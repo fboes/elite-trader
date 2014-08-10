@@ -6,10 +6,6 @@ class EliteTrader {
 	const TABLE_PRICES    = 'prices';
 	const TABLE_LOCATIONS = 'locations';
 
-	const PRICE_NO_BUYER  = 1;
-	const PRICE_NO_PROFIT = 2;
-	const PRICE_NO_SALE   = 4;
-
 	protected $pdo;
 
 	public $currentLocation;
@@ -172,7 +168,7 @@ class EliteTrader {
 				$result['highestId']      = $tryId;
 			}
 			if ((!empty($trader['price_sell']) && $trader['price_sell'] > 0 && empty($result['lowestPrice'])) || $trader['price_sell'] < $result['lowestPrice']) {
-				$result['lowestPrice']    = $trader['price_buy'];
+				$result['lowestPrice']    = $trader['price_sell'];
 				$result['lowestId']       = $tryId;
 			}
 		}
