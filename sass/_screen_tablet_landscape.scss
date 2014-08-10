@@ -1,0 +1,28 @@
+html {
+  font-size: $base-unit-absolute-tablet-landscape;
+}
+
+#container {
+	@if not $switch-use-fluid {
+		max-width: toolshed-rem($width-screen-tablet-landscape, $base-unit-absolute-tablet-landscape, -2);
+	}
+	#banner, #footer {
+		.inner {
+			@if not $switch-use-fluid {
+				max-width: toolshed-rem($width-screen-tablet-landscape, $base-unit-absolute-tablet-landscape, -4);
+			}
+		}
+	}
+	#main {
+		.block-container-3 {
+			section {
+				width: (100%/3) - 2%;
+			}
+		}
+		.block-container-4 {
+			section {
+				width: (100%/4) - 2%;
+			}
+		}
+	}
+}

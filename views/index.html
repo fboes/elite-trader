@@ -1,0 +1,175 @@
+<?php require('_header.html');?>
+
+<?php $newGoods = $elite->listGoods; ?>
+
+<?php if (!empty($data)): ?>
+	<div class="block-container-1">
+		<section>
+			<h3><?php _echo($elite->currentLocation['name']);?></h3>
+			<p>Price is set to '0' if the good can't be bought / sold at this location.<br />Prices are compared for locations in max. <?php _echo($_GET['hops']);?> hops distance.</p>
+			<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
+				<table>
+					<thead>
+						<tr>
+							<th>Good</th>
+							<th class="number" style="width:5em;">Buy</th>
+							<th class="number" style="width:5em;">Sell</th>
+							<th class="number">Best buy delta</th>
+							<th>Best buyer</th>
+							<th class="number">Best sale delta</th>
+							<th>Best seller</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $even = TRUE; foreach ($data as $goodIndex => $price): ?>
+							<?php unset($newGoods[$goodIndex]);?>
+							<tr class="<?php _echo(($even = !$even) ? 'even' : 'odd');?>">
+								<th><?php _echo($elite->listGoods[$goodIndex]);?></th>
+								<td class="number">
+									<span class="input-replace" data-name="price[<?php _echo($goodIndex);?>][buy]"><?php _echo($price['price_buy']);?></span>
+								</td>
+								<td class="number">
+									<span class="input-replace" data-name="price[<?php _echo($goodIndex);?>][sell]"><?php _echo($price['price_sell']);?></span>
+								</td>
+
+								<?php if(!empty($price['buyer'])): ?>
+									<td class="number"><?php _echo($price['buyer']['delta']); ?></td>
+									<td><a href="?location=<?php _echo(urlencode($price['buyer']['id']));?>"><?php _echo($price['buyer']['name']); ?></a></td>
+								<?php else: ?>
+									<td colspan="2" class="empty">No profitable buyer found</td>
+								<?php endif; ?>
+
+								<?php if(!empty($price['seller'])): ?>
+									<td class="number"><?php _echo($price['seller']['delta']); ?></td>
+									<td><a href="?location=<?php _echo(urlencode($price['seller']['id']));?>"><?php _echo($price['seller']['name']); ?></a></td>
+								<?php else: ?>
+									<td colspan="2" class="empty">No profitable seller found</td>
+								<?php endif; ?>
+
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
+				<input type="hidden" name="action" value="update_price" />
+				<button type="submit">Save</button>
+			</form>
+		</section>
+	</div>
+<?php endif; ?>
+<div class="block-container-1">
+	<section>
+		<h4>Travelling connections for <?php _echo($elite->currentLocation['name']);?></h4>
+
+		<?php
+			$connections = $elite->getNextLocationsForCurrentLocation(1);
+			$newLocations = $elite->listLocations;
+			unset($newLocations[$elite->currentLocation['id']]);
+		?>
+		<ul>
+			<?php foreach($connections as $c): ?>
+				<?php unset($newLocations[$c['id']]); ?>
+				<li><a href="?location=<?php _echo(urlencode($c['id']));?>"><?php _echo($c['name']); ?></a></li>
+			<?php endforeach; ?>
+		</ul>
+	</section>
+</div>
+<div class="block-container-4">
+	<?php if(!empty($newGoods)): ?>
+		<section>
+			<h4>New prices for <?php _echo($elite->currentLocation['name']);?></h4>
+			<p>If the good does not exist, create it first.</p>
+			<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
+				<div class="form-field">
+					<label for="create_price-good_id">Good</label>
+					<select id="create_price-good_id" name="good_id">
+						<?php foreach($newGoods as $id => $name):?>
+							<option value="<?php _echo($id);?>"><?php _echo($name);?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<div class="form-field">
+					<label for="create_price-price_buy">Buy</label>
+					<input id="create_price-price_buy" type="number" min="0" step="1" name="price_buy" />
+				</div>
+				<div class="form-field">
+					<label for="create_price-price_sell">Sell</label>
+					<input id="create_price-price_sell" type="number" min="0" step="1" name="price_sell" />
+				</div>
+				<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
+				<input type="hidden" name="action" value="create_price" />
+				<button type="submit">Save</button>
+			</form>
+		</section>
+	<?php endif; ?>
+	<section>
+		<h4>New good</h4>
+		<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
+			<div class="form-field">
+				<label for="create_good-name">Name</label>
+				<input id="create_good-name" type="text" name="name" />
+			</div>
+			<div class="form-field">
+				<label for="create_good-description">Description</label>
+				<input id="create_good-description" type="text" name="description" />
+			</div>
+			<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
+			<input type="hidden" name="action" value="create_good" />
+			<button type="submit">Create</button>
+		</form>
+		<p>After the good has been created, it can be referenced by this station.</p>
+	</section>
+	<?php if(!empty($newLocations)): ?>
+		<section>
+			<h4>New travelling connection for <?php _echo($elite->currentLocation['name']);?></h4>
+			<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
+				<div class="form-field">
+					<label for="create_connection-location_id">Location</label>
+					<select id="create_connection-location_id" name="location_id">
+						<?php foreach($newLocations as $id => $name):?>
+							<option value="<?php _echo($id);?>"><?php _echo($name);?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<div class="form-field">
+					<label for="create_connection-distance">Distance</label>
+					<input id="create_connection-distance" type="number" min="0" step="0.1" name="distance" />
+				</div>
+				<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
+				<input type="hidden" name="action" value="create_connection" />
+				<button type="submit">Save</button>
+			</form>
+		</section>
+	<?php endif; ?>
+	<section>
+		<h4>Create new neighboring location</h4>
+		<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
+			<div class="form-field">
+				<label for="create_location-name">Name</label>
+				<input id="create_location-name" type="text" name="name" />
+			</div>
+			<div class="form-field">
+				<label for="create_location-description">Description</label>
+				<input id="create_location-description" type="text" name="description" />
+			</div>
+			<div class="form-field">
+				<label for="create_location-distance">Distance</label>
+				<input id="create_location-distance" type="number" min="0" step="0.1" name="distance" />
+			</div>
+			<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
+			<input type="hidden" name="action" value="create_location" />
+			<button type="submit">Create</button>
+		</form>
+	</section>
+</div>
+<?php if(0): ?>
+	<div class="block-container-1">
+		<section>
+			<h3>Debug</h3>
+			<?php _print_r($data); ?>
+			<?php _print_r($elite); ?>
+		</section>
+	</div>
+<?php endif; ?>
+<?php require('_footer.html');?>
+

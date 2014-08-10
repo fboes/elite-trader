@@ -1,0 +1,129 @@
+// Settings
+
+$switch-use-fluid          : true;
+$switch-use-dark           : false;
+$switch-use-navigation     : true;
+$switch-fixed-header       : false;
+$switch-fixed-footer       : false;
+$switch-transparent-header : true;
+
+// Base canon (Responsive)
+// See http://developer.android.com/design/style/metrics-grids.html
+
+$base-unit-absolute : 12px;
+$base-unit-absolute-smartphone           : round($base-unit-absolute);
+$base-unit-absolute-smartphone-landscape : round($base-unit-absolute);
+$base-unit-absolute-tablet               : round($base-unit-absolute * 1.3);
+$base-unit-absolute-tablet-landscape     : round($base-unit-absolute * 1.3);
+$base-unit-absolute-desktop              : round($base-unit-absolute * 1.3);
+$base-unit-absolute-print                : 10pt;
+
+$base-unit: 1rem;
+
+$width-screen-smartphone                 : 320px;
+$width-screen-smartphone-landscape       : 480px;
+$width-screen-tablet                     : 768px;
+$width-screen-tablet-landscape           : 1024px;
+$width-screen-desktop                    : 1280px;
+
+// Colors
+// See http://developer.android.com/design/style/color.html
+
+$color-white:        rgb(255,255,255);
+$color-black:        rgb(90,90,90);
+$color-grey:         mix($color-white, $color-black, 80%); //rgb(225,225,225);
+$color-grey-dark:    mix($color-white, $color-black, 55%); //rgb(180,180,180);
+$color-grey-light:   mix($color-white, $color-black, 95%); //rgb(245,245,245);
+$color-blue:         #33b5e5;
+$color-blue-dark:    darken($color-blue, 25%);
+$color-blue-light:   lighten($color-blue, 15%);
+$color-purple:       #AA66CC;
+$color-purple-dark:  darken($color-purple, 25%);
+$color-purple-light: lighten($color-purple, 15%);
+$color-green:        #99cc00;
+$color-green-dark:   darken($color-green, 25%);
+$color-green-light:  lighten($color-green, 15%);
+$color-yellow:       #FFBB33;
+$color-yellow-dark:  darken($color-yellow, 25%);
+$color-yellow-light: lighten($color-yellow, 15%);
+$color-red:          #FF4444;
+$color-red-dark:     darken($color-red, 25%);
+$color-red-light:    lighten($color-red, 15%);
+$color-orange:       orange;
+$color-orange-dark:  darken($color-orange, 25%);
+$color-orange-light: lighten($color-orange, 15%);
+
+@if $switch-use-dark {
+	$color-black:        #000;
+	$color-grey-dark:    mix($color-white, $color-black, 20%);
+}
+
+// Colors -> Function
+
+$color-font:                  $color-black;
+$color-font-light:            $color-grey-dark;
+$color-highlight:             $color-blue;
+$color-link:                  $color-blue-dark;
+$color-button:                $color-font;
+
+$color-header:                $color-font;
+$color-content:               $color-font;
+$color-form-input:            $color-font;
+$color-form-input-disabled:   $color-grey-dark;
+
+$border-color-form-input:     $color-grey;
+$border-color-form-input-disabled:$color-grey;
+
+$background-color:            $color-grey;
+$background-color-header:     $background-color;
+$background-color-header-2:   $background-color;
+$background-color-content:    $color-grey-light;
+$background-color-form-input: $color-white;
+$background-color-form-input-disabled: $color-grey;
+$background-color-button:     $color-grey;
+$background-color-button-2:   $color-grey-dark;
+
+@if $switch-use-dark {
+	$color-font:                  $color-white;
+	$color-font-light:            $color-grey-light;
+	$color-highlight:             $color-orange;
+	$color-link:                  $color-orange-light;
+	$color-button:                $color-black;
+
+	$color-header:                $color-font;
+	$color-content:               $color-font;
+	$color-form-input:            $color-font;
+	$color-form-input-disabled:   $color-grey-dark;
+
+	$border-color-form-input:     $color-grey-dark;
+	$border-color-form-input-disabled:$color-black;
+
+	$background-color:            $color-black;
+	$background-color-header:     $color-orange;
+	$background-color-header-2:   $color-orange-dark;
+	$background-color-content:    $color-grey-dark;
+	$background-color-form-input: $color-white;
+	$background-color-form-input-disabled: $color-grey;
+	$background-color-button:     $color-orange-light;
+	$background-color-button-2:   $color-orange;
+}
+
+@if $switch-transparent-header {
+	$background-color-header:     rgba($background-color-header, 0.9);
+	$background-color-header-2:   rgba($background-color-header-2, 0.9);
+}
+
+// Typography
+
+$font-size-micro  : 0.85rem;
+$font-size-small  : 1rem;
+$font-size-medium : 1.25rem;
+$font-size-large  : 1.5rem;
+
+$font-family:        'Roboto Slab', Garamond, serif;
+$font-family-header: 'Roboto', Tahoma, sans-serif;
+$font-family-fixed:  'Courier New', monospace;
+
+@if $switch-use-dark {
+	$font-family: $font-family-header;
+}
