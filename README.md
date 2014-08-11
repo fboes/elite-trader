@@ -4,6 +4,7 @@ Elite Trader
 Setup
 -----
 
+0. Use `git submodule update --init` for fetching required submodules
 1. Import setup/elite_trader.sql into DB
 2. Copy `app/config.dist.php` to `app/config.php`
 
