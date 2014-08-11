@@ -1,0 +1,9 @@
+[submodule "js/vendor/js-toolshed"]
+	path = js/vendor/js-toolshed
+	url = https://github.com/fboes/js-toolshed.git
+[submodule "sass/vendor/toolshed"]
+	path = sass/vendor/toolshed
+	url = https://github.com/fboes/sass-toolshed.git
+[submodule "app/vendor/small-php-helpers"]
+	path = app/vendor/small-php-helpers
+	url = https://github.com/fboes/small-php-helpers.git
