@@ -4,3 +4,6 @@
 [submodule "sass/vendor/toolshed"]
 	path = sass/vendor/toolshed
 	url = git://github.com/fboes/SASS-Toolshed.git
+[submodule "app/vendor/small-php-helpers"]
+	path = app/vendor/small-php-helpers
+	url = git@github.com:fboes/small-php-helpers.git
