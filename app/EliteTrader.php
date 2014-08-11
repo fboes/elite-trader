@@ -136,7 +136,7 @@ class EliteTrader {
 							'name'  => $goods[$profits['highestId']]['location_name'],
 						);
 					}
-					if (!empty($profits['lowestId']) && ($profits['lowestPrice'] < $price['price_buy']) && ($profits['lowestPrice'] < $price['price_sell'])) {
+					if (!empty($profits['lowestId']) && ($profits['lowestPrice'] < $price['price_buy']) && ($profits['lowestPrice'] < $price['price_sell'] || $price['price_sell'] == 0)) {
 						$price['seller'] = array(
 							'id'    => $profits['lowestId'],
 							'price' => $profits['lowestPrice'],
