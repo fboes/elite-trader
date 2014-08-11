@@ -53,4 +53,14 @@ $data = $elite->getPricesForCurrentAndNeighbouringLocations($_GET['hops']);
 
 // View
 
-require('views/index.html');
+if (isset($_GET['json'])) {
+	header('Content-type: application/json');
+	echo(json_encode((object)array(
+		'elite' => $elite,
+		'data'  => $data,
+		'nextLocations' => $elite->getNextLocationsForCurrentLocation(1),
+	)));
+}
+else {
+	require('views/index.html');
+}
