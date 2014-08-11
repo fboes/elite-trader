@@ -103,7 +103,7 @@
 		</section>
 	<?php endif; ?>
 	<section>
-		<h4>New good</h4>
+		<h4>New good and prices for this location</h4>
 		<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
 			<div class="form-field">
 				<label for="create_good-name">Name</label>
@@ -113,11 +113,18 @@
 				<label for="create_good-description">Description</label>
 				<input id="create_good-description" type="text" name="description" />
 			</div>
+			<div class="form-field">
+				<label for="create_good-price_buy">Buy</label>
+				<input id="create_good-price_buy" type="number" min="0" step="1" name="price_buy" />
+			</div>
+			<div class="form-field">
+				<label for="create_good-price_sell">Sell</label>
+				<input id="create_good-price_sell" type="number" min="0" step="1" name="price_sell" />
+			</div>
 			<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
 			<input type="hidden" name="action" value="create_good" />
 			<button type="submit">Create</button>
 		</form>
-		<p>After the good has been created, it can be referenced by this station.</p>
 	</section>
 	<?php if(!empty($newLocations)): ?>
 		<section>

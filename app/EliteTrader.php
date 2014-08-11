@@ -163,11 +163,11 @@ class EliteTrader {
 		$result['lowestId']  = NULL;
 		$result['lowestPrice']  = NULL;
 		foreach ($traders as $tryId => $trader) {
-			if (empty($result['highestPrice']) || $trader['price_buy'] > $result['highestPrice']) {
+			if (empty($result['highestPrice']) || ($trader['price_buy'] > $result['highestPrice'])) {
 				$result['highestPrice']   = $trader['price_buy'];
 				$result['highestId']      = $tryId;
 			}
-			if ((!empty($trader['price_sell']) && $trader['price_sell'] > 0 && empty($result['lowestPrice'])) || $trader['price_sell'] < $result['lowestPrice']) {
+			if (empty($result['lowestPrice']) || ($trader['price_sell'] > 0 && $trader['price_sell'] < $result['lowestPrice'])) {
 				$result['lowestPrice']    = $trader['price_sell'];
 				$result['lowestId']       = $tryId;
 			}

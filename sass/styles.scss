@@ -2,7 +2,6 @@
 
 @import "compass/css3";
 @import "vendor/toolshed/toolshed";
-@import "vendor/toolshed/print";
 @import "vendor/toolshed/reset";
 
 // Load basic styles
@@ -41,5 +40,6 @@
 	@import 'screen_desktop_only';
 }
 @media print {
+	@import "vendor/toolshed/print-base";
 	@import 'print';
 }
