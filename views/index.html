@@ -35,13 +35,16 @@
 								<?php if(!empty($price['buyer'])): ?>
 									<td class="number"><?php _echo($price['buyer']['delta']); ?></td>
 									<td><a href="?location=<?php _echo(urlencode($price['buyer']['id']));?>"><?php _echo($price['buyer']['name']); ?></a></td>
+								<?php elseif ($price['buyer_status'] == EliteTrader::STATUS_BEST_BUYER): ?>
+									<td colspan="2">Best buyer</td>
 								<?php else: ?>
 									<td colspan="2" class="empty">No profitable / better buyer found</td>
 								<?php endif; ?>
-
 								<?php if(!empty($price['seller'])): ?>
 									<td class="number"><?php _echo($price['seller']['delta']); ?></td>
 									<td><a href="?location=<?php _echo(urlencode($price['seller']['id']));?>"><?php _echo($price['seller']['name']); ?></a></td>
+								<?php elseif ($price['seller_status'] == EliteTrader::STATUS_BEST_SELLER): ?>
+									<td colspan="2">Best buyer</td>
 								<?php else: ?>
 									<td colspan="2" class="empty">No profitable / better seller found</td>
 								<?php endif; ?>
@@ -78,7 +81,6 @@
 	<?php if(!empty($newGoods)): ?>
 		<section>
 			<h4>New prices for <?php _echo($elite->currentLocation['name']);?></h4>
-			<p>If the good does not exist, create it first.</p>
 			<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
 				<div class="form-field">
 					<label for="create_price-good_id">Good</label>
@@ -88,11 +90,11 @@
 						<?php endforeach; ?>
 					</select>
 				</div>
-				<div class="form-field">
+				<div class="form-field form-field-half">
 					<label for="create_price-price_buy">Buy</label>
 					<input id="create_price-price_buy" type="number" min="0" step="1" name="price_buy" />
 				</div>
-				<div class="form-field">
+				<div class="form-field form-field-half">
 					<label for="create_price-price_sell">Sell</label>
 					<input id="create_price-price_sell" type="number" min="0" step="1" name="price_sell" />
 				</div>
@@ -113,11 +115,11 @@
 				<label for="create_good-description">Description</label>
 				<input id="create_good-description" type="text" name="description" />
 			</div>
-			<div class="form-field">
+			<div class="form-field form-field-half">
 				<label for="create_good-price_buy">Buy</label>
 				<input id="create_good-price_buy" type="number" min="0" step="1" name="price_buy" />
 			</div>
-			<div class="form-field">
+			<div class="form-field form-field-half">
 				<label for="create_good-price_sell">Sell</label>
 				<input id="create_good-price_sell" type="number" min="0" step="1" name="price_sell" />
 			</div>

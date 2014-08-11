@@ -21,7 +21,7 @@ html {
 	}
 }
 .form-field-half {
-	width:49%;
+	width:50%;
 	float:left;
 	clear:none;
 }
@@ -40,7 +40,7 @@ input,
 select,
 textarea {
 	display:block;
-	width: 96%;
+	width: 100%;
 }
 input,
 select,
@@ -84,9 +84,6 @@ input {
 	&[type=hidden] {
 		display:none;
 	}
-}
-select {
-	width:100%;
 }
 .button,
 button {

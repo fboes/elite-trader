@@ -6,6 +6,13 @@ class EliteTrader {
 	const TABLE_PRICES    = 'prices';
 	const TABLE_LOCATIONS = 'locations';
 
+	const STATUS_BETTER_SELLER_AVL = 1;
+	const STATUS_BETTER_BUYER_AVL  = 2;
+	const STATUS_BEST_SELLER       = 4;
+	const STATUS_BEST_BUYER        = 8;
+	const STATUS_NO_SELLER_AVL     = 16;
+	const STATUS_NO_BUYER_AVL      = 32;
+
 	protected $pdo;
 
 	public $currentLocation;
@@ -132,24 +139,35 @@ class EliteTrader {
 					$profits = $this->getProfitSpan($goods);
 					$price['buyer']  = array();
 					$price['seller'] = array();
-					if (!empty($profits['highestId']) && !empty($price['price_sell'])) {
-						if ($profits['highestPrice'] > $price['price_sell'] && $profits['highestPrice'] > $price['price_buy']) {
-							$price['buyer'] = array(
-								'id'    => $profits['highestId'],
-								'price' => (int)$profits['highestPrice'],
-								'delta' => (int)$profits['highestPrice'] - $price['price_sell'],
-								'name'  => $goods[$profits['highestId']]['location_name'],
-							);
+					$price['buyer_status']  = self::STATUS_NO_BUYER_AVL;
+					$price['seller_status'] = self::STATUS_NO_SELLER_AVL;
+
+					if (!empty($price['price_sell'])) {
+						$price['seller_status'] = self::STATUS_BEST_SELLER;
+						if (!empty($profits['highestId'])) {
+							$price['buyer_status']  = self::STATUS_BETTER_BUYER_AVL;
+							if ($profits['highestPrice'] > $price['price_sell'] && $profits['highestPrice'] > $price['price_buy']) {
+								$price['buyer'] = array(
+									'id'    => $profits['highestId'],
+									'price' => (int)$profits['highestPrice'],
+									'delta' => (int)$profits['highestPrice'] - $price['price_sell'],
+									'name'  => $goods[$profits['highestId']]['location_name'],
+								);
+							}
 						}
 					}
-					if (!empty($profits['lowestId']) && !empty($price['price_buy'])) {
-						if ($profits['lowestPrice'] < $price['price_buy'] && $profits['lowestPrice'] < $price['price_sell'] || $price['price_sell'] == 0) {
-							$price['seller'] = array(
-								'id'    => $profits['lowestId'],
-								'price' => (int)$profits['lowestPrice'],
-								'delta' => (int)$price['price_buy'] - $profits['lowestPrice'],
-								'name'  => $goods[$profits['lowestId']]['location_name'],
-							);
+					if (!empty($price['price_buy'])) {
+						$price['buyer_status']  = self::STATUS_BEST_BUYER;
+						if (!empty($profits['lowestId'])) {
+							$price['seller_status'] = self::STATUS_BETTER_SELLER_AVL;
+							if ($profits['lowestPrice'] < $price['price_buy'] && $profits['lowestPrice'] < $price['price_sell'] || $price['price_sell'] == 0) {
+								$price['seller'] = array(
+									'id'    => $profits['lowestId'],
+									'price' => (int)$profits['lowestPrice'],
+									'delta' => (int)$price['price_buy'] - $profits['lowestPrice'],
+									'name'  => $goods[$profits['lowestId']]['location_name'],
+								);
+							}
 						}
 					}
 				}

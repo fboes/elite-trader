@@ -43,11 +43,11 @@ html { font-size: 12px; }
 .form-field ul.checkbox { list-style: none; display: block; padding: 0; margin: 0; }
 .form-field ul.checkbox li { list-style: none; display: block; padding: 0; margin: 0; }
 
-.form-field-half { width: 49%; float: left; clear: none; }
+.form-field-half { width: 50%; float: left; clear: none; }
 
 label, button, .button, input, select, textarea { font: inherit; color: inherit; padding: 0.5rem 2%; }
 
-label, input, select, textarea { display: block; width: 96%; }
+label, input, select, textarea { display: block; width: 100%; }
 
 input, select, textarea { color: #5a5a5a; background: white; outline: 0.15rem solid #dedede; border: none; -webkit-border-radius: 0.15rem; -moz-border-radius: 0.15rem; -ms-border-radius: 0.15rem; -o-border-radius: 0.15rem; border-radius: 0.15rem; }
 input[disabled], select[disabled], textarea[disabled] { color: #b4b4b4; background-color: #dedede; outline-color: #dedede; }
@@ -57,8 +57,6 @@ input[type=radio], input[type=checkbox], input[type=file], input[type=submit] { 
 input[type=radio], input[type=checkbox], input[type=file], input[type=submit], input[type=range] { background: none; outline: none; border: none; }
 input[type=range] { vertical-align: middle; }
 input[type=hidden] { display: none; }
-
-select { width: 100%; }
 
 .button, button { display: inline-block; text-decoration: none; text-align: center; color: #5a5a5a; border: 0.0625rem solid rgba(0, 0, 0, 0.3); -webkit-border-radius: 0.5rem; -moz-border-radius: 0.5rem; -ms-border-radius: 0.5rem; -o-border-radius: 0.5rem; border-radius: 0.5rem; -webkit-box-shadow: 1px 0.125rem 0.125rem rgba(0, 0, 0, 0.1); -moz-box-shadow: 1px 0.125rem 0.125rem rgba(0, 0, 0, 0.1); box-shadow: 1px 0.125rem 0.125rem rgba(0, 0, 0, 0.1); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dedede), color-stop(100%, #b4b4b4)); background: -webkit-linear-gradient(top, #dedede, #b4b4b4); background: -moz-linear-gradient(top, #dedede, #b4b4b4); background: -o-linear-gradient(top, #dedede, #b4b4b4); background: linear-gradient(top, #dedede, #b4b4b4); }
 .button:hover, button:hover { background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f8f8), color-stop(100%, #cecece)); background: -webkit-linear-gradient(top, #f8f8f8, #cecece); background: -moz-linear-gradient(top, #f8f8f8, #cecece); background: -o-linear-gradient(top, #f8f8f8, #cecece); background: linear-gradient(top, #f8f8f8, #cecece); }
