@@ -128,7 +128,7 @@ class EliteTrader {
 					$profits = $this->getProfitSpan($goods);
 					$price['buyer'] = array();
 					$price['seller'] = array();
-					if (!empty($profits['highestId']) && ($profits['highestPrice'] > $price['price_sell'])) {
+					if (!empty($profits['highestId']) && ($profits['highestPrice'] > $price['price_sell']) && ($profits['highestPrice'] > $price['price_buy'])) {
 						$price['buyer'] = array(
 							'id'    => $profits['highestId'],
 							'price' => $profits['highestPrice'],
@@ -136,7 +136,7 @@ class EliteTrader {
 							'name'  => $goods[$profits['highestId']]['location_name'],
 						);
 					}
-					if (!empty($profits['lowestId']) && ($profits['lowestPrice'] < $price['price_buy'])) {
+					if (!empty($profits['lowestId']) && ($profits['lowestPrice'] < $price['price_buy']) && ($profits['lowestPrice'] < $price['price_sell'])) {
 						$price['seller'] = array(
 							'id'    => $profits['lowestId'],
 							'price' => $profits['lowestPrice'],

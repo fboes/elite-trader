@@ -36,14 +36,14 @@
 									<td class="number"><?php _echo($price['buyer']['delta']); ?></td>
 									<td><a href="?location=<?php _echo(urlencode($price['buyer']['id']));?>"><?php _echo($price['buyer']['name']); ?></a></td>
 								<?php else: ?>
-									<td colspan="2" class="empty">No profitable buyer found</td>
+									<td colspan="2" class="empty">No profitable / better buyer found</td>
 								<?php endif; ?>
 
 								<?php if(!empty($price['seller'])): ?>
 									<td class="number"><?php _echo($price['seller']['delta']); ?></td>
 									<td><a href="?location=<?php _echo(urlencode($price['seller']['id']));?>"><?php _echo($price['seller']['name']); ?></a></td>
 								<?php else: ?>
-									<td colspan="2" class="empty">No profitable seller found</td>
+									<td colspan="2" class="empty">No profitable / better seller found</td>
 								<?php endif; ?>
 
 							</tr>
