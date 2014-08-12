@@ -38,6 +38,9 @@ if (!empty($_POST['action'])) {
 	$success = TRUE;
 	switch ($_POST['action']) {
 		case 'update_price':
+			if (!empty($_POST['location_name'])) {
+				$elite->updateCurrentLocation($_POST['location_name'],$_POST['location_description']);
+			}
 			foreach ($_POST['price'] as $idGood => $price) {
 				$success = $elite->setPriceForCurrentLocation ($idGood, $price['buy'], $price['sell']) && $success;
 			}

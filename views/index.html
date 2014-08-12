@@ -5,9 +5,12 @@
 <?php if (!empty($data)): ?>
 	<div class="block-container-1">
 		<section>
-			<h3><?php _echo($elite->currentLocation['name']);?></h3>
-			<p>Price is set to '0' if the good can't be bought / sold at this location.<br />Prices are compared for locations in max. <?php _echo($_SESSION['hops']);?> hops distance.</p>
 			<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
+				<div>
+					<h3><span class="input-replace" data-parents="div" data-type="text" data-name="location_name"><?php _echo($elite->currentLocation['name']);?></span></h3>
+					<p><span class="input-replace" data-parents="div" data-type="text" data-name="location_description"><?php _echo($elite->currentLocation['description']);?></span></p>
+				</div>
+				<p>Price is set to '0' if the good can't be bought / sold at this location.<br />Prices are compared for locations in max. <?php _echo($_SESSION['hops']);?> hops distance.</p>
 				<table>
 					<thead>
 						<tr>

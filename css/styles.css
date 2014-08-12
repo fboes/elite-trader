@@ -64,7 +64,7 @@ input[type=hidden] { display: none; }
 
 .form-field-double input, .form-field-double select, .form-field-double textarea { width: 48%; display: inline-block; }
 
-.no-styling { display: inline-block; width: auto; max-width: 99%; margin: 0; padding: 0; background: transparent; border: none; outline: none; text-align: inherit; width: 5em; }
+.no-styling { display: inline-block; margin: 0; padding: 0; background: transparent; border: none; outline: none; text-align: inherit; }
 
 .input-replace { display: block; cursor: pointer; }
 

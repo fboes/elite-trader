@@ -35,10 +35,11 @@
 						.on('click focus','span.input-replace',function (event){
 							event.stopPropagation();
 							$(this).data('focus','focus');
-							var tr = $(this).parents('tr');
+							var tr = $(this).parents($(this).data('parents') ? $(this).data('parents') : 'tr');
 							tr.find('span.input-replace').each(function (index) {
 								var el = $(this);
-								el.hide().after('<input class="no-styling '+el.data('focus')+'" type="number" min="0" step="1" name="'+el.data('name')+'" value="'+el.html()+'" />').remove();
+								var html = $(this).data('type') ? 'type="'+$(this).data('type')+'"' : 'type="number" min="0" step="1"';
+								el.hide().after('<input class="no-styling '+el.data('focus')+'" '+html+' name="'+el.data('name')+'" value="'+el.html()+'" />').remove();
 							})
 							tr.find('.focus').each(function(){
 								var newEl = $(this);

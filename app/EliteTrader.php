@@ -81,6 +81,8 @@ class EliteTrader {
 		return $id;
 	}
 
+
+
 	// -------------------------------------------
 	// Lists
 	// -------------------------------------------
@@ -246,19 +248,6 @@ class EliteTrader {
 		return $result;
 	}
 
-	public function setPriceForCurrentLocation ($idGood, $priceBuy, $priceSell = 0) {
-		return $this->setPriceForLocation($this->currentLocation['id'], $idGood, $priceBuy, $priceSell);
-	}
-
-	public function setPriceForLocation ($idLocation, $idGood, $priceBuy, $priceSell = 0) {
-		return ($this->pdo->replace(self::TABLE_PRICES, array(
-			'good_id'      => (int)$idGood,
-			'location_id'  => (int)$idLocation,
-			'price_buy'    => (int)$priceBuy,
-			'price_sell'   => (int)$priceSell,
-		)) >= 0);
-	}
-
 	// -------------------------------------------
 	// Travelling
 	// -------------------------------------------
@@ -318,6 +307,54 @@ class EliteTrader {
 		return TRUE;
 	}
 
+
+	// -------------------------------------------
+	// UPDATE
+	// -------------------------------------------
+
+	public function setPriceForCurrentLocation ($idGood, $priceBuy, $priceSell = 0) {
+		return $this->setPriceForLocation($this->currentLocation['id'], $idGood, $priceBuy, $priceSell);
+	}
+
+	public function setPriceForLocation ($idLocation, $idGood, $priceBuy, $priceSell = 0) {
+		return ($this->pdo->replace(self::TABLE_PRICES, array(
+			'good_id'      => (int)$idGood,
+			'location_id'  => (int)$idLocation,
+			'price_buy'    => (int)$priceBuy,
+			'price_sell'   => (int)$priceSell,
+		)) >= 0);
+	}
+
+	public function updateCurrentLocation ($name, $description = NULL) {
+		return $this->updateLocation ($this->currentLocation['id'], $name, $description);
+	}
+
+	public function updateLocation ($id, $name, $description = NULL) {
+		return ($this->pdo->update(
+			self::TABLE_LOCATIONS,
+			array(
+				'name'        => $name,
+				'description' => $description,
+			),
+			'id='.$this->pdo->quote($id)
+		));
+	}
+
+	public function updateGood ($id, $name, $description = NULL) {
+		return ($this->pdo->update(
+			self::TABLE_GOODS,
+			array(
+				'name'        => $name,
+				'description' => $description,
+			),
+			'id='.$this->pdo->quote($id)
+		));
+	}
+
+	// -------------------------------------------
+	// DELETE
+	// -------------------------------------------
+
 	public function deleteLane ($idLocation1, $idLocation2) {
 		return $this->pdo->delete(
 			self::TABLE_ROADS,
@@ -325,4 +362,5 @@ class EliteTrader {
 			.'OR (location_id_from='.$this->pdo->quote((int)$idLocation2).' AND location_id_to='.$this->pdo->quote((int)$idLocation1).')'
 		);
 	}
+
 }
