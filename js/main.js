@@ -49,6 +49,15 @@
 						.on('click','tr',function (event) {
 							$(this).toggleClass('focus');
 						})
+						.on('change','.show-on-empty', function (event) {
+							var el = $($(this).data('show-on-empty'));
+							if ($(this).val() && el.is(":visible") ) {
+								el.slideUp('fast');
+							}
+							else if (!$(this).val() && el.is(":hidden")  ) {
+								el.slideDown('fast');
+							}
+						})
 					;
 				}
 			}

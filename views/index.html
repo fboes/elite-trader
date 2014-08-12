@@ -6,7 +6,7 @@
 	<div class="block-container-1">
 		<section>
 			<h3><?php _echo($elite->currentLocation['name']);?></h3>
-			<p>Price is set to '0' if the good can't be bought / sold at this location.<br />Prices are compared for locations in max. <?php _echo($_GET['hops']);?> hops distance.</p>
+			<p>Price is set to '0' if the good can't be bought / sold at this location.<br />Prices are compared for locations in max. <?php _echo($_SESSION['hops']);?> hops distance.</p>
 			<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
 				<table>
 					<thead>
@@ -35,16 +35,12 @@
 								<?php if(!empty($price['buyer'])): ?>
 									<td class="number"><?php _echo($price['buyer']['delta']); ?></td>
 									<td><a href="?location=<?php _echo(urlencode($price['buyer']['id']));?>"><?php _echo($price['buyer']['name']); ?></a></td>
-								<?php elseif ($price['buyer_status'] == EliteTrader::STATUS_BEST_BUYER): ?>
-									<td colspan="2">Best buyer</td>
 								<?php else: ?>
 									<td colspan="2" class="empty">No profitable / better buyer found</td>
 								<?php endif; ?>
 								<?php if(!empty($price['seller'])): ?>
 									<td class="number"><?php _echo($price['seller']['delta']); ?></td>
 									<td><a href="?location=<?php _echo(urlencode($price['seller']['id']));?>"><?php _echo($price['seller']['name']); ?></a></td>
-								<?php elseif ($price['seller_status'] == EliteTrader::STATUS_BEST_SELLER): ?>
-									<td colspan="2">Best buyer</td>
 								<?php else: ?>
 									<td colspan="2" class="empty">No profitable / better seller found</td>
 								<?php endif; ?>
@@ -60,7 +56,44 @@
 		</section>
 	</div>
 <?php endif; ?>
-<div class="block-container-1">
+<div class="block-container-3">
+	<section>
+		<h4>New prices for <?php _echo($elite->currentLocation['name']);?></h4>
+		<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
+			<div class="form-field">
+				<label for="create_price-good_id">Good</label>
+				<select id="create_price-good_id" name="good_id" class="show-on-empty" data-show-on-empty="#create_price-new">
+					<option value="">-- New good --</option>
+					<?php foreach($newGoods as $id => $name):?>
+						<option value="<?php _echo($id);?>"><?php _echo($name);?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+
+			<div class="form-fieldset" id="create_price-new">
+				<div class="form-field">
+					<label for="create_price-name">Name</label>
+					<input id="create_price-name" type="text" name="name" />
+				</div>
+				<div class="form-field">
+					<label for="create_price-description">Description</label>
+					<input id="create_price-description" type="text" name="description" />
+				</div>
+			</div>
+
+			<div class="form-field form-field-half">
+				<label for="create_price-price_buy">Buy</label>
+				<input id="create_price-price_buy" type="number" min="0" step="1" name="price_buy" />
+			</div>
+			<div class="form-field form-field-half">
+				<label for="create_price-price_sell">Sell</label>
+				<input id="create_price-price_sell" type="number" min="0" step="1" name="price_sell" />
+			</div>
+			<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
+			<input type="hidden" name="action" value="create_price" />
+			<button type="submit">Save</button>
+		</form>
+	</section>
 	<section>
 		<h4>Travelling connections for <?php _echo($elite->currentLocation['name']);?></h4>
 
@@ -76,98 +109,36 @@
 			<?php endforeach; ?>
 		</ul>
 	</section>
-</div>
-<div class="block-container-4">
-	<?php if(!empty($newGoods)): ?>
-		<section>
-			<h4>New prices for <?php _echo($elite->currentLocation['name']);?></h4>
-			<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
-				<div class="form-field">
-					<label for="create_price-good_id">Good</label>
-					<select id="create_price-good_id" name="good_id">
-						<?php foreach($newGoods as $id => $name):?>
-							<option value="<?php _echo($id);?>"><?php _echo($name);?></option>
-						<?php endforeach; ?>
-					</select>
-				</div>
-				<div class="form-field form-field-half">
-					<label for="create_price-price_buy">Buy</label>
-					<input id="create_price-price_buy" type="number" min="0" step="1" name="price_buy" />
-				</div>
-				<div class="form-field form-field-half">
-					<label for="create_price-price_sell">Sell</label>
-					<input id="create_price-price_sell" type="number" min="0" step="1" name="price_sell" />
-				</div>
-				<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
-				<input type="hidden" name="action" value="create_price" />
-				<button type="submit">Save</button>
-			</form>
-		</section>
-	<?php endif; ?>
 	<section>
-		<h4>New good and prices for this location</h4>
+		<h4>New travelling connection for <?php _echo($elite->currentLocation['name']);?></h4>
 		<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
 			<div class="form-field">
-				<label for="create_good-name">Name</label>
-				<input id="create_good-name" type="text" name="name" />
+				<label for="create_connection-location_id">Location</label>
+				<select id="create_connection-location_id" name="location_id" class="show-on-empty" data-show-on-empty="#create_connection-new">
+					<option value="">-- New location --</option>
+					<?php foreach($newLocations as $id => $name):?>
+						<option value="<?php _echo($id);?>"><?php _echo($name);?></option>
+					<?php endforeach; ?>
+				</select>
 			</div>
-			<div class="form-field">
-				<label for="create_good-description">Description</label>
-				<input id="create_good-description" type="text" name="description" />
-			</div>
-			<div class="form-field form-field-half">
-				<label for="create_good-price_buy">Buy</label>
-				<input id="create_good-price_buy" type="number" min="0" step="1" name="price_buy" />
-			</div>
-			<div class="form-field form-field-half">
-				<label for="create_good-price_sell">Sell</label>
-				<input id="create_good-price_sell" type="number" min="0" step="1" name="price_sell" />
-			</div>
-			<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
-			<input type="hidden" name="action" value="create_good" />
-			<button type="submit">Create</button>
-		</form>
-	</section>
-	<?php if(!empty($newLocations)): ?>
-		<section>
-			<h4>New travelling connection for <?php _echo($elite->currentLocation['name']);?></h4>
-			<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
+			<div class="form-fieldset" id="create_connection-new">
 				<div class="form-field">
-					<label for="create_connection-location_id">Location</label>
-					<select id="create_connection-location_id" name="location_id">
-						<?php foreach($newLocations as $id => $name):?>
-							<option value="<?php _echo($id);?>"><?php _echo($name);?></option>
-						<?php endforeach; ?>
-					</select>
+					<label for="create_connection-name">Name</label>
+					<input id="create_connection-name" type="text" name="name" />
 				</div>
 				<div class="form-field">
-					<label for="create_connection-distance">Distance</label>
-					<input id="create_connection-distance" type="number" min="0" step="0.1" name="distance" />
+					<label for="create_connection-description">Description</label>
+					<input id="create_connection-description" type="text" name="description" />
 				</div>
-				<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
-				<input type="hidden" name="action" value="create_connection" />
-				<button type="submit">Save</button>
-			</form>
-		</section>
-	<?php endif; ?>
-	<section>
-		<h4>Create new neighboring location</h4>
-		<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
-			<div class="form-field">
-				<label for="create_location-name">Name</label>
-				<input id="create_location-name" type="text" name="name" />
 			</div>
+
 			<div class="form-field">
-				<label for="create_location-description">Description</label>
-				<input id="create_location-description" type="text" name="description" />
-			</div>
-			<div class="form-field">
-				<label for="create_location-distance">Distance</label>
-				<input id="create_location-distance" type="number" min="0" step="0.1" name="distance" />
+				<label for="create_connection-distance">Distance</label>
+				<input id="create_connection-distance" type="number" min="0" step="0.1" name="distance" />
 			</div>
 			<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
-			<input type="hidden" name="action" value="create_location" />
-			<button type="submit">Create</button>
+			<input type="hidden" name="action" value="create_connection" />
+			<button type="submit">Save</button>
 		</form>
 	</section>
 </div>

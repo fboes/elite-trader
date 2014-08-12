@@ -1,22 +1,36 @@
 <?php
 
+session_start();
+
 require('app/config.php');
 require('app/vendor/small-php-helpers/toolshed.php');
 require('app/vendor/small-php-helpers/SuperPDO.php');
 require('app/vendor/small-php-helpers/Form.php');
 require('app/EliteTrader.php');
 
-// Logic
+// Session
 
-if (empty($_GET['hops']) || $_GET['hops'] < 0) {
-	$_GET['hops'] = 2;
+if (!empty($_GET['location'])) {
+	$_SESSION['location'] = (int)$_GET['location'];
 }
+if (empty($_SESSION['location']) || $_SESSION['location'] <= 0) {
+	$_SESSION['location'] = 1;
+}
+
+if (!empty($_GET['hops'])) {
+	$_SESSION['hops'] = (int)$_GET['hops'];
+}
+if (empty($_SESSION['hops']) || $_SESSION['hops'] < 0  || $_SESSION['hops'] > 15) {
+	$_SESSION['hops'] = 2;
+}
+
+// Logic
 
 $data = NULL;
 $elite = new EliteTrader(
 	SuperPDO::openMysql(CONFIG_DB_HOST,CONFIG_DB_DB,CONFIG_DB_USR,CONFIG_DB_PWD)
 );
-$elite->setCurrentLocation(!empty($_REQUEST['location']) ? $_REQUEST['location'] : 1);
+$elite->setCurrentLocation(!empty($_GET['location']) ? $_GET['location'] : $_SESSION['location']);
 $elite->getAllGoods();
 $elite->getAllLocations();
 
@@ -29,18 +43,19 @@ if (!empty($_POST['action'])) {
 			}
 			break;
 		case 'create_price':
-			$success = $elite->setPriceForCurrentLocation($_POST['good_id'],$_POST['price_buy'],$_POST['price_sell']);
+			if (!empty($_POST['name']) && empty($_POST['good_id'])) {
+				$_POST['good_id'] = $elite->createGood($_POST['name'],$_POST['description']);
+			}
+			if (!empty($_POST['good_id'])) {
+				$success = $elite->setPriceForCurrentLocation($_POST['good_id'],$_POST['price_buy'],$_POST['price_sell']);
+			}
 			break;
 		case 'create_connection':
-			$success = $elite->setLaneForCurrentLocation($_POST['location_id'],$_POST['distance']);
-			break;
-		case 'create_good':
-			$success = $elite->createGood($_POST['name'],$_POST['description']);
-			break;
-		case 'create_location':
-			$success = $elite->createLocation($_POST['name'],$_POST['description']);
-			if ($success) {
-				$elite->setLaneForCurrentLocation($success,$_POST['distance']);
+			if (!empty($_POST['name']) && empty($_POST['location_id'])) {
+				$_POST['location_id'] = $elite->createLocation($_POST['name'],$_POST['description']);
+			}
+			if (!empty($_POST['location_id'])) {
+				$success = $elite->setLaneForCurrentLocation($_POST['location_id'],$_POST['distance']);
 			}
 			break;
 	}
@@ -49,7 +64,7 @@ if (!empty($_POST['action'])) {
 	}
 }
 
-$data = $elite->getPricesForCurrentAndNeighbouringLocations($_GET['hops']);
+$data = $elite->getPricesForCurrentAndNeighbouringLocations($_SESSION['hops']);
 
 // View
 
