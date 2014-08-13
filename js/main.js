@@ -35,16 +35,22 @@
 						.on('click focus','span.ir',function (event){
 							event.stopPropagation();
 							$(this).data('focus','focus');
-							var tr = $(this).parents($(this).data('ir-parents'));
-							tr.find('span.ir').each(function (index) {
+							var tr = $(this).closest($(this).data('ir-parents'));
+							var filter = 'span.ir';
+							if ($(this).data('ir-filter')) {
+								filter = $(this).data('ir-filter')+ ' ' + filter;
+							}
+							tr.find(filter).each(function (index) {
 								var el = $(this);
 								el.hide().after('<input class="no-styling '+el.data('focus')+'" '+el.data('ir-attributes')+'" value="'+el.html()+'" />').remove();
 							})
 							tr.find('.focus').each(function(){
 								var newEl = $(this);
-								var strLength= newEl.val().length;
 								newEl.focus();
-								newEl[0].setSelectionRange(strLength, strLength);
+								if (newEl.attr('type') != 'number') {
+									var strLength= newEl.val().length;
+									newEl[0].setSelectionRange(strLength, strLength);
+								}
 							})
 						})
 						.on('click','tr',function (event) {

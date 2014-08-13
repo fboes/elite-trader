@@ -29,10 +29,10 @@
 							<tr class="<?php _echo(($even = !$even) ? 'even' : 'odd');?>">
 								<th><span class="ir" data-ir-parents="th" data-ir-attributes="type='text' name='good[<?php _echo($goodIndex);?>]'"><?php _echo($elite->listGoods[$goodIndex]);?></span></th>
 								<td class="number">
-									<span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][buy]'"><?php _echo($price['price_buy']);?></span>
+									<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][buy]'"><?php _echo($price['price_buy']);?></span>
 								</td>
 								<td class="number">
-									<span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][sell]'"><?php _echo($price['price_sell']);?></span>
+									<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][sell]'"><?php _echo($price['price_sell']);?></span>
 								</td>
 
 								<?php if(!empty($price['buyer'])): ?>
