@@ -37,6 +37,13 @@ $elite->getAllLocations();
 if (!empty($_POST['action'])) {
 	$success = TRUE;
 	switch ($_POST['action']) {
+		case 'update_lane':
+			if (!empty($_POST['lanes'])) {
+				foreach ($_POST['lanes'] as $idLocation => $distance) {
+					$success = $elite->setLaneForCurrentLocation($idLocation, $distance) && $success;
+				}
+			}
+			break;
 		case 'update_price':
 			if (!empty($_POST['good'])) {
 				foreach ($_POST['good'] as $idGood => $name) {

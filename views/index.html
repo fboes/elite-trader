@@ -100,17 +100,33 @@
 	<section>
 		<h4>Travelling connections for <?php _echo($elite->currentLocation['name']);?></h4>
 
-		<?php
-			$connections = $elite->getNextLocationsForCurrentLocation(1);
-			$newLocations = $elite->listLocations;
-			unset($newLocations[$elite->currentLocation['id']]);
-		?>
-		<ul>
-			<?php foreach($connections as $c): ?>
-				<?php unset($newLocations[$c['id']]); ?>
-				<li><a href="?location=<?php _echo(urlencode($c['id']));?>"><?php _echo($c['name']); ?></a></li>
-			<?php endforeach; ?>
-		</ul>
+		<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
+			<?php
+				$connections = $elite->getNextLocationsForCurrentLocation(1);
+				$newLocations = $elite->listLocations;
+				unset($newLocations[$elite->currentLocation['id']]);
+			?>
+			<table>
+				<thead>
+					<tr>
+						<th>Location</th>
+						<th class="number" style="width:4.5em;">Distance</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php $even = TRUE; foreach($connections as $c): ?>
+						<?php unset($newLocations[$c['id']]); ?>
+						<tr class="<?php _echo(($even = !$even) ? 'even' : 'odd');?>">
+							<td><a href="?location=<?php _echo(urlencode($c['id']));?>"><?php _echo($c['name']); ?></a></td>
+							<td class="number"><span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='0.1' name='lanes[<?php _echo(urlencode($c['id']));?>]'"><?php _echo($c['distance']); ?></span></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+			<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
+			<input type="hidden" name="action" value="update_lane" />
+			<button type="submit">Save</button>
+		</form>
 	</section>
 	<section>
 		<h4>New travelling connection for <?php _echo($elite->currentLocation['name']);?></h4>

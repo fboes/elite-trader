@@ -131,8 +131,12 @@ button {
 	text-align:inherit;
 }
 .ir {
-	display:block;
 	cursor:pointer;
+}
+table {
+	.ir {
+		display:block;
+	}
 }
 #container {
 	#banner {

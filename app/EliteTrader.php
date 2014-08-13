@@ -317,7 +317,7 @@ class EliteTrader {
 		$excludedLocationIds = array_merge($locationIds, $excludedLocationIds);
 
 		$this->pdo->lastCmd =
-			'SELECT l.*'
+			'SELECT l.*, r.distance'
 			.' FROM roads AS r'
 			.' JOIN locations AS l ON l.id = r.location_id_to'
 			.' WHERE l.id NOT IN ('.implode(',', $excludedLocationIds).')'
