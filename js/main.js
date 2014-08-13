@@ -42,8 +42,9 @@
 							})
 							tr.find('.focus').each(function(){
 								var newEl = $(this);
-								newEl.focus().setCursorPosition(newEl.val().length * 2);
-								newEl.removeClass('focus');
+								var strLength= newEl.val().length;
+								newEl.focus();
+								newEl[0].setSelectionRange(strLength, strLength);
 							})
 						})
 						.on('click','tr',function (event) {
@@ -64,20 +65,6 @@
 
 			main.init($(this));
 		});
-	}
-	$.fn.setCursorPosition = function(pos) {
-		if (this.setSelectionRange) {
-		  this.setSelectionRange(pos, pos);
-		} else if (this.createTextRange) {
-		  var range = this.createTextRange();
-		  range.collapse(true);
-		  if(pos < 0) {
-		    pos = $(this).val().length + pos;
-		  }
-		  range.moveEnd('character', pos);
-		  range.moveStart('character', pos);
-		  range.select();
-		}
 	}
 })(jQuery);
 
