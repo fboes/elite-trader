@@ -6,19 +6,12 @@ class EliteTrader {
 	const TABLE_PRICES    = 'prices';
 	const TABLE_LOCATIONS = 'locations';
 
-	const STATUS_BETTER_SELLER_AVL = 1;
-	const STATUS_BETTER_BUYER_AVL  = 2;
-	const STATUS_BEST_SELLER       = 4;
-	const STATUS_BEST_BUYER        = 8;
-	const STATUS_NO_SELLER_AVL     = 16;
-	const STATUS_NO_BUYER_AVL      = 32;
-
 	protected $pdo;
 
 	public $currentLocation;
 
-	public $listGoods = array();
-	public $listLocations    = array();
+	public $listGoods      = array();
+	public $listLocations  = array();
 
 	public function __construct(SuperPDO $pdo) {
 		$this->pdo = $pdo;
@@ -48,9 +41,15 @@ class EliteTrader {
 	}
 
 	// -------------------------------------------
-	// Create
+	// CREATE
 	// -------------------------------------------
 
+	/**
+	 * [createLocation description]
+	 * @param  string $name        [description]
+	 * @param  string $description [description]
+	 * @return integer             [description]
+	 */
 	public function createLocation ($name, $description = NULL) {
 		$id = NULL;
 		if ($this->pdo->replace(
@@ -66,6 +65,12 @@ class EliteTrader {
 		return $id;
 	}
 
+	/**
+	 * [createGood description]
+	 * @param  string $name        [description]
+	 * @param  string $description [description]
+	 * @return integer             [description]
+	 */
 	public function createGood ($name, $description = NULL) {
 		$id = NULL;
 		if ($this->pdo->replace(
@@ -81,12 +86,13 @@ class EliteTrader {
 		return $id;
 	}
 
-
-
 	// -------------------------------------------
-	// Lists
+	// READ
 	// -------------------------------------------
 
+	/**
+	 * [getAllGoods description]
+	 */
 	public function getAllGoods () {
 		$this->pdo->lastCmd =
 			'SELECT *'
@@ -102,6 +108,9 @@ class EliteTrader {
 		}
 	}
 
+	/**
+	 * [getAllLocations description]
+	 */
 	public function getAllLocations () {
 		$this->pdo->lastCmd =
 			'SELECT *'
@@ -121,10 +130,24 @@ class EliteTrader {
 	// Prices
 	// -------------------------------------------
 
+	/**
+	 * [getPricesForCurrentAndNeighbouringLocations description]
+	 * @param  integer $hops [description]
+	 * @return [type]        [description]
+	 */
 	public function getPricesForCurrentAndNeighbouringLocations ($hops = 1) {
+		if (empty($this->currentLocation)) {
+			throw new \Exception('No location set');
+		}
 		return $this->getPricesForThisAndNeighbouringLocations($this->currentLocation, $hops);
 	}
 
+	/**
+	 * [getPricesForThisAndNeighbouringLocations description]
+	 * @param  array   $location [description]
+	 * @param  integer $hops     [description]
+	 * @return array             [description]
+	 */
 	public function getPricesForThisAndNeighbouringLocations ($location, $hops = 1) {
 		$pricesForThisLocation = $this->getPricesForLocations(array($location['id']), TRUE);
 
@@ -196,10 +219,22 @@ class EliteTrader {
 		return $result;
 	}
 
+	/**
+	 * [getPricesForCurrentLocation description]
+	 * @return [type] [description]
+	 */
 	public function getPricesForCurrentLocation () {
+		if (empty($this->currentLocation['id'])) {
+			throw new \Exception('No location set');
+		}
 		return $this->getPricesForLocation($this->currentLocation['id']);
 	}
 
+	/**
+	 * [getPricesForLocation description]
+	 * @param  [type] $id [description]
+	 * @return [type]     [description]
+	 */
 	public function getPricesForLocation ($id) {
 		return $this->getPricesForLocations(array($id), TRUE);
 	}
@@ -252,6 +287,11 @@ class EliteTrader {
 	// Travelling
 	// -------------------------------------------
 
+	/**
+	 * [getNextLocationsForCurrentLocation description]
+	 * @param  integer $hops [description]
+	 * @return [type]        [description]
+	 */
 	public function getNextLocationsForCurrentLocation ($hops = 1) {
 		return $this->getNextLocations(
 			array($this->currentLocation),
@@ -259,6 +299,13 @@ class EliteTrader {
 		);
 	}
 
+	/**
+	 * [getNextLocations description]
+	 * @param  array  $locations           [description]
+	 * @param  [type] $hops                [description]
+	 * @param  array  $excludedLocationIds [description]
+	 * @return [type]                      [description]
+	 */
 	public function getNextLocations (array $locations, $hops, array $excludedLocationIds = array()) {
 		if (empty($locations)) {
 			return array();
@@ -289,10 +336,26 @@ class EliteTrader {
 		return $results;
 	}
 
+	/**
+	 * Invoke setLaneForCurrentLocation for current location
+	 * @param integer $idLocation [description]
+	 * @param float   $distance   [description]
+	 * @return boolean
+	 */
 	public function setLaneForCurrentLocation ($idLocation, $distance) {
+		if (empty($this->currentLocation['id'])) {
+			throw new \Exception('No location set');
+		}
 		return $this->setLane($this->currentLocation['id'], $idLocation, $distance);
 	}
 
+	/**
+	 * Generate lane beweteen two locations
+	 * @param integer $idLocation1 [description]
+	 * @param integer $idLocation2 [description]
+	 * @param float   $distance    [description]
+	 * @return boolean
+	 */
 	public function setLane ($idLocation1, $idLocation2, $distance) {
 		$this->pdo->replace(self::TABLE_ROADS, array(
 			'location_id_from' => (int)$idLocation1,
@@ -312,10 +375,28 @@ class EliteTrader {
 	// UPDATE
 	// -------------------------------------------
 
+	/**
+	 * Will invoke setPriceForLocation for current location
+	 * @param integer $idGood    [description]
+	 * @param integer $priceBuy  [description]
+	 * @param integer $priceSell [description]
+	 * @return boolean           [description]
+	 */
 	public function setPriceForCurrentLocation ($idGood, $priceBuy, $priceSell = 0) {
+		if (empty($this->currentLocation['id'])) {
+			throw new \Exception('No location set');
+		}
 		return $this->setPriceForLocation($this->currentLocation['id'], $idGood, $priceBuy, $priceSell);
 	}
 
+	/**
+	 * Set new prices for good at given location
+	 * @param integer  $idLocation [description]
+	 * @param integer  $idGood     [description]
+	 * @param integer  $priceBuy   [description]
+	 * @param integer  $priceSell  [description]
+	 * @return boolean             [description]
+	 */
 	public function setPriceForLocation ($idLocation, $idGood, $priceBuy, $priceSell = 0) {
 		return ($this->pdo->replace(self::TABLE_PRICES, array(
 			'good_id'      => (int)$idGood,
@@ -325,28 +406,60 @@ class EliteTrader {
 		)) >= 0);
 	}
 
+	/**
+	 * Will invoke updateLocation for current location
+	 * @param [type]  $idGood    [description]
+	 * @param [type]  $priceBuy  [description]
+	 * @param integer $priceSell [description]
+	 * @return boolean           [description]
+	 */
 	public function updateCurrentLocation ($name, $description = NULL) {
+		if (empty($this->currentLocation['id'])) {
+			throw new \Exception('No location set');
+		}
 		return $this->updateLocation ($this->currentLocation['id'], $name, $description);
 	}
 
+	/**
+	 * Set new name and description for location
+	 * @param  integer $id          [description]
+	 * @param  string  $name        [description]
+	 * @param  string  $description [description]
+	 * @return boolean              [description]
+	 */
 	public function updateLocation ($id, $name, $description = NULL) {
+		$data = array(
+			'name'        => $name,
+			'description' => $description,
+		);
+		if (empty($description)) {
+			unset($data[$description]);
+		}
 		return ($this->pdo->update(
 			self::TABLE_LOCATIONS,
-			array(
-				'name'        => $name,
-				'description' => $description,
-			),
+			$data,
 			'id='.$this->pdo->quote($id)
 		));
 	}
 
+	/**
+	 * Set new name and description for good
+	 * @param  integer $id          [description]
+	 * @param  string  $name        [description]
+	 * @param  string  $description [description]
+	 * @return boolean              [description]
+	 */
 	public function updateGood ($id, $name, $description = NULL) {
+		$data = array(
+			'name'        => $name,
+			'description' => $description,
+		);
+		if (empty($description)) {
+			unset($data[$description]);
+		}
 		return ($this->pdo->update(
 			self::TABLE_GOODS,
-			array(
-				'name'        => $name,
-				'description' => $description,
-			),
+			$data,
 			'id='.$this->pdo->quote($id)
 		));
 	}
@@ -355,6 +468,12 @@ class EliteTrader {
 	// DELETE
 	// -------------------------------------------
 
+	/**
+	 * Delete lane bewteen two locations
+	 * @param  integer $idLocation1 [description]
+	 * @param  integer $idLocation2 [description]
+	 * @return boolean              [description]
+	 */
 	public function deleteLane ($idLocation1, $idLocation2) {
 		return $this->pdo->delete(
 			self::TABLE_ROADS,

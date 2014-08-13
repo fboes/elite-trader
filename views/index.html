@@ -7,8 +7,8 @@
 		<section>
 			<form action="<?php _echo($_SERVER['SCRIPT_NAME']);?>" method="POST">
 				<div>
-					<h3><span class="input-replace" data-parents="div" data-type="text" data-name="location_name"><?php _echo($elite->currentLocation['name']);?></span></h3>
-					<p><span class="input-replace" data-parents="div" data-type="text" data-name="location_description"><?php _echo($elite->currentLocation['description']);?></span></p>
+					<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='location_name'"><?php _echo($elite->currentLocation['name']);?></span></h3>
+					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='location_description'"><?php _echo($elite->currentLocation['description']);?></span></p>
 				</div>
 				<p>Price is set to '0' if the good can't be bought / sold at this location.<br />Prices are compared for locations in max. <?php _echo($_SESSION['hops']);?> hops distance.</p>
 				<table>
@@ -27,12 +27,12 @@
 						<?php $even = TRUE; foreach ($data as $goodIndex => $price): ?>
 							<?php unset($newGoods[$goodIndex]);?>
 							<tr class="<?php _echo(($even = !$even) ? 'even' : 'odd');?>">
-								<th><?php _echo($elite->listGoods[$goodIndex]);?></th>
+								<th><span class="ir" data-ir-parents="th" data-ir-attributes="type='text' name='good[<?php _echo($goodIndex);?>]'"><?php _echo($elite->listGoods[$goodIndex]);?></span></th>
 								<td class="number">
-									<span class="input-replace" data-name="price[<?php _echo($goodIndex);?>][buy]"><?php _echo($price['price_buy']);?></span>
+									<span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][buy]'"><?php _echo($price['price_buy']);?></span>
 								</td>
 								<td class="number">
-									<span class="input-replace" data-name="price[<?php _echo($goodIndex);?>][sell]"><?php _echo($price['price_sell']);?></span>
+									<span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][sell]'"><?php _echo($price['price_sell']);?></span>
 								</td>
 
 								<?php if(!empty($price['buyer'])): ?>

@@ -66,7 +66,7 @@ input[type=hidden] { display: none; }
 
 .no-styling { display: inline-block; margin: 0; padding: 0; background: transparent; border: none; outline: none; text-align: inherit; }
 
-.input-replace { display: block; cursor: pointer; }
+.ir { display: block; cursor: pointer; }
 
 #container #banner header { display: inline-block; float: left; }
 #container #banner h1 { font-size: 1em; display: inline-block; font-weight: normal; }
