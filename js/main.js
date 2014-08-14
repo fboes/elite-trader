@@ -42,7 +42,7 @@
 							}
 							tr.find(filter).each(function (index) {
 								var el = $(this);
-								el.hide().after('<input class="no-styling '+el.data('focus')+'" '+el.data('ir-attributes')+'" value="'+el.html()+'" />').remove();
+								el.hide().after('<input class="no-styling '+el.data('focus')+'" '+el.data('ir-attributes')+' value="'+el.html()+'" />').remove();
 							})
 							tr.find('.focus').each(function(){
 								var newEl = $(this);
