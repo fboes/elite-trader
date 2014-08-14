@@ -53,9 +53,6 @@
 								}
 							})
 						})
-						.on('click','tr',function (event) {
-							$(this).toggleClass('focus');
-						})
 						.on('change','.show-on-empty', function (event) {
 							var el = $($(this).data('show-on-empty'));
 							if ($(this).val() && el.is(":visible") ) {
@@ -64,6 +61,13 @@
 							else if (!$(this).val() && el.is(":hidden")  ) {
 								el.slideDown('fast');
 							}
+						})
+						.on('change click','input.delete', function (event) {
+							event.stopPropagation();
+							$(this).closest('tr').toggleClass('deleted',$(this).is(':checked'));
+						})
+						.on('click','tbody tr',function (event) {
+							$(this).toggleClass('focus');
 						})
 					;
 				}

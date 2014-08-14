@@ -11,7 +11,7 @@
 					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='location_description'"><?php _echo($elite->currentLocation['description']);?></span></p>
 				</div>
 				<p>Price is set to '0' if the good can't be bought / sold at this location.<br />Prices are compared for locations in max. <?php _echo($_SESSION['hops']);?> hops distance.</p>
-				<table>
+				<table class="sortable">
 					<thead>
 						<tr>
 							<th>Good</th>
@@ -24,9 +24,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						<?php $even = TRUE; foreach ($data as $goodIndex => $price): ?>
+						<?php foreach ($data as $goodIndex => $price): ?>
 							<?php unset($newGoods[$goodIndex]);?>
-							<tr class="<?php _echo(($even = !$even) ? 'even' : 'odd');?>">
+							<tr>
 								<th><span class="ir" data-ir-parents="th" data-ir-attributes="type='text' name='good[<?php _echo($goodIndex);?>]'"><?php _echo($elite->listGoods[$goodIndex]);?></span></th>
 								<td class="number">
 									<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][buy]'"><?php _echo($price['price_buy']);?></span>
@@ -106,19 +106,21 @@
 				$newLocations = $elite->listLocations;
 				unset($newLocations[$elite->currentLocation['id']]);
 			?>
-			<table>
+			<table class="sortable">
 				<thead>
 					<tr>
 						<th>Location</th>
 						<th class="number" style="width:4.5em;">Distance</th>
+						<th class="number" style="width:1.5em;">X</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php $even = TRUE; foreach($connections as $c): ?>
+					<?php foreach($connections as $c): ?>
 						<?php unset($newLocations[$c['id']]); ?>
-						<tr class="<?php _echo(($even = !$even) ? 'even' : 'odd');?>">
+						<tr>
 							<td><a href="?location=<?php _echo(urlencode($c['id']));?>"><?php _echo($c['name']); ?></a></td>
 							<td class="number"><span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='0.1' name='lanes[<?php _echo(urlencode($c['id']));?>]'"><?php _echo($c['distance']); ?></span></td>
+							<td class="number"><input class="delete" type="checkbox" name="lanes_delete[<?php _echo(urlencode($c['id']));?>]" value="x" /></td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>

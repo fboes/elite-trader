@@ -44,20 +44,29 @@ table {
 			color:$color-grey;
 			text-align:center;
 		}
-	}
-	tr {
-		&.even {
-			@if $switch-use-dark {
-				background-color: $color-black;
-			}
-			@else {
-				background-color: $color-white;
+		&.deleted {
+			text-decoration: line-through;
+			color: $color-grey;
+			a {
+				color:inherit;
 			}
 		}
-		&.focus {
-			background-color: $color-yellow;
-			&.even {
-				background-color: $color-yellow-light;
+	}
+	tbody {
+		tr {
+			&:nth-child(odd) {
+				@if $switch-use-dark {
+					background-color: $color-black;
+				}
+				@else {
+					background-color: $color-white;
+				}
+			}
+			&.focus {
+				background-color: $color-yellow;
+				&:nth-child(odd) {
+					background-color: $color-yellow-light;
+				}
 			}
 		}
 	}

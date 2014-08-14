@@ -469,6 +469,18 @@ class EliteTrader {
 	// -------------------------------------------
 
 	/**
+	 * [deleteLaneForCurrentLocation description]
+	 * @param  integer $idLocation [description]
+	 * @return [type]              [description]
+	 */
+	public function deleteLaneForCurrentLocation ($idLocation) {
+		if (empty($this->currentLocation['id'])) {
+			throw new \Exception('No location set');
+		}
+		return $this->deleteLane($this->currentLocation['id'], $idLocation);
+	}
+
+	/**
 	 * Delete lane bewteen two locations
 	 * @param  integer $idLocation1 [description]
 	 * @param  integer $idLocation2 [description]

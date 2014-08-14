@@ -43,6 +43,11 @@ if (!empty($_POST['action'])) {
 					$success = $elite->setLaneForCurrentLocation($idLocation, $distance) && $success;
 				}
 			}
+			if (!empty($_POST['lanes_delete'])) {
+				foreach ($_POST['lanes_delete'] as $idLocation => $value) {
+					$success = $elite->deleteLaneForCurrentLocation($idLocation) && $success;
+				}
+			}
 			break;
 		case 'update_price':
 			if (!empty($_POST['good'])) {

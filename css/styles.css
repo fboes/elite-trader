@@ -89,9 +89,11 @@ table .ir { display: block; }
   table td.number, table th.number { text-align: right; }
   table td.number { font-family: "Courier New", monospace; }
   table td.empty { color: #dedede; text-align: center; }
-  table tr.even { background-color: white; }
-  table tr.focus { background-color: #ffbb33; }
-  table tr.focus.even { background-color: #ffd480; }
+  table td.deleted { text-decoration: line-through; color: #dedede; }
+  table td.deleted a { color: inherit; }
+  table tbody tr:nth-child(odd) { background-color: white; }
+  table tbody tr.focus { background-color: #ffbb33; }
+  table tbody tr.focus:nth-child(odd) { background-color: #ffd480; }
   #container { position: relative; margin: 0 auto; }
   #container #banner, #container #footer { color: #5a5a5a; background: rgba(222, 222, 222, 0.9); height: 4rem; }
   #container #banner .inner, #container #footer .inner { padding: 1rem 1rem; margin: auto; }
