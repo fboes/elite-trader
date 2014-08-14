@@ -15,12 +15,12 @@
 					<thead>
 						<tr>
 							<th>Good</th>
-							<th class="number" style="width:5em;">Buy</th>
 							<th class="number" style="width:5em;">Sell</th>
-							<th class="number">Best buy delta</th>
-							<th>Best buyer</th>
+							<th class="number" style="width:5em;">Buy</th>
 							<th class="number">Best sale delta</th>
 							<th>Best seller</th>
+							<th class="number">Best buy delta</th>
+							<th>Best buyer</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -29,25 +29,24 @@
 							<tr>
 								<th><span class="ir" data-ir-parents="th" data-ir-attributes="type='text' name='good[<?php _echo($goodIndex);?>]'"><?php _echo($elite->listGoods[$goodIndex]);?></span></th>
 								<td class="number">
-									<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][buy]'"><?php _echo($price['price_buy']);?></span>
-								</td>
-								<td class="number">
 									<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][sell]'"><?php _echo($price['price_sell']);?></span>
 								</td>
+								<td class="number">
+									<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][buy]'"><?php _echo($price['price_buy']);?></span>
+								</td>
 
-								<?php if(!empty($price['buyer'])): ?>
-									<td class="number"><?php _echo($price['buyer']['delta']); ?></td>
-									<td><a href="?location=<?php _echo(urlencode($price['buyer']['id']));?>"><?php _echo($price['buyer']['name']); ?></a></td>
-								<?php else: ?>
-									<td colspan="2" class="empty">No profitable / better buyer found</td>
-								<?php endif; ?>
 								<?php if(!empty($price['seller'])): ?>
 									<td class="number"><?php _echo($price['seller']['delta']); ?></td>
 									<td><a href="?location=<?php _echo(urlencode($price['seller']['id']));?>"><?php _echo($price['seller']['name']); ?></a></td>
 								<?php else: ?>
 									<td colspan="2" class="empty">No profitable / better seller found</td>
 								<?php endif; ?>
-
+								<?php if(!empty($price['buyer'])): ?>
+									<td class="number"><?php _echo($price['buyer']['delta']); ?></td>
+									<td><a href="?location=<?php _echo(urlencode($price['buyer']['id']));?>"><?php _echo($price['buyer']['name']); ?></a></td>
+								<?php else: ?>
+									<td colspan="2" class="empty">No profitable / better buyer found</td>
+								<?php endif; ?>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>
@@ -85,12 +84,12 @@
 			</div>
 
 			<div class="form-field form-field-half">
-				<label for="create_price-price_buy">Buy</label>
-				<input id="create_price-price_buy" type="number" min="0" step="1" name="price_buy" />
-			</div>
-			<div class="form-field form-field-half">
 				<label for="create_price-price_sell">Sell</label>
 				<input id="create_price-price_sell" type="number" min="0" step="1" name="price_sell" />
+			</div>
+			<div class="form-field form-field-half">
+				<label for="create_price-price_buy">Buy</label>
+				<input id="create_price-price_buy" type="number" min="0" step="1" name="price_buy" />
 			</div>
 			<input type="hidden" name="location" value="<?php _echo($elite->currentLocation['id']);?>" />
 			<input type="hidden" name="action" value="create_price" />
