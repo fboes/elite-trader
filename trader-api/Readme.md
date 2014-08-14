@@ -288,7 +288,8 @@ Example call:
 
 POST params:
 ```
-{"commoditytype":"53eccae673fee3b418f74098","buy":32,"sell":24,"demand":5000,"supply":3000}```
+{"commoditytype":"53eccae673fee3b418f74098","buy":32,"sell":24,"demand":5000,"supply":3000}
+```
 
 Response:
 ```
@@ -315,3 +316,4 @@ Response:
   "name" : "Foobar 3000"
 }
 ```
+
