@@ -25,7 +25,7 @@ connectionsController.create = function() {
   var self = this;
 
   // Location available?
-  if ( ! this._location ) {
+  if ( ! self._location ) {
     return self.res.json( { error : "Location not found!" } );
   }
 
@@ -36,16 +36,27 @@ connectionsController.create = function() {
     }
   }
 
-  Location.findOneAndUpdate(
-    { _id : this.params('location_id') },
-    { $push : { connections : { destination : this.params('destination'), distance : this.params('distance') } } },
-    function( err, destination ) {
-      if (err) {
-        self.res.json( { error : "Kaputh!" } );
-        return;
-      }
-      self.res.json( destination );
+  // Check if destination exists
+  Location.findOne( { _id : self.params('destination') }, function( err, destination ) {
+    if (err || ! destination ) {
+      self.res.json( { error : "Destination location does not exists!" } );
+      return;
+    }
+
+    Location.findOneAndUpdate(
+      { _id : self.params('location_id') },
+      { $push : { connections : { destination : self.params('destination'), distance : self.params('distance') } } },
+      function( err, destination ) {
+        if (err) {
+          self.res.json( { error : "Kaputh!" } );
+          return;
+        }
+        self.res.json( destination );
+    });
+
   });
+
+
 };
 
 connectionsController.index = function() {
