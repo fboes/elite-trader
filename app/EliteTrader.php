@@ -433,7 +433,7 @@ class EliteTrader {
 			'description' => $description,
 		);
 		if (empty($description)) {
-			unset($data[$description]);
+			unset($data['description']);
 		}
 		return ($this->pdo->update(
 			self::TABLE_LOCATIONS,
@@ -455,7 +455,7 @@ class EliteTrader {
 			'description' => $description,
 		);
 		if (empty($description)) {
-			unset($data[$description]);
+			unset($data['description']);
 		}
 		return ($this->pdo->update(
 			self::TABLE_GOODS,
