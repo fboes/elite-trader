@@ -23,6 +23,12 @@ if (!empty($_GET['hops'])) {
 if (empty($_SESSION['hops']) || $_SESSION['hops'] < 0  || $_SESSION['hops'] > 15) {
 	$_SESSION['hops'] = 2;
 }
+if (!empty($_GET['hopdistance'])) {
+	$_SESSION['hopdistance'] = (int)$_GET['hopdistance'];
+}
+if (empty($_SESSION['hopdistance']) || $_SESSION['hopdistance'] < 0  || $_SESSION['hopdistance'] > 2000) {
+	$_SESSION['hopdistance'] = 8;
+}
 
 // Logic
 
@@ -86,7 +92,7 @@ if (!empty($_POST['action'])) {
 	}
 }
 
-$data = $elite->getPricesForCurrentAndNeighbouringLocations($_SESSION['hops']);
+$data = $elite->getPricesForCurrentAndNeighbouringLocations($_SESSION['hops'],$_SESSION['hopdistance']);
 
 // View
 

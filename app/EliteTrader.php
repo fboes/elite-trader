@@ -133,25 +133,27 @@ class EliteTrader {
 	/**
 	 * [getPricesForCurrentAndNeighbouringLocations description]
 	 * @param  integer $hops [description]
+	 * @param  float   $hopdistance Maximum distance for a hop
 	 * @return [type]        [description]
 	 */
-	public function getPricesForCurrentAndNeighbouringLocations ($hops = 1) {
+	public function getPricesForCurrentAndNeighbouringLocations ($hops = 1, $hopdistance = 999) {
 		if (empty($this->currentLocation)) {
 			throw new \Exception('No location set');
 		}
-		return $this->getPricesForThisAndNeighbouringLocations($this->currentLocation, $hops);
+		return $this->getPricesForThisAndNeighbouringLocations($this->currentLocation, $hops, $hopdistance);
 	}
 
 	/**
 	 * [getPricesForThisAndNeighbouringLocations description]
 	 * @param  array   $location [description]
 	 * @param  integer $hops     [description]
+	 * @param  float   $hopdistance Maximum distance for a hop
 	 * @return array             [description]
 	 */
-	public function getPricesForThisAndNeighbouringLocations ($location, $hops = 1) {
+	public function getPricesForThisAndNeighbouringLocations ($location, $hops = 1, $hopdistance = 999) {
 		$pricesForThisLocation = $this->getPricesForLocations(array($location['id']), TRUE);
 
-		$locations = $this->getNextLocations(array($location),$hops);
+		$locations = $this->getNextLocations(array($location),$hops,$hopdistance);
 		if (!empty($locations)) {
 			$locationIds = array();
 			foreach ($locations as $s) {
@@ -290,12 +292,14 @@ class EliteTrader {
 	/**
 	 * [getNextLocationsForCurrentLocation description]
 	 * @param  integer $hops [description]
+	 * @param  float   $hopdistance Maximum distance for a hop
 	 * @return [type]        [description]
 	 */
-	public function getNextLocationsForCurrentLocation ($hops = 1) {
+	public function getNextLocationsForCurrentLocation ($hops = 1, $hopdistance = 999) {
 		return $this->getNextLocations(
 			array($this->currentLocation),
-			$hops
+			$hops,
+			$hopdistance
 		);
 	}
 
@@ -303,10 +307,11 @@ class EliteTrader {
 	 * [getNextLocations description]
 	 * @param  array  $locations           [description]
 	 * @param  [type] $hops                [description]
+	 * @param  float   $hopdistance Maximum distance for a hop
 	 * @param  array  $excludedLocationIds [description]
 	 * @return [type]                      [description]
 	 */
-	public function getNextLocations (array $locations, $hops, array $excludedLocationIds = array()) {
+	public function getNextLocations (array $locations, $hops, $hopdistance = 999, array $excludedLocationIds = array()) {
 		if (empty($locations)) {
 			return array();
 		}
@@ -322,6 +327,7 @@ class EliteTrader {
 			.' JOIN locations AS l ON l.id = r.location_id_to'
 			.' WHERE l.id NOT IN ('.implode(',', $excludedLocationIds).')'
 			.' AND r.location_id_from IN('.implode(',', $locationIds).')'
+			.' AND r.distance < '.$this->pdo->quote((float)$hopdistance)
 			.' ORDER BY l.name'
 		;
 		$this->pdo->lastData = NULL;
@@ -331,7 +337,7 @@ class EliteTrader {
 
 		$hops --;
 		if ($hops > 0) {
-			$results = array_merge($results, $this->getNextLocations($results, $hops, $excludedLocationIds));
+			$results = array_merge($results, $this->getNextLocations($results, $hops, $hopdistance, $excludedLocationIds));
 		}
 		return $results;
 	}

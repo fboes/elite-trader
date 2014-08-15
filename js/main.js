@@ -76,9 +76,61 @@
 			main.init($(this));
 		});
 	}
+	$.fn.webapp = function (options) {
+		return this.each(function() {
+			var main = {
+				options : $.extend(
+					{
+					},
+					options
+				),
+				elements : {
+					parent : null,
+					modal  : null,
+				},
+				init : function (el) {
+					this.elements.parent = el;
+					this.elements.modal  = el.find('#modal');
+					this.bindEvents();
+				},
+				bindEvents : function () {
+					var that = this;
+					if (this.elements.modal.length) {
+						this.elements.parent
+							.on('click','a.modal', function (event) {
+								event.stopPropagation();
+								event.preventDefault();
+								var openEl = that.elements.modal.find($(this).attr('href'));
+								if (openEl.length) {
+									that.elements.modal.find('section').hide();
+									that.elements.modal.css({
+										width: $( document ).width(),
+										height: $( document ).height()
+									}).show();
+									openEl.css({
+										left: (($( document ).width() - openEl.width()) / 2)
+									}).show();
+								}
+							})
+							.on('click','#modal section', function (event) {
+								event.stopPropagation();
+							})
+							.on('click','#modal', function (event) {
+								that.elements.modal.hide();
+								that.elements.modal.find('section').hide();
+							})
+						;
+					}
+				}
+			}
+
+			main.init($(this));
+		});
+	}
 })(jQuery);
 
 
 $(document).ready(function() {
 	$('form').submitter({});
+	$('body').webapp({});
 });
