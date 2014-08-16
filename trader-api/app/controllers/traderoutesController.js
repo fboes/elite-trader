@@ -39,7 +39,7 @@ traderoutesController.checkBestProfitPerHop = function( location_id, commodityty
       original_buy_price
     );
 
-    if ( checkresult && ( checkresult.price > current_bestprofit_per_hop.price ) ) {
+    if ( checkresult && ( checkresult.price_per_hop_index > current_bestprofit_per_hop.price_per_hop_index ) ) {
       current_bestprofit_per_hop = checkresult;
     }
 
@@ -51,8 +51,8 @@ console.log("Checking local commodities of",location.name,commoditytype);
 
     if ( String(location.commodities[i].commoditytype) == String(commoditytype) ) {
       console.log("Profit here is...",( location.commodities[i].sell - original_buy_price )," or ",( location.commodities[i].sell - original_buy_price ) / current_hops,"per hop");
-      if ( current_bestprofit_per_hop.price < ( ( location.commodities[i].sell - original_buy_price ) / current_hops ) ) {
-        current_bestprofit_per_hop = { price : ( ( location.commodities[i].sell - original_buy_price ) / current_hops ), destination : location_id };
+      if ( current_bestprofit_per_hop.price_per_hop_index < ( ( location.commodities[i].sell - original_buy_price ) / current_hops ) ) {
+        current_bestprofit_per_hop = { price_per_hop_index : ( ( location.commodities[i].sell - original_buy_price ) / current_hops ), destination : location_id, price : location.commodities[i].sell };
       }
     }
   }
@@ -83,7 +83,7 @@ traderoutesController.show = function() {
       if ( location.commodities[i]._id == commodity_id ) {
         commoditytype_id = location.commodities[i].commoditytype;
         original_buy_price = location.commodities[i].buy;
-        current_bestprofit_per_hop.price = location.commodities[i].sell - original_buy_price;
+        current_bestprofit_per_hop.price_per_hop_index = location.commodities[i].sell - original_buy_price;
       }
     }
 
