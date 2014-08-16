@@ -231,6 +231,19 @@ Response:
 }
 ```
 
+**DELETE /locations/:locationid**
+
+Deletes a location and all connections to it.
+
+Example call:
+
+```DELETE http://localhost:3000/locations/53ecc7ac73fee3b418f74096```
+
+Response:
+```
+{ "ok" : 1 }
+```
+
 **POST /locations/:locationid/connections**
 
 Creates a **onedirectional** connection between two locations.
@@ -317,3 +330,74 @@ Response:
 }
 ```
 
+**PUT /locations/:locationid/commodities/:commodityid**
+
+Sets price information for an **existing** commodity in a given location.
+
+| Key | Description | Example |
+|-----|-------------|---------|
+| buy | Buy price | 32 |
+| sell | Sell price | 24 |
+| demand | Current demand | 5000 |
+| supply | Current supply | 30005 |
+
+Response: The new data of the location. Values not contained in the POST parameters will remain unchanged. The commoditytype can't be changed!
+
+Example call:
+
+```POST http://locahost:3000/locations/53ecc7ac73fee3b418f74096/commodities/53ecd04673fee3b418f7409c```
+
+POST params:
+```
+{"buy":64}
+```
+
+Response:
+```
+{
+  "_id" : "53ecc7ac73fee3b418f74096",
+  "__v" : 0,
+  "commodities" : [
+    {
+      "_id" : "53ecd04673fee3b418f7409c",
+      "supply" : 3000,
+      "demand" : 5000,
+      "commoditytype" : "53eccae673fee3b418f74098",
+      "buy" : 64,
+      "sell" : 24
+    }
+  ],
+  "connections" : [
+    {
+      "_id" : "53ecce7173fee3b418f7409a",
+      "destination" : "53ecce3073fee3b418f74099",
+      "distance" : 3.65
+    }
+  ],
+  "name" : "Foobar 3000"
+}
+```
+
+**GET /locations/:locationid/commodities/:commodityid/traderoutes**
+
+Returns the best destination for selling the item.
+
+Response: Object with destination, price and price per hop index.
+The index value may be a little bit abstract and dependant on the algorithm used.
+It basically sets the profit into relation to the amount of time which
+would be used to get to the destination.
+It is the quality index used for returning the best destination,
+so the destination may not necessarily be the one with the best price!
+
+Example call:
+
+```GET http://localhost:3000/locations/53ecc7ac73fee3b418f74096/53ecd04673fee3b418f7409c/traderoutes```
+
+Response:
+```
+{
+    "destination" : "53ecce3073fee3b418f74099",
+    "price" : 62,
+    "price_per_hop_index" : 3.5
+}
+```
