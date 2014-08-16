@@ -22,6 +22,44 @@ commoditiesController.before('*', function( next ) {
   }
 });
 
+commoditiesController.update = function() {
+  var self = this;
+
+  // Location available?
+  if ( ! this._location ) {
+    return self.res.json( { error : "Location not found!" } );
+  }
+
+  // Check for existence first - we will only support updating existing elements!
+  var commodityindex = -1;
+  for ( var i = 0; i<self._location.commodities.length; ++i ) {
+    if ( String(self._location.commodities[i]._id) == self.params('id') ) {
+      commodityindex = i;
+      break;
+    }
+  }
+
+  if ( commodityindex != -1 ) {
+    var e = self._location.commodities[i];
+    e.sell = self.params('sell') || e.sell;
+    e.buy = self.params('buy') || e.buy;
+    e.demand = self.params('demand') || e.demand;
+    e.supply = self.params('supply') || e.supply;
+  } else {
+    return self.res.json( { error : "Commodity is not in list ! Maybe you want to create instead?" } );
+  }
+
+
+  self._location.save(
+    function( err, location ) {
+      if (err) {
+        return self.res.json( { error : "Commodity could not be modified!", msg: err } );
+      }
+      return self.res.json( location );
+  });
+
+}
+
 commoditiesController.create = function() {
   var self = this;
 
