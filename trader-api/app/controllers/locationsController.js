@@ -17,6 +17,26 @@ locationsController.create = function() {
   });
 };
 
+locationsController.destroy = function() {
+  var self = this;
+  Location.findOne( { _id : this.params('id') }, function( err, location ) {
+    if ( err ) {
+      return self.res.json( { error : "Location does not exist!", msg:err} );
+    }
+    if ( location ) {
+      location.remove( function( err, location ) {
+        if ( err ) {
+          return self.res.json( { error : "Location could not be removed!", msg:err} );
+        }
+        return self.res.json( { ok: 1} );
+      });
+    }
+    else {
+      return self.res.json( { error : "Location does not exist!"} );
+    }
+  });
+};
+
 locationsController.show = function() {
   var self = this;
   Location.findOne( { _id : this.params('id') }, function( err, location ) {

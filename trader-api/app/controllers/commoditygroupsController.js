@@ -17,6 +17,26 @@ commoditygroupsController.create = function() {
   });
 };
 
+commoditygroupsController.destroy = function() {
+  var self = this;
+  Commoditygroup.findOne( { _id : this.params('id') }, function( err, commoditygroup ) {
+    if ( err ) {
+      return self.res.json( { error : "Commoditygroup does not exist!", msg:err} );
+    }
+    if ( commoditygroup ) {
+      commoditygroup.remove( function( err, commoditygroup ) {
+        if ( err ) {
+          return self.res.json( { error : "Commoditygroup could not be removed!", msg:err} );
+        }
+        return self.res.json( { ok: 1} );
+      });
+    }
+    else {
+      return self.res.json( { error : "Commoditygroup does not exist!"} );
+    }
+  });
+};
+
 commoditygroupsController.show = function() {
   var self = this;
   Commoditygroup.findOne( { _id : this.params('id') }, function( err, commoditygroup ) {

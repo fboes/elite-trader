@@ -22,6 +22,26 @@ commoditytypesController.before('*', function( next ) {
   }
 });
 
+commoditytypesController.destroy = function() {
+  var self = this;
+  Commoditytype.findOne( { _id : this.params('id') }, function( err, commoditytype ) {
+    if ( err ) {
+      return self.res.json( { error : "Commoditytype does not exist!", msg:err} );
+    }
+    if ( commoditytype ) {
+      commoditytype.remove( function( err, commoditytype ) {
+        if ( err ) {
+          return self.res.json( { error : "Commoditytype could not be removed!", msg:err} );
+        }
+        return self.res.json( { ok: 1} );
+      });
+    }
+    else {
+      return self.res.json( { error : "Commoditytype does not exist!"} );
+    }
+  });
+};
+
 commoditytypesController.create = function() {
   var commoditytype = new Commoditytype( { name : this.param('name'), commoditygroup : this._commoditygroup } );
   var self = this;

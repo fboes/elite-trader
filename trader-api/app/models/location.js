@@ -15,7 +15,18 @@ var LocationSchema = new Schema( {
     }]
 });
 
-
 var Location = mongoose.model('Location', LocationSchema);
+
+LocationSchema.post('remove', function(location) {
+  // Remove all connections to this location
+  Location.update(
+    {},
+    { $pull : { 'connections' : { destination : location._id } } },
+    { multi : true },
+    function( err, numaffected ) {
+      console.log("Deleted",numaffected,"connections to location",location._id);
+    }
+  );
+});
 
 module.exports = Location;
