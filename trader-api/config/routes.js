@@ -14,11 +14,15 @@ module.exports = function routes() {
       this.get('traderoutes','traderoutes#show');
     });
     this.get('traderoutes','traderoutes#show');
+
   });
+  this.post('locations/search','search#show');
+
   this.resources('commoditygroups', function() {
     this.resources('commoditytypes');
   });
   this.resources('commoditytypes');
 
   this.get('traderoutes','traderoutes#show');
+
 };
