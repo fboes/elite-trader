@@ -12,6 +12,7 @@ module.exports = function routes() {
   // Protect post and put
   this.post('*', passport.authenticate('basic', { session : false }) );
   this.put('*', passport.authenticate('basic', { session : false }) );
+  this.delete('*', passport.authenticate('basic', { session : false }) );
 
   this.root('index#main');
   this.resources('locations', function () {
