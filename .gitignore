@@ -5,3 +5,5 @@ _stuff/*
 app/config.php
 trader-api/node_modules
 trader-api/node_modules/*
+
+trader-api/trader-cli/trader-cli.conf
