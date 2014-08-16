@@ -18,7 +18,9 @@
     "mongoose": "3.8.*",
     "node-sass": "0.8.*",
     "supertest": "^0.13.0",
-    "winston": "0.7.*"
+    "winston": "0.7.*",
+    "passport":"0.2.x",
+    "passport-http":"0.2.x"
   },
   "devDependencies": {
     "mocha": "1.15.x",

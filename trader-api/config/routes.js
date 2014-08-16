@@ -1,4 +1,5 @@
 'use strict';
+var passport = require('passport');
 // Draw routes.  Locomotive's router provides expressive syntax for drawing
 // routes, including support for resourceful routes, namespaces, and nesting.
 // MVC routes can be mapped to controllers using convenient
@@ -7,15 +8,22 @@
 // Guide on [routing](http://locomotivejs.org/guide/routing.html) for additional
 // information.
 module.exports = function routes() {
+
+  // Protect post and put
+  this.post('*', passport.authenticate('basic', { session : false }) );
+  this.put('*', passport.authenticate('basic', { session : false }) );
+
   this.root('index#main');
   this.resources('locations', function () {
     this.resources('connections');
-    this.resources('commodities', function() {
+    this.resources('commodities',
+    function() {
       this.get('traderoutes','traderoutes#show');
     });
     this.get('traderoutes','traderoutes#show');
 
   });
+  //this.post('locations/search', passport.authenticate('basic', { session : false }) );
   this.post('locations/search','search#show');
 
   this.resources('commoditygroups', function() {
@@ -24,5 +32,9 @@ module.exports = function routes() {
   this.resources('commoditytypes');
 
   this.get('traderoutes','traderoutes#show');
+
+  //this.get('/locations', passport.authenticate('basic', { session : false }) );
+  //this.post('*', passport.authenticate('basic', { session : false }) );
+  //this.put('*', passport.authenticate('basic', { session : false }) );
 
 };
