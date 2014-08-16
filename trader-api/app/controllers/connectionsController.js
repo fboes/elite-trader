@@ -9,8 +9,21 @@ var connectionsController = new Controller();
 
 connectionsController.before('*', function( next ) {
   var self = this;
+
   if ( this.params('location_id') ) {
-    Location.findOne( { _id : this.params('location_id') }, function( err, location ) {
+
+    var locationid = this.params('location_id');
+    var what = { _id : locationid }
+    // Does the id contain a :?
+    if ( locationid.indexOf(':') != -1 ) {
+      // We do not have a real object id here, but a "search"
+      var key = locationid.split(':')[0];
+      var value = locationid.split(':')[1];
+      what = { };
+      what[key] = value;
+    }
+
+    Location.findOne( what, function( err, location ) {
       if ( err ) { return next(err); }
       self._location = location;
       return next();

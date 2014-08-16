@@ -39,7 +39,19 @@ locationsController.destroy = function() {
 
 locationsController.show = function() {
   var self = this;
-  Location.findOne( { _id : this.params('id') }, function( err, location ) {
+  var locationid = this.params('id');
+  var what = { _id : locationid }
+  // Does the id contain a :?
+  if ( locationid.indexOf(':') != -1 ) {
+    // We do not have a real object id here, but a "search"
+    var key = locationid.split(':')[0];
+    var value = locationid.split(':')[1];
+    console.log(key, value);
+    what = { };
+    what[key] = value;
+  }
+
+  Location.findOne( what, function( err, location ) {
     if ( err ) {
       return self.res.json( { error : "Location could not be read!", msg:err} );
     }
