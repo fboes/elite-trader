@@ -188,6 +188,7 @@ class EliteTrader {
 			.' FROM '.self::TABLE_PRICES.' AS p'
 			.' JOIN '.self::TABLE_LOCATIONS.' AS l ON l.id = p.location_id'
 			.' WHERE p.good_id = '.$this->pdo->quote((int) $idGood)
+			.' AND ( p.price_buy > 0 OR p.price_sell > 0)'
 			.' ORDER BY l.name'
 		;
 		$this->pdo->lastData = NULL;
