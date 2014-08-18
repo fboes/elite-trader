@@ -103,9 +103,12 @@ class EliteTrader {
 		$sth = $this->pdo->prepare($this->pdo->lastCmd);
 		$sth->execute();
 
+		$goods = array();
 		while (($row = $sth->fetch(SuperPDO::FETCH_ASSOC)) !== false) {
 			$this->listGoods[$row['id']] = $row['name'];
+			$goods[] = $row;
 		}
+		return $goods;
 	}
 
 	/**
@@ -121,14 +124,77 @@ class EliteTrader {
 		$sth = $this->pdo->prepare($this->pdo->lastCmd);
 		$sth->execute();
 
+		$locations = array();
 		while (($row = $sth->fetch(SuperPDO::FETCH_ASSOC)) !== false) {
 			$this->listLocations[$row['id']] = $row['name'];
+			$locations[] = $row;
 		}
+		return $locations;
 	}
 
 	// -------------------------------------------
 	// Prices
 	// -------------------------------------------
+
+	public function getCompleteGood ($idGood) {
+		$this->pdo->lastCmd =
+			'SELECT *'
+			.' FROM '.self::TABLE_GOODS
+			.' WHERE id = '.$this->pdo->quote((int)$idGood)
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+		$result = $sth->fetchAll(SuperPDO::FETCH_ASSOC);
+		$good = !empty($result[0]) ? $result[0] : array();
+
+		if ($good) {
+			$good['prices'] = $this->getPricesForGood($idGood);
+		}
+		$good['delta'] = array(
+			'highestBuy'  => NULL,
+			'highestSell' => NULL,
+			'lowestBuy'   => NULL,
+			'lowestSell'  => NULL,
+		);
+		foreach ($good['prices'] as $p) {
+			if (!empty($p['price_buy'])) {
+				if (empty($good['delta']['highestBuy']) || $good['delta']['highestBuy']['price'] < $p['price_buy']) {
+					$good['delta']['highestBuy'] = $p;
+					$good['delta']['highestBuy']['price'] = $p['price_buy'];
+				}
+				if (empty($good['delta']['lowestBuy']) || $good['delta']['lowestBuy']['price'] > $p['price_buy']) {
+					$good['delta']['lowestBuy'] = $p;
+					$good['delta']['lowestBuy']['price'] = $p['price_buy'];
+				}
+			}
+			if (!empty($p['price_sell'])) {
+				if (empty($good['delta']['highestSell']) || $good['delta']['highestSell']['price'] < $p['price_sell']) {
+					$good['delta']['highestSell'] = $p;
+					$good['delta']['highestSell']['price'] = $p['price_sell'];
+				}
+				if (empty($good['delta']['lowestSell']) || $good['delta']['lowestSell']['price'] > $p['price_sell']) {
+					$good['delta']['lowestSell'] = $p;
+					$good['delta']['lowestSell']['price'] = $p['price_sell'];
+				}
+			}
+		}
+		return $good;
+	}
+
+	public function getPricesForGood ($idGood) {
+		$this->pdo->lastCmd =
+			'SELECT p.price_buy, p.price_sell, l.id AS location_id, l.name AS location_name'
+			.' FROM '.self::TABLE_PRICES.' AS p'
+			.' JOIN '.self::TABLE_LOCATIONS.' AS l ON l.id = p.location_id'
+			.' WHERE p.good_id = '.$this->pdo->quote((int) $idGood)
+			.' ORDER BY l.name'
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+		return $sth->fetchAll(SuperPDO::FETCH_ASSOC);
+	}
 
 	/**
 	 * [getPricesForCurrentAndNeighbouringLocations description]

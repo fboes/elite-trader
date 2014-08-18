@@ -3,7 +3,8 @@
 <!--html prefix="og: http://ogp.me/ns#" manifest="manifests/manifest.appcache" lang="en"-->
 <head>
 	<meta charset="UTF-8" />
-	<title><?php _echo($elite->currentLocation['name']);?> | Elite Trader</title>
+	<title><?php _echo(!empty($data['title']) ? $data['title'].' | ' : NULL);?>Elite Trader</title>
+	<base href="<?php _echo($app->url(''));?>" />
 	<meta name="application-name" content="Elite Trader"/>
 	<meta name="apple-mobile-web-app-title" content="Elite Trader" />
 	<meta name="mobile-web-app-capable" content="yes" />
@@ -31,17 +32,7 @@
 		<div id="banner" class="header">
 			<div class="inner">
 				<header role="banner">
-					<a href="#"><img src="apple-touch-icon.png" alt="Home" class="header-icon" /></a>
+					<a href="<?php _echo($app->url(''));?>"><img src="apple-touch-icon.png" alt="Home" class="header-icon" /></a>
 					<h1>Elite Trader</h1>
 				</header>
 				<nav role="navigation">
-					<ul class="nav">
-						<li><a href="#modal-create_price" class="modal"><i class="fa fa-money"></i> <span class="icon-hide">Create price</span></a></li>
-						<li><a href="#modal-create_connection" class="modal"><i class="fa fa-road"></i> <span class="icon-hide">Create connection</span></a></li>
-						<!--li><a href="#"><i class="fa fa-ellipsis-vertical"></i> <span class="icon-hide">Menu</span></a></li-->
-					</ul>
-				</nav>
-			</div>
-		</div>
-		<div id="main" class="main">
-			<main role="main">

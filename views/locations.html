@@ -1,0 +1,37 @@
+<?php require('_header.html');?>
+<?php require('_header_break.html');?>
+
+	<div class="block-container-2">
+		<section>
+			<h3>Locations</h3>
+			<?php if (!empty($data['allLocations'])): ?>
+				<ul>
+					<?php foreach ($data['allLocations'] as $location): ?>
+						<li><a href="<?php _echo($app->url('locations', $location['id']));?>"><?php _echo($location['name']);?></a></li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+		</section>
+		<section>
+			<h4>New location</h4>
+			<form action="<?php _echo($app->currentUrl());?>" method="POST">
+				<div class="form-fieldset" id="create_location-new">
+					<div class="form-field">
+						<label for="create_location-name">Name</label>
+						<input id="create_location-name" type="text" name="name" />
+					</div>
+					<div class="form-field">
+						<label for="create_location-description">Description</label>
+						<input id="create_location-description" type="text" name="description" />
+					</div>
+				</div>
+
+				<input type="hidden" name="action" value="create_location" />
+				<button type="submit">Save</button>
+			</form>
+		</section>
+	</div>
+
+<?php require('_footer_break.html');?>
+<?php require('_footer.html');?>
+
