@@ -5,7 +5,7 @@ Setup
 -----
 
 0. Use `git submodule update --init` for fetching required submodules
-1. Import setup/elite_trader.sql into DB
+1. Import `setup/elite_trader.sql` into DB
 2. Copy `app/config.dist.php` to `app/config.php`
 
 Development
@@ -16,10 +16,10 @@ Development
 Version
 -------
 
-Version: 0.1 (2014-08-07)
+Version: 0.2 (2014-08-19)
 
-Webbapp-Boilerplate legal stuff
--------------------------------
+Legal stuff
+-----------
 
 Author: [Frank Boës](http://3960.org)
 

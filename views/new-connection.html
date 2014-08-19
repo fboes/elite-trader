@@ -1,0 +1,31 @@
+<section>
+	<h4><?php _echo($data['title']);?></h4>
+	<form action="<?php _echo($app->url('locations',$data['currentLocation']['id']));?>" method="POST">
+		<div class="form-field">
+			<label for="create_connection-location_id">Location</label>
+			<select id="create_connection-location_id" name="location_id" class="show-on-empty" data-show-on-empty="#create_connection-new">
+				<option value="">-- New location --</option>
+				<?php foreach($data['allLocations'] as $location):?>
+					<option value="<?php _echo($location['id']);?>"><?php _echo($location['name']);?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<div class="form-fieldset" id="create_connection-new">
+			<div class="form-field">
+				<label for="create_connection-name">Name</label>
+				<input id="create_connection-name" type="text" name="name" />
+			</div>
+			<div class="form-field">
+				<label for="create_connection-description">Description</label>
+				<input id="create_connection-description" type="text" name="description" />
+			</div>
+		</div>
+
+		<div class="form-field">
+			<label for="create_connection-distance">Distance</label>
+			<input id="create_connection-distance" type="number" min="0" step="0.01" name="distance" />
+		</div>
+		<input type="hidden" name="action" value="create_connection" />
+		<button type="submit">Save</button>
+	</form>
+</section>

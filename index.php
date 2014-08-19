@@ -6,6 +6,7 @@ require('app/config.php');
 require('app/vendor/small-php-helpers/toolshed.php');
 require('app/vendor/small-php-helpers/SuperPDO.php');
 require('app/vendor/small-php-helpers/Form.php');
+require('app/TraderApi.php');
 require('app/EliteTrader.php');
 require('app/App.php');
 
@@ -21,17 +22,19 @@ $elite = new EliteTrader(
 	SuperPDO::openMysql(CONFIG_DB_HOST,CONFIG_DB_DB,CONFIG_DB_USR,CONFIG_DB_PWD)
 );
 
-if (!empty($_GET['hops'])) {
-	$_SESSION['hops'] = (int)$_GET['hops'];
+if (!empty($_POST['action']) && $_POST['action'] == 'ship') {
+	if (!empty($_POST['hops'])) {
+		$_SESSION['hops'] = (int)$_POST['hops'];
+	}
+	if (!empty($_POST['hopdistance'])) {
+		$_SESSION['hopdistance'] = (float)$_POST['hopdistance'];
+	}
 }
 if (empty($_SESSION['hops']) || $_SESSION['hops'] < 0  || $_SESSION['hops'] > 15) {
 	$_SESSION['hops'] = 2;
 }
-if (!empty($_GET['hopdistance'])) {
-	$_SESSION['hopdistance'] = (int)$_GET['hopdistance'];
-}
 if (empty($_SESSION['hopdistance']) || $_SESSION['hopdistance'] < 0  || $_SESSION['hopdistance'] > 2000) {
-	$_SESSION['hopdistance'] = 8;
+	$_SESSION['hopdistance'] = 5.8;
 }
 
 switch ($app->path) {
@@ -52,8 +55,9 @@ switch ($app->path) {
 			if (empty($elite->currentLocation)) {
 				$app->redirect ($app->path, NULL, 307);
 			}
-			$data['allGoods']     = $elite->getAllGoods();
-			$data['allLocations'] = $elite->getAllLocations();
+			$_SESSION['last_station_id'] = $app->id;
+			#$data['allGoods']     = $elite->getAllGoods();
+			#$data['allLocations'] = $elite->getAllLocations();
 
 			if (!empty($_POST['action'])) {
 				$success = TRUE;
@@ -109,6 +113,8 @@ switch ($app->path) {
 
 			$data['prices']       = $elite->getPricesForCurrentAndNeighbouringLocations($_SESSION['hops'],$_SESSION['hopdistance']);
 			$data['template']     = 'location';
+			$data['connections']  = $elite->getNextLocationsForCurrentLocation(1);
+			$data['currentLocation'] = $elite->currentLocation;
 			$data['title']        = $elite->currentLocation['name'];
 		}
 		break;
@@ -135,6 +141,7 @@ switch ($app->path) {
 			if (empty($data['good'])) {
 				$app->redirect ($app->path, NULL, 307);
 			}
+			$_SESSION['last_good_id'] = $app->id;
 
 			if (!empty($_POST['action'])) {
 				$success = TRUE;
@@ -153,6 +160,36 @@ switch ($app->path) {
 			$data['template']     = 'good';
 			$data['title']        = $data['good']['name'];
 		}
+		break;
+	case 'ship':
+		$data['template']     = $app->path;
+		$data['title']        = 'Ship settings';
+		break;
+	case 'new-price':
+		if (!empty($app->id)) {
+			$elite->setCurrentLocation($app->id);
+		}
+		if (empty($elite->currentLocation)) {
+			$app->redirect (NULL, NULL, 307);
+		}
+		$data['allGoods']        = $elite->getAllGoods();
+		$data['currentLocation'] = $elite->currentLocation;
+
+		$data['template']     = $app->path;
+		$data['title']        = 'New price for '.$elite->currentLocation['name'];
+		break;
+	case 'new-connection':
+		if (!empty($app->id)) {
+			$elite->setCurrentLocation($app->id);
+		}
+		if (empty($elite->currentLocation)) {
+			$app->redirect (NULL, NULL, 307);
+		}
+		$data['allLocations']    = $elite->getAllLocations();
+		$data['currentLocation'] = $elite->currentLocation;
+
+		$data['template']     = $app->path;
+		$data['title']        = 'New connection for '.$elite->currentLocation['name'];
 		break;
 	default:
 		break;

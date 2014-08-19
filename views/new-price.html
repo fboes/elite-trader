@@ -1,0 +1,36 @@
+<section>
+	<h4><?php _echo($data['title']);?></h4>
+	<form action="<?php _echo($app->url('locations',$data['currentLocation']['id']));?>" method="POST">
+		<div class="form-field">
+			<label for="create_price-good_id">Good</label>
+			<select id="create_price-good_id" name="good_id" class="show-on-empty" data-show-on-empty="#create_price-new">
+				<option value="">-- New good --</option>
+				<?php foreach($data['allGoods'] as $good):?>
+					<option value="<?php _echo($good['id']);?>"><?php _echo($good['name']);?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+
+		<div class="form-fieldset" id="create_price-new">
+			<div class="form-field">
+				<label for="create_price-name">Name</label>
+				<input id="create_price-name" type="text" name="name" />
+			</div>
+			<div class="form-field">
+				<label for="create_price-description">Description</label>
+				<input id="create_price-description" type="text" name="description" />
+			</div>
+		</div>
+
+		<div class="form-field form-field-half">
+			<label for="create_price-price_buy">Sell to…</label>
+			<input id="create_price-price_buy" type="number" min="0" step="1" name="price_buy" />
+		</div>
+		<div class="form-field form-field-half">
+			<label for="create_price-price_sell">Buy from…</label>
+			<input id="create_price-price_sell" type="number" min="0" step="1" name="price_sell" />
+		</div>
+		<input type="hidden" name="action" value="create_price" />
+		<button type="submit">Save</button>
+	</form>
+</section>
