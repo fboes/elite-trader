@@ -11,7 +11,7 @@ class EliteTrader {
 	const STATUS_VERY_OLD = 3;
 
 	const SECONDS_NEW      = 300;
-	const SECONDS_OLD      = 43200;
+	const SECONDS_OLD      = 86400;
 	const SECONDS_VERY_OLD = 259200;
 
 	protected $pdo;
