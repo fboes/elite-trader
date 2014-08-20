@@ -10,3 +10,7 @@ define ('CONFIG_UNIT_CURRENCY_SHORT','CR');
 define ('CONFIG_UNIT_DISTANCE','ly');
 
 define ('CONFIG_USE_NICE_URLS',FALSE);
+
+define ('CONFIG_API_BASEURL', 'http://localhost:3000');
+define ('CONFIG_API_USR', '');
+define ('CONFIG_API_PWD', '');

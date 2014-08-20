@@ -42,7 +42,8 @@
 							}
 							tr.find(filter).each(function (index) {
 								var el = $(this);
-								el.hide().after('<input class="no-styling '+el.data('focus')+'" '+el.data('ir-attributes')+' value="'+el.html()+'" />').remove();
+								var value = el.html().replace(/(\d+),(\d+)/g,'$1$2');
+								el.hide().after('<input class="no-styling '+el.data('focus')+'" '+el.data('ir-attributes')+' value="'+value+'" />').remove();
 							})
 							tr.find('.focus').each(function(){
 								var newEl = $(this);

@@ -137,6 +137,12 @@ table {
 	.ir {
 		display:block;
 	}
+	tr.error {
+		color:$color-red-dark;
+		a {
+			color:inherit;
+		}
+	}
 }
 #container {
 	#banner {

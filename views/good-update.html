@@ -1,0 +1,41 @@
+<section>
+	<h4><?php _echo($data['title']);?></h4>
+	<form action="<?php _echo($app->url('locations',$data['currentLocation']['id']));?>" method="POST">
+		<?php if(!empty($app->id)): ?>
+			<div class="form-field">
+				<label for="good_update-good_id">Good</label>
+				<select id="good_update-good_id" name="good_id" class="show-on-empty" data-show-on-empty="#good_update-new">
+					<option value="">-- New good --</option>
+					<?php foreach($data['allGoods'] as $good):?>
+						<option value="<?php _echo($good['id']);?>"<?php echo(!empty($app->subId) && $app->subId == $good['id'] ? ' selected="selected"' : '');?>><?php _echo($good['name']);?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+		<?php endif; ?>
+
+		<div class="form-fieldset" id="good_update-new"<?php echo(!empty($app->subId) ? ' style="display:none"' : '');?>>
+			<div class="form-field">
+				<label for="good_update-name">Name</label>
+				<input id="good_update-name" type="text" name="name" />
+			</div>
+			<div class="form-field">
+				<label for="good_update-description">Description</label>
+				<input id="good_update-description" type="text" name="description" />
+			</div>
+		</div>
+
+		<?php if(!empty($app->id)): ?>
+			<div class="form-field form-field-half">
+				<label for="good_update-price_buy">Sell to…</label>
+				<input id="good_update-price_buy" type="number" min="0" step="1" name="price_buy" />
+			</div>
+			<div class="form-field form-field-half">
+				<label for="good_update-price_sell">Buy from…</label>
+				<input id="good_update-price_sell" type="number" min="0" step="1" name="price_sell" />
+			</div>
+		<?php endif; ?>
+
+		<input type="hidden" name="action" value="good_update" />
+		<button type="submit">Save</button>
+	</form>
+</section>

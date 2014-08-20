@@ -16,7 +16,7 @@
 							Lowest seller: <a href="<?php _echo($app->url('locations',$data['good']['delta']['lowestSell']['location_id']));?>"><?php _echo($data['good']['delta']['lowestSell']['location_name']);?></a><br />
 						<?php endif; ?>
 						<?php if(!empty($data['good']['delta']['highestBuy']) && !empty($data['good']['delta']['lowestSell'])): ?>
-							Biggest delta: <?php _echo($data['good']['delta']['highestBuy']['price'] - $data['good']['delta']['lowestSell']['price']);?>
+							Biggest delta: <?php $app->echoNumber($data['good']['delta']['highestBuy']['price'] - $data['good']['delta']['lowestSell']['price']);?>
 						<?php endif; ?>
 					</p>
 				</div>
@@ -35,10 +35,10 @@
 								<tr>
 									<td><a href="<?php _echo($app->url('locations',$price['location_id']));?>"><?php _echo($price['location_name']); ?></a></td>
 									<td class="number">
-										<?php _echo($price['price_buy']);?>
+										<?php $app->echoNumber($price['price_buy']);?>
 									</td>
 									<td class="number">
-										<?php _echo($price['price_sell']);?>
+										<?php $app->echoNumber($price['price_sell']);?>
 									</td>
 								</tr>
 							<?php endforeach; ?>

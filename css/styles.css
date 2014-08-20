@@ -69,6 +69,8 @@ input[type=hidden] { display: none; }
 .ir { cursor: pointer; }
 
 table .ir { display: block; }
+table tr.error { color: #c30000; }
+table tr.error a { color: inherit; }
 
 #container #banner header { display: inline-block; float: left; }
 #container #banner h1 { font-size: 1em; display: inline-block; font-weight: normal; }

@@ -1,0 +1,35 @@
+<section>
+	<h4><?php _echo($data['title']);?></h4>
+	<form action="<?php _echo($app->url('locations',$data['currentLocation']['id']));?>" method="POST">
+		<?php if(!empty($app->id)): ?>
+			<div class="form-field">
+				<label for="location_update-location_id">Location</label>
+				<select id="location_update-location_id" name="location_id" class="show-on-empty" data-show-on-empty="#location_update-new">
+					<option value="">-- New location --</option>
+					<?php foreach($data['allLocations'] as $location):?>
+						<option value="<?php _echo($location['id']);?>"><?php _echo($location['name']);?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+		<?php endif; ?>
+		<div class="form-fieldset" id="location_update-new">
+			<div class="form-field">
+				<label for="location_update-name">Name</label>
+				<input id="location_update-name" type="text" name="name" />
+			</div>
+			<div class="form-field">
+				<label for="location_update-description">Description</label>
+				<input id="location_update-description" type="text" name="description" />
+			</div>
+		</div>
+
+		<?php if(!empty($app->id)): ?>
+			<div class="form-field">
+				<label for="location_update-distance">Distance</label>
+				<input id="location_update-distance" type="number" min="0" step="0.01" name="distance" />
+			</div>
+		<?php endif; ?>
+		<input type="hidden" name="action" value="location_update" />
+		<button type="submit">Save</button>
+	</form>
+</section>

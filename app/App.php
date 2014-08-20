@@ -3,8 +3,9 @@
  * @class App
  */
 class App {
-	public $path = NULL;
-	public $id   = NULL;
+	public $path  = NULL;
+	public $id    = NULL;
+	public $subId = NULL;
 
 	/**
 	 * [__construct description]
@@ -18,8 +19,9 @@ class App {
 		}
 		if (!empty($path)) {
 			$pathParts = explode('/', $path);
-			$this->path = (!empty($pathParts[0])) ? $pathParts[0] : NULL;
-			$this->id   = (!empty($pathParts[1])) ? $pathParts[1] : NULL;
+			$this->path    = (!empty($pathParts[0])) ? $pathParts[0] : NULL;
+			$this->id      = (!empty($pathParts[1])) ? $pathParts[1] : NULL;
+			$this->subId   = (!empty($pathParts[2])) ? $pathParts[2] : NULL;
 		}
 	}
 
@@ -31,8 +33,11 @@ class App {
 	 * @param  boolean $absolute   [description]
 	 * @return string              [description]
 	 */
-	public function url ($path, $id = NULL, array $parameters = array(), $absolute = FALSE) {
+	public function url ($path, $id = NULL, $subId = NULL, array $parameters = array(), $absolute = FALSE) {
 		$url = !empty($path) ? $path.'/'.$id : NULL;
+		if (!empty($subId)) {
+			$url .= '/'.$subId;
+		}
 
 		$url = !CONFIG_USE_NICE_URLS
 			? ($_SERVER['SCRIPT_NAME'].(!empty($url) ? '/'.$url : ''))
@@ -52,7 +57,7 @@ class App {
 	 * @return [type]              [description]
 	 */
 	public function currentUrl (array $parameters = array(), $absolute = FALSE) {
-		return $this->url($this->path, $this->id, $parameters, $absolute);
+		return $this->url($this->path, $this->id, $this->subId, $parameters, $absolute);
 	}
 
 	/**
@@ -63,6 +68,31 @@ class App {
 	 * @return [type]              [description]
 	 */
 	public function redirect ($path, $id = NULL, $statusCode = 303) {
-		header('Location: '.$this->url($path,$id,array(), TRUE), $statusCode);
+		header('Location: '.$this->url($path,$id,NULL,array(), TRUE), $statusCode);
+	}
+
+	public function echoStatus ($status) {
+		switch ($status) {
+			case EliteTrader::STATUS_NEW:
+				echo('fa-plus-square-o');
+				break;
+			case EliteTrader::STATUS_OLD:
+				echo('fa-minus-square-o');
+				break;
+			case EliteTrader::STATUS_VERY_OLD:
+				echo('fa-minus-square');
+				break;
+			default:
+				echo('fa-square-o');
+				break;
+		}
+	}
+
+	public function echoNumber ($number) {
+		if (is_int($number)) {
+			_echo(number_format($number));
+		} else {
+			_echo(number_format($number,2));
+		}
 	}
 }

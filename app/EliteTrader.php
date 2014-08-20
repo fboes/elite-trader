@@ -6,15 +6,27 @@ class EliteTrader {
 	const TABLE_PRICES    = 'prices';
 	const TABLE_LOCATIONS = 'locations';
 
+	const STATUS_NEW      = 1;
+	const STATUS_OLD      = 2;
+	const STATUS_VERY_OLD = 3;
+
+	const SECONDS_NEW      = 300;
+	const SECONDS_OLD      = 86400;
+	const SECONDS_VERY_OLD = 604800;
+
 	protected $pdo;
+	protected $api;
+	protected $tsNow;
 
 	public $currentLocation;
 
 	public $listGoods      = array();
 	public $listLocations  = array();
 
-	public function __construct(SuperPDO $pdo) {
+	public function __construct(SuperPDO $pdo, HttpApi $api = NULL) {
 		$this->pdo = $pdo;
+		$this->api = $api;
+		$this->tsNow = time();
 	}
 
 	/**
@@ -315,7 +327,7 @@ class EliteTrader {
 	 */
 	public function getPricesForLocations (array $ids, $singleMode = FALSE) {
 		$this->pdo->lastCmd =
-			'SELECT g.id, g.name, p.price_buy, p.price_sell, l.id AS location_id, l.name AS location_name'
+			'SELECT g.id, g.name, p.price_buy, p.price_sell, p.ts, l.id AS location_id, l.name AS location_name'
 			.' FROM '.self::TABLE_LOCATIONS.' AS l'
 			.' JOIN '.self::TABLE_PRICES.' AS p ON p.location_id = l.id'
 			.' JOIN '.self::TABLE_GOODS.' AS g ON g.id = p.good_id'
@@ -333,6 +345,7 @@ class EliteTrader {
 			$row['location_id'] = (int)$row['location_id'];
 			$row['price_buy']   = (int)$row['price_buy'];
 			$row['price_sell']  = (int)$row['price_sell'];
+			$row = $this->addTsStatus($row);
 			if (empty($result[$row['id']])) {
 				$result[$row['id']] = array();
 			}
@@ -567,4 +580,24 @@ class EliteTrader {
 		);
 	}
 
+	// -------------------------------------------
+	// HELPERS
+	// -------------------------------------------
+
+	protected function addTsStatus(array $row) {
+		if (!empty($row['ts'])) {
+			$row['tsStatus'] = 0;
+			$ts = strtotime($row['ts']);
+			if ($ts + self::SECONDS_VERY_OLD < $this->tsNow) {
+				$row['tsStatus'] = self::STATUS_VERY_OLD;
+			}
+			elseif ($ts + self::SECONDS_OLD < $this->tsNow) {
+				$row['tsStatus'] = self::STATUS_OLD;
+			}
+			elseif ($ts + self::SECONDS_NEW > $this->tsNow) {
+				$row['tsStatus'] = self::STATUS_NEW;
+			}
+		}
+		return $row;
+	}
 }

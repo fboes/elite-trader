@@ -20,6 +20,7 @@ $data = array(
 );
 $elite = new EliteTrader(
 	SuperPDO::openMysql(CONFIG_DB_HOST,CONFIG_DB_DB,CONFIG_DB_USR,CONFIG_DB_PWD)
+	#,TraderApi::init(CONFIG_API_BASEURL, TraderApi::REPLY_TYPE_JSON)->setHttpCredentials(CONFIG_API_USR,CONFIG_API_PWD)
 );
 
 if (!empty($_POST['action']) && $_POST['action'] == 'ship') {
@@ -56,8 +57,6 @@ switch ($app->path) {
 				$app->redirect ($app->path, NULL, 307);
 			}
 			$_SESSION['last_station_id'] = $app->id;
-			#$data['allGoods']     = $elite->getAllGoods();
-			#$data['allLocations'] = $elite->getAllLocations();
 
 			if (!empty($_POST['action'])) {
 				$success = TRUE;
@@ -89,7 +88,7 @@ switch ($app->path) {
 							}
 						}
 						break;
-					case 'create_price':
+					case 'good_update':
 						if (!empty($_POST['name']) && empty($_POST['good_id'])) {
 							$_POST['good_id'] = $elite->createGood($_POST['name'],$_POST['description']);
 						}
@@ -97,7 +96,7 @@ switch ($app->path) {
 							$success = $elite->setPriceForCurrentLocation($_POST['good_id'],$_POST['price_buy'],$_POST['price_sell']);
 						}
 						break;
-					case 'create_connection':
+					case 'location_update':
 						if (!empty($_POST['name']) && empty($_POST['location_id'])) {
 							$_POST['location_id'] = $elite->createLocation($_POST['name'],$_POST['description']);
 						}
@@ -165,31 +164,28 @@ switch ($app->path) {
 		$data['template']     = $app->path;
 		$data['title']        = 'Ship settings';
 		break;
-	case 'new-price':
+	case 'good-update':
+		$data['title']        = 'New good';
 		if (!empty($app->id)) {
 			$elite->setCurrentLocation($app->id);
-		}
-		if (empty($elite->currentLocation)) {
-			$app->redirect (NULL, NULL, 307);
+			$data['currentLocation'] = $elite->currentLocation;
+			$data['title']        = 'New price for '.$elite->currentLocation['name'];
 		}
 		$data['allGoods']        = $elite->getAllGoods();
-		$data['currentLocation'] = $elite->currentLocation;
 
 		$data['template']     = $app->path;
-		$data['title']        = 'New price for '.$elite->currentLocation['name'];
 		break;
-	case 'new-connection':
+	case 'location-update':
+		$data['title']        = 'New location';
 		if (!empty($app->id)) {
 			$elite->setCurrentLocation($app->id);
-		}
-		if (empty($elite->currentLocation)) {
-			$app->redirect (NULL, NULL, 307);
+			$data['currentLocation'] = $elite->currentLocation;
+			$data['title']        = 'New connection for '.$elite->currentLocation['name'];
 		}
 		$data['allLocations']    = $elite->getAllLocations();
 		$data['currentLocation'] = $elite->currentLocation;
 
 		$data['template']     = $app->path;
-		$data['title']        = 'New connection for '.$elite->currentLocation['name'];
 		break;
 	default:
 		break;
