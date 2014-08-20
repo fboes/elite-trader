@@ -70,7 +70,9 @@ table {
 		}
 	}
 }
-
+span.icon-hide {
+	display:none;
+}
 #container {
 	position:relative;
 	margin: 0 auto;
@@ -127,9 +129,6 @@ table {
 					//height: 3 * $base-unit;
 					margin: -0.5 * $base-unit 0;
 					font-size:1.25em;
-				}
-				span.icon-hide {
-					display:none;
 				}
 			}
 		}

@@ -43,7 +43,7 @@
 									</td>
 									<td class="number">
 										<a href="<?php _echo($app->url('good-update',$data['currentLocation']['id'],$goodIndex));?>#modal-good_update" class="modal">
-											<i class="fa <?php $app->echoStatus($price['tsStatus']);?>"></i>
+											<i class="fa <?php $app->echoStatus($price['tsStatus']);?>"></i><span class="icon-hide"><?php _echo($price['tsStatus']);?></span>
 										</a>
 									</td>
 

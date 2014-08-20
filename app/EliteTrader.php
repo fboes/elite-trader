@@ -6,11 +6,11 @@ class EliteTrader {
 	const TABLE_PRICES    = 'prices';
 	const TABLE_LOCATIONS = 'locations';
 
-	const STATUS_NEW      = 1;
-	const STATUS_OLD      = 2;
-	const STATUS_VERY_OLD = 3;
+	const STATUS_NEW      = -1;
+	const STATUS_OLD      = 1;
+	const STATUS_VERY_OLD = 2;
 
-	const SECONDS_NEW      = 300;
+	const SECONDS_NEW      = 900;
 	const SECONDS_OLD      = 86400;
 	const SECONDS_VERY_OLD = 259200;
 

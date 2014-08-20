@@ -77,7 +77,6 @@ table tr.error a { color: inherit; }
 #container #banner nav { display: inline-block; float: right; }
 #container #banner .nav { float: right; }
 #container #banner .nav else { display: inline-block; }
-#container #banner .nav li a span.icon-hide { display: none; }
 
 @media screen { body { color: #5a5a5a; background: #dedede; padding: 0 1rem; font: 1.25rem "Roboto Slab", Garamond, serif; line-height: 1.5em; }
   del { color: #b4b4b4; }
@@ -96,6 +95,7 @@ table tr.error a { color: inherit; }
   table tbody tr:nth-child(odd) { background-color: white; }
   table tbody tr.focus { background-color: #ffbb33; }
   table tbody tr.focus:nth-child(odd) { background-color: #ffd480; }
+  span.icon-hide { display: none; }
   #container { position: relative; margin: 0 auto; }
   #banner, #footer { color: #5a5a5a; background: rgba(222, 222, 222, 0.9); height: 4rem; }
   #banner .inner, #footer .inner { padding: 1rem 1rem; margin: auto; }
@@ -106,7 +106,6 @@ table tr.error a { color: inherit; }
   #banner .nav li { display: inline-block; margin-left: 0.25rem; }
   #banner .nav li a { color: #5a5a5a; text-decoration: none; }
   #banner .nav li a i { display: inline-block; text-align: center; width: 3rem; margin: -0.5rem 0; font-size: 1.25em; }
-  #banner .nav li a span.icon-hide { display: none; }
   #footer { text-align: right; font-family: "Roboto", Tahoma, sans-serif; }
   #main section, #modal section { color: #5a5a5a; background: #f6f6f6; margin-bottom: 1rem; padding: 1.5rem; overflow: auto; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; -webkit-box-shadow: 1px 0.5rem 0.5rem rgba(0, 0, 0, 0.1); -moz-box-shadow: 1px 0.5rem 0.5rem rgba(0, 0, 0, 0.1); box-shadow: 1px 0.5rem 0.5rem rgba(0, 0, 0, 0.1); }
   #main section h3, #modal section h3 { font-size: 1.5rem; margin-bottom: 1rem; }
