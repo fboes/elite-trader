@@ -8,16 +8,25 @@
 	<div class="block-container-1">
 		<section>
 			<form action="<?php _echo($app->currentUrl());?>" method="POST">
-				<div>
-					<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='location_name'"><?php _echo($data['title']);?></span></h3>
-					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='location_description'"><?php _echo($data['currentLocation']['description']);?></span></p>
-				</div>
+				<?php if(empty($app->subId)): ?>
+					<div>
+
+						<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='location_name'"><?php _echo($data['currentLocation']['name']);?></span></h3>
+						<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='location_description'"><?php _echo($data['currentLocation']['description']);?></span></p>
+					</div>
+				<?php else: ?>
+					<h3><?php _echo($data['title']);?></h3>
+				<?php endif; ?>
 
 				<?php if (!empty($data['prices'])): ?>
-					<p>
-						Price is set to '0' if the good can't be bought / sold at this location.<br />
-						Prices are compared for locations in max. <?php _echo($_SESSION['hops']);?> hops distance with a max. distance of <?php _echo($_SESSION['hopdistance'].' '.CONFIG_UNIT_DISTANCE);?> for a single hop.
-					</p>
+					<?php if(empty($app->subId)): ?>
+						<p>
+							Price is set to '0' if the good can't be bought / sold at this location.<br />
+							Prices are compared for locations in max. <?php _echo($_SESSION['hops']);?> hops distance with a max. distance of <?php _echo($_SESSION['hopdistance'].' '.CONFIG_UNIT_DISTANCE);?> for a single hop.
+						</p>
+					<?php else: ?>
+						<p><a href="<?php _echo($app->url($app->path,$app->id));?>">Return to chart for <?php _echo($data['currentLocation']['name']);?></a></p>
+					<?php endif; ?>
 					<table class="sortable">
 						<thead>
 							<tr>
@@ -49,14 +58,16 @@
 
 									<?php if(!empty($price['buyer'])): ?>
 										<td class="number"><?php $app->echoNumber($price['buyer']['delta']); ?></td>
-										<td><a href="<?php _echo($app->url('locations',$price['buyer']['id']));?>"><?php _echo($price['buyer']['name']); ?></a></td>
+										<td><a href="<?php _echo($app->url('locations',$price['buyer']['id']));?>"><?php _echo($price['buyer']['name']); ?></a>
+										</td>
 									<?php else: ?>
 										<td class="empty"></td>
 										<td class="empty">No profits</td>
 									<?php endif; ?>
 									<?php if(!empty($price['seller'])): ?>
 										<td class="number"><?php $app->echoNumber($price['seller']['delta']); ?></td>
-										<td><a href="<?php _echo($app->url('locations',$price['seller']['id']));?>"><?php _echo($price['seller']['name']); ?></a></td>
+										<td><a href="<?php _echo($app->url('locations',$price['seller']['id']));?>"><?php _echo($price['seller']['name']); ?></a>
+										</td>
 									<?php else: ?>
 										<td class="empty"></td>
 										<td class="empty">No profits</td>
@@ -72,8 +83,6 @@
 				<a href="<?php _echo($app->url('good-update',$data['currentLocation']['id']));?>#modal-good_update" class="modal button"><i class="fa fa-plus"></i> New price</a>
 			</form>
 		</section>
-	</div>
-	<div class="block-container-2">
 
 		<section>
 			<h4>Travelling connections for <?php _echo($data['currentLocation']['name']);?></h4>
@@ -85,6 +94,7 @@
 							<tr>
 								<th>Location</th>
 								<th class="number" style="width:4.5em;">Distance</th>
+								<th style="width:15em;">Compare prices</th>
 								<th class="number" style="width:3em;"><i class="fa fa-trash-o"></i></th>
 							</tr>
 						</thead>
@@ -93,6 +103,7 @@
 								<tr<?php echo(($c['distance'] > $_SESSION['hopdistance']) ? ' class="error" title="Out of reach"': '');?>>
 									<td><a href="<?php _echo($app->url('locations',$c['id']));?>"><?php _echo($c['name']); ?></a></td>
 									<td class="number"><span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='0.01' name='lanes[<?php _echo(urlencode($c['id']));?>]'"><?php $app->echoNumber($c['distance']); ?></span></td>
+									<td><a href="<?php _echo($app->url($app->path,$app->id, $c['id']));?>"><i class="fa fa-exchange"></i> <?php _echo($data['currentLocation']['name']);?></a></td>
 									<td class="number"><input class="delete" type="checkbox" name="lanes_delete[<?php _echo(urlencode($c['id']));?>]" value="x" /></td>
 								</tr>
 							<?php endforeach; ?>

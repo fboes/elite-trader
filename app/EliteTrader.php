@@ -35,6 +35,15 @@ class EliteTrader {
 	 * @return  boolean [description]
 	 */
 	public function setCurrentLocation ($id) {
+		$this->currentLocation = $this->getLocation($id);
+		if (!empty($this->currentLocation)) {
+			$this->currentLocation['id'] = (int)$this->currentLocation['id'];
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	public function getLocation ($id) {
 		$this->pdo->lastCmd =
 			'SELECT l.*'
 			.' FROM locations AS l'
@@ -44,12 +53,7 @@ class EliteTrader {
 		$sth = $this->pdo->prepare($this->pdo->lastCmd);
 		$sth->execute();
 		$result = $sth->fetchAll(SuperPDO::FETCH_ASSOC);
-		$this->currentLocation = !empty($result[0]) ? $result[0] : array();
-		if (!empty($this->currentLocation)) {
-			$this->currentLocation['id'] = (int)$this->currentLocation['id'];
-			return TRUE;
-		}
-		return FALSE;
+		return (!empty($result[0]) ? $result[0] : array());
 	}
 
 	// -------------------------------------------
@@ -207,6 +211,59 @@ class EliteTrader {
 		$sth = $this->pdo->prepare($this->pdo->lastCmd);
 		$sth->execute();
 		return $sth->fetchAll(SuperPDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * [getPricesForCurrentAndSpecificLocation description]
+	 * @param  [type] $locationId [description]
+	 * @return [type]             [description]
+	 */
+	public function getPricesForCurrentAndSpecificLocation ($locationId) {
+		return $this->getPricesSpecificLocation($this->currentLocation, $locationId);
+	}
+
+	/**
+	 * [getPricesSpecificLocation description]
+	 * @param  array  $location   [description]
+	 * @param  [type] $locationId [description]
+	 * @return [type]             [description]
+	 */
+	public function getPricesSpecificLocation (array $location, $locationId) {
+		$pricesForThisLocation = $this->getPricesForLocations(array($location['id']), TRUE);
+
+		$pricesOfOtherLocations = $this->getPricesForLocations(array($locationId));
+		foreach ($pricesForThisLocation as $goodIndex => &$price) {
+			if (!empty($pricesOfOtherLocations[$goodIndex])) {
+				$goods   = &$pricesOfOtherLocations[$goodIndex];
+				$profits = $this->getProfitSpan($goods);
+				$price['buyer']  = array();
+				$price['seller'] = array();
+
+				if (!empty($price['price_sell']) && !empty($profits['highestId'])) {
+					if ($profits['highestPrice'] > $price['price_sell'] && $profits['highestPrice'] > $price['price_buy']) {
+						$price['buyer'] = array(
+							'id'    => $profits['highestId'],
+							'price' => (int)$profits['highestPrice'],
+							'delta' => (int)$profits['highestPrice'] - $price['price_sell'],
+							'name'  => $goods[$profits['highestId']]['location_name'],
+						);
+					}
+				}
+				if (!empty($price['price_buy']) && !empty($profits['lowestId'])) {
+					if ($profits['lowestPrice'] < $price['price_buy'] && $profits['lowestPrice'] < $price['price_sell'] || $price['price_sell'] == 0) {
+						$price['seller'] = array(
+							'id'    => $profits['lowestId'],
+							'price' => (int)$profits['lowestPrice'],
+							'delta' => (int)$price['price_buy'] - $profits['lowestPrice'],
+							'name'  => $goods[$profits['lowestId']]['location_name'],
+						);
+					}
+				}
+			}
+		}
+
+		return $pricesForThisLocation;
+
 	}
 
 	/**

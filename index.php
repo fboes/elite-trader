@@ -110,11 +110,17 @@ switch ($app->path) {
 				}
 			}
 
-			$data['prices']       = $elite->getPricesForCurrentAndNeighbouringLocations($_SESSION['hops'],$_SESSION['hopdistance']);
+			if (!empty($app->subId)) {
+				$data['prices']       = $elite->getPricesForCurrentAndSpecificLocation($app->subId);
+				$data['title']        = 'Comparing prices for '.$elite->currentLocation['name'].' with location '.$app->id;
+			}
+			else {
+				$data['prices']       = $elite->getPricesForCurrentAndNeighbouringLocations($_SESSION['hops'],$_SESSION['hopdistance']);
+				$data['title']        = $elite->currentLocation['name'];
+			}
 			$data['template']     = 'location';
 			$data['connections']  = $elite->getNextLocationsForCurrentLocation(1);
 			$data['currentLocation'] = $elite->currentLocation;
-			$data['title']        = $elite->currentLocation['name'];
 		}
 		break;
 	case 'goods':
