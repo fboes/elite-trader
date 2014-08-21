@@ -1,0 +1,15 @@
+<section>
+	<h4><?php _echo($data['title']);?></h4>
+	<form action="#" method="POST">
+		<div class="form-field form-field-half">
+			<label for="trader-hops">Hops</label>
+			<input id="trader-hops" type="number" min="1" max="15" step="1" name="hops" value="<?php _echo($data['currentTrader']['hops']);?>" />
+		</div>
+		<div class="form-field form-field-half">
+			<label for="trader-hopdistance">Max. hop distance (<?php _echo(CONFIG_UNIT_DISTANCE);?>)</label>
+			<input id="trader-hopdistance" type="number" min="0.01" step="0.01" name="hopdistance" value="<?php _echo($data['currentTrader']['hopdistance']);?>" />
+		</div>
+		<input type="hidden" name="action" value="trader" />
+		<button type="submit">Save</button>
+	</form>
+</section>

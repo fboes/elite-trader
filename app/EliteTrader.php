@@ -5,6 +5,10 @@ class EliteTrader {
 	const TABLE_ROADS     = 'roads';
 	const TABLE_PRICES    = 'prices';
 	const TABLE_LOCATIONS = 'locations';
+	const TABLE_TRADERS   = 'traders';
+	const TABLE_CRAFT     = 'craft';
+	const TABLE_X_CT      = 'craft_trader';
+	const TABLE_X_CL      = 'craft_locations';
 
 	const STATUS_NEW      = -1;
 	const STATUS_OLD      = 1;
@@ -19,14 +23,49 @@ class EliteTrader {
 	protected $tsNow;
 
 	public $currentLocation;
+	public $currentTrader;
 
 	public $listGoods      = array();
 	public $listLocations  = array();
 
 	public function __construct(SuperPDO $pdo, HttpApi $api = NULL) {
 		$this->pdo = $pdo;
+		$this->pdo->useUtf8();
 		$this->api = $api;
 		$this->tsNow = time();
+		$this->currentTrader = array();
+	}
+
+	public function getCurrentTrader ($id) {
+		$this->currentTrader = array(
+			'hops' =>  2,
+			'hopdistance' =>  5.8,
+			'last_station_id' =>  NULL,
+			'last_good_id' =>  NULL,
+		);
+		if (!empty($id)) {
+			$this->currentTrader = $_SESSION;
+		}
+	}
+
+	public function setTraderHops ($hops) {
+		$hops = (int)$hops;
+		if (!empty($hops) && $hops > 0  && $hops <= 15) {
+			$this->currentTrader['hops'] = $hops;
+		}
+	}
+
+	public function setTraderHopDistance ($hopdistance) {
+		$hopdistance = (int)$hopdistance;
+		if (!empty($hopdistance) && $hopdistance > 0  && $hopdistance <= 2000) {
+			$this->currentTrader['hopdistance'] = $hopdistance;
+		}
+	}
+
+	public function persistCurrentTrader () {
+		foreach ($this->currentTrader as $key => $value) {
+			$_SESSION[$key] = $value;
+		}
 	}
 
 	/**
@@ -35,7 +74,9 @@ class EliteTrader {
 	 * @return  boolean [description]
 	 */
 	public function setCurrentLocation ($id) {
+		$id = (int)$id;
 		$this->currentLocation = $this->getLocation($id);
+		$this->currentTrader['last_station_id'] = $id;
 		if (!empty($this->currentLocation)) {
 			$this->currentLocation['id'] = (int)$this->currentLocation['id'];
 			return TRUE;
@@ -44,6 +85,7 @@ class EliteTrader {
 	}
 
 	public function getLocation ($id) {
+		$id = (int)$id;
 		$this->pdo->lastCmd =
 			'SELECT l.*'
 			.' FROM locations AS l'
@@ -54,6 +96,10 @@ class EliteTrader {
 		$sth->execute();
 		$result = $sth->fetchAll(SuperPDO::FETCH_ASSOC);
 		return (!empty($result[0]) ? $result[0] : array());
+	}
+
+	public function getCurrentTraderId () {
+		return !empty($this->currentTrader) ? $this->currentTrader['id'] : NULL;
 	}
 
 	// -------------------------------------------
@@ -70,10 +116,10 @@ class EliteTrader {
 		$id = NULL;
 		if ($this->pdo->replace(
 			self::TABLE_LOCATIONS,
-			array(
+			$this->modifyRow(array(
 				'name'        => $name,
 				'description' => $description,
-			)
+			))
 		)) {
 			$id = $this->pdo->lastInsertId();
 			$this->listLocations[$id] = $name;
@@ -91,10 +137,10 @@ class EliteTrader {
 		$id = NULL;
 		if ($this->pdo->replace(
 			self::TABLE_GOODS,
-			array(
+			$this->modifyRow(array(
 				'name'        => $name,
 				'description' => $description,
-			)
+			))
 		)) {
 			$id = $this->pdo->lastInsertId();
 			$this->listGoods[$id] = $name;
@@ -153,6 +199,8 @@ class EliteTrader {
 	// -------------------------------------------
 
 	public function getCompleteGood ($idGood) {
+		$idGood = (int)$idGood;
+		$this->currentTrader['last_good_id'] = $idGood;
 		$this->pdo->lastCmd =
 			'SELECT *'
 			.' FROM '.self::TABLE_GOODS
@@ -500,16 +548,16 @@ class EliteTrader {
 	 * @return boolean
 	 */
 	public function setLane ($idLocation1, $idLocation2, $distance) {
-		$this->pdo->replace(self::TABLE_ROADS, array(
+		$this->pdo->replace(self::TABLE_ROADS, $this->modifyRow(array(
 			'location_id_from' => (int)$idLocation1,
 			'location_id_to'   => (int)$idLocation2,
 			'distance'         => (float)$distance,
-		));
-		$this->pdo->replace(self::TABLE_ROADS, array(
+		)));
+		$this->pdo->replace(self::TABLE_ROADS, $this->modifyRow(array(
 			'location_id_from' => (int)$idLocation2,
 			'location_id_to'   => (int)$idLocation1,
 			'distance'         => (float)$distance,
-		));
+		)));
 		return TRUE;
 	}
 
@@ -541,12 +589,12 @@ class EliteTrader {
 	 * @return boolean             [description]
 	 */
 	public function setPriceForLocation ($idLocation, $idGood, $priceBuy, $priceSell = 0) {
-		return ($this->pdo->replace(self::TABLE_PRICES, array(
+		return ($this->pdo->replace(self::TABLE_PRICES, $this->modifyRow(array(
 			'good_id'      => (int)$idGood,
 			'location_id'  => (int)$idLocation,
 			'price_buy'    => (int)$priceBuy,
 			'price_sell'   => (int)$priceSell,
-		)) >= 0);
+		))) >= 0);
 	}
 
 	/**
@@ -580,7 +628,7 @@ class EliteTrader {
 		}
 		return ($this->pdo->update(
 			self::TABLE_LOCATIONS,
-			$data,
+			$this->modifyRow($data),
 			'id='.$this->pdo->quote($id)
 		));
 	}
@@ -602,7 +650,7 @@ class EliteTrader {
 		}
 		return ($this->pdo->update(
 			self::TABLE_GOODS,
-			$data,
+			$this->modifyRow($data),
 			'id='.$this->pdo->quote($id)
 		));
 	}
@@ -656,5 +704,13 @@ class EliteTrader {
 			}
 		}
 		return $row;
+	}
+
+	protected function modifyRow ($data) {
+		$currentTraderId = $this->getCurrentTraderId();
+		if (!empty($currentTraderId)) {
+			$data['trader_id'] = $currentTraderId;
+		}
+		return $data;
 	}
 }

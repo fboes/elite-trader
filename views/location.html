@@ -22,7 +22,7 @@
 					<?php if(empty($app->subId)): ?>
 						<p>
 							Price is set to '0' if the good can't be bought / sold at this location.<br />
-							Prices are compared for locations in max. <?php _echo($_SESSION['hops']);?> hops distance with a max. distance of <?php _echo($_SESSION['hopdistance'].' '.CONFIG_UNIT_DISTANCE);?> for a single hop.
+							Prices are compared for locations in max. <?php _echo($data['currentTrader']['hops']);?> hops distance with a max. distance of <?php _echo($data['currentTrader']['hopdistance'].' '.CONFIG_UNIT_DISTANCE);?> for a single hop.
 						</p>
 					<?php else: ?>
 						<p><a href="<?php _echo($app->url($app->path,$app->id));?>">Return to chart for <?php _echo($data['currentLocation']['name']);?></a></p>
@@ -100,7 +100,7 @@
 						</thead>
 						<tbody>
 							<?php foreach($data['connections'] as $c): ?>
-								<tr<?php echo(($c['distance'] > $_SESSION['hopdistance']) ? ' class="error" title="Out of reach"': '');?>>
+								<tr<?php echo(($c['distance'] > $data['currentTrader']['hopdistance']) ? ' class="error" title="Out of reach"': '');?>>
 									<td><a href="<?php _echo($app->url('locations',$c['id']));?>"><?php _echo($c['name']); ?></a></td>
 									<td class="number"><span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='0.01' name='lanes[<?php _echo(urlencode($c['id']));?>]'"><?php $app->echoNumber($c['distance']); ?></span></td>
 									<td><a href="<?php _echo($app->url($app->path,$app->id, $c['id']));?>"><i class="fa fa-exchange"></i> <?php _echo($data['currentLocation']['name']);?></a></td>
