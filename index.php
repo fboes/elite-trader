@@ -25,15 +25,19 @@ $elite = new EliteTrader(
 	new SuperPDO(CONFIG_DB_DSN,CONFIG_DB_USR,CONFIG_DB_PWD)
 	#,TraderApi::init(CONFIG_API_BASEURL, TraderApi::REPLY_TYPE_JSON)->setHttpCredentials(CONFIG_API_USR,CONFIG_API_PWD)
 );
-$elite->getCurrentTrader(NULL);
+$elite->getCurrentTrader(session_id());
 $data['currentTrader'] = &$elite->currentTrader;
 
-if (!empty($_POST['action']) && $_POST['action'] == 'trader') {
-	if (!empty($_POST['hops'])) {
-		$elite->setTraderHops($_POST['hops']);
-	}
-	if (!empty($_POST['hopdistance'])) {
-		$elite->setTraderHopDistance($_POST['hopdistance']);
+if (!empty($_POST['action'])) {
+	switch ($_POST['action']) {
+		case 'trader':
+			if (!empty($_POST['hops'])) {
+				$elite->setTraderHops($_POST['hops']);
+			}
+			if (!empty($_POST['hopdistance'])) {
+				$elite->setTraderHopDistance($_POST['hopdistance']);
+			}
+			break;
 	}
 }
 
