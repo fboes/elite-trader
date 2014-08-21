@@ -22,10 +22,10 @@ ALTER TABLE `locations` ADD INDEX(`trader_id`);
 ALTER TABLE `roads`     ADD INDEX(`trader_id`);
 ALTER TABLE `prices`    ADD INDEX(`trader_id`);
 
-ALTER TABLE `goods`     ADD FOREIGN KEY (`trader_id`) REFERENCES `elite_trader`.`traders`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
-ALTER TABLE `locations` ADD FOREIGN KEY (`trader_id`) REFERENCES `elite_trader`.`traders`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
-ALTER TABLE `roads`     ADD FOREIGN KEY (`trader_id`) REFERENCES `elite_trader`.`traders`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
-ALTER TABLE `prices`    ADD FOREIGN KEY (`trader_id`) REFERENCES `elite_trader`.`traders`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE `goods`     ADD FOREIGN KEY (`trader_id`) REFERENCES `traders`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE `locations` ADD FOREIGN KEY (`trader_id`) REFERENCES `traders`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE `roads`     ADD FOREIGN KEY (`trader_id`) REFERENCES `traders`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE `prices`    ADD FOREIGN KEY (`trader_id`) REFERENCES `traders`(`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE `traders` ADD `settings_json` TEXT NOT NULL AFTER `name`;
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `craft_locations` (
 ALTER TABLE `craft_locations`
  ADD UNIQUE `craft_id` (`craft_id`, `location_id`)COMMENT '';
 
- ALTER TABLE `craft_locations` ADD FOREIGN KEY (`craft_id`) REFERENCES `elite_trader`.`craft`(`id`) ON DELETE CASCADE ON UPDATE CASCADE; ALTER TABLE `craft_locations` ADD FOREIGN KEY (`location_id`) REFERENCES `elite_trader`.`locations`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE `craft_locations` ADD FOREIGN KEY (`craft_id`) REFERENCES `craft`(`id`) ON DELETE CASCADE ON UPDATE CASCADE; ALTER TABLE `craft_locations` ADD FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `craft_traders` (
   `craft_id` int(10) unsigned NOT NULL,
@@ -61,4 +61,4 @@ CREATE TABLE IF NOT EXISTS `craft_traders` (
 ALTER TABLE `craft_traders`
  ADD UNIQUE `craft_id` (`craft_id`, `trader_id`)COMMENT '';
 
- ALTER TABLE `craft_traders` ADD FOREIGN KEY (`craft_id`) REFERENCES `elite_trader`.`craft`(`id`) ON DELETE CASCADE ON UPDATE CASCADE; ALTER TABLE `craft_traders` ADD FOREIGN KEY (`trader_id`) REFERENCES `elite_trader`.`traders`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE `craft_traders` ADD FOREIGN KEY (`craft_id`) REFERENCES `craft`(`id`) ON DELETE CASCADE ON UPDATE CASCADE; ALTER TABLE `craft_traders` ADD FOREIGN KEY (`trader_id`) REFERENCES `traders`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
