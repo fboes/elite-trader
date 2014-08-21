@@ -1,416 +1,136 @@
--- phpMyAdmin SQL Dump
--- version 4.2.1
--- http://www.phpmyadmin.net
+-- MySQL dump 10.13  Distrib 5.5.35, for debian-linux-gnu (x86_64)
 --
--- Host: localhost
--- Generation Time: Aug 08, 2014 at 02:57 PM
--- Server version: 5.5.34
--- PHP Version: 5.5.9
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: fboes_elite_trader
+-- ------------------------------------------------------
+-- Server version	5.5.35-0+wheezy1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-
---
--- Database: `elite_trader`
---
-CREATE DATABASE IF NOT EXISTS `elite_trader` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `elite_trader`;
-
--- --------------------------------------------------------
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
 -- Table structure for table `goods`
 --
 
 DROP TABLE IF EXISTS `goods`;
-CREATE TABLE IF NOT EXISTS `goods` (
-`id` int(11) unsigned NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `goods` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `description` varchar(1024) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=99 ;
+  `description` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `goods`
 --
 
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(50, 'Agri-Medicines', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(51, 'Algae', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(52, 'Animal Meat', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(53, 'Animal Monitors', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(54, 'Aquaponic Systems', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(55, 'Auto-Fabricators', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(56, 'Basic Meds', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(57, 'Bertrandite', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(58, 'Biowaste', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(59, 'Clothing', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(60, 'Cobalt', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(61, 'Coffee', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(62, 'Coltan', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(63, 'Computer Components', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(64, 'Consumer Technology', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(65, 'Cotton', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(66, 'Crop Harvesters', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(67, 'Dom. Appliances', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(68, 'Energy Drinks', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(69, 'Fish', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(70, 'Food Cartridges', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(71, 'Fruit and Vegetables', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(72, 'Gold', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(73, 'Grain', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(74, 'Hydrogen Fuels', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(75, 'Leather', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(76, 'Liquors', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(77, 'Lithium', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(78, 'Marine Supplies', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(79, 'Mineral Extractors', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(80, 'Mineral Oil', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(81, 'Non-lethal wpns', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(82, 'Palladium', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(83, 'Performance Enhancers', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(84, 'Personal Armour', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(85, 'Personal Weapons', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(86, 'Pesticides', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(87, 'Plastics', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(88, 'Progenitor Cells', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(89, 'Reactive armor', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(90, 'Resonating Separators', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(91, 'Robotics', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(92, 'Superconductors', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(93, 'Synthetic meat', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(94, 'Tantalum', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(95, 'Tea', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(96, 'Terrain Enrichment Sys. ', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(97, 'Tobacco', NULL);
-INSERT INTO `goods` (`id`, `name`, `description`) VALUES(98, 'Wine', NULL);
-
--- --------------------------------------------------------
+LOCK TABLES `goods` WRITE;
+/*!40000 ALTER TABLE `goods` DISABLE KEYS */;
+INSERT INTO `goods` VALUES (50,'Agri-Medicines',NULL),(51,'Algae',NULL),(52,'Animal Meat',NULL),(53,'Animal Monitors',NULL),(54,'Aquaponic Systems',NULL),(55,'Auto-Fabricators',NULL),(56,'Basic Meds',NULL),(57,'Bertrandite',NULL),(58,'Biowaste',NULL),(59,'Clothing',NULL),(60,'Cobalt',NULL),(61,'Coffee',NULL),(62,'Coltan',NULL),(63,'Computer Components',NULL),(64,'Consumer Technology',NULL),(65,'Cotton',NULL),(66,'Crop Harvesters',NULL),(67,'Dom. Appliances',NULL),(68,'Energy Drinks',NULL),(69,'Fish',NULL),(70,'Food Cartridges',NULL),(71,'Fruit and Vegetables',NULL),(72,'Gold',NULL),(73,'Grain',NULL),(74,'Hydrogen Fuels',NULL),(75,'Leather',NULL),(76,'Liquors',NULL),(77,'Lithium',NULL),(78,'Marine Supplies',NULL),(79,'Mineral Extractors',NULL),(80,'Mineral Oil',NULL),(81,'Non-lethal wpns',NULL),(82,'Palladium',NULL),(83,'Performance Enhancers',NULL),(84,'Personal Armour',NULL),(85,'Personal Weapons',NULL),(86,'Pesticides',NULL),(87,'Plastics',NULL),(88,'Progenitor Cells',NULL),(89,'Reactive armor',NULL),(90,'Resonating Separators',NULL),(91,'Robotics',NULL),(92,'Superconductors',NULL),(93,'Synthetic meat',NULL),(94,'Tantalum',NULL),(95,'Tea',NULL),(96,'Terrain Enrichment Sys. ',NULL),(97,'Tobacco',NULL),(98,'Wine',NULL),(99,'- Eagle Mk. II',''),(100,'- Sidewinder Mk. I',''),(101,'- Zorgon Peterson Hauler','Fishies!'),(102,'- Lakon Type 6',''),(103,'Hel-static furnaces',''),(104,'Scrap',''),(105,'Beer',''),(106,'Uranium',''),(107,'Indium',''),(108,'Silver',''),(109,'Rutile',''),(110,'Beryllium',''),(111,'Gallite',''),(112,'Gallium',''),(113,'Advanced catalyers',''),(114,'H.E. suits',''),(115,'Explosives',''),(116,'Narcotics',''),(117,'Bauxite',''),(118,'Bioreducing lichen',''),(119,'Polymers',''),(120,'Combat Stabilisers',''),(121,'Titanium',''),(122,'Aluminium',''),(123,'Indite',''),(124,'Uraninite',''),(125,'Lepidolite',''),(126,'- Viper Mk. III',''),(127,'- Cobra Mk. III',''),(128,'Semiconductors',''),(129,'Copper',''),(130,'Natural fabrics',''),(131,'Synthetic fabrics',''),(132,'- Lakon Type 9','');
+/*!40000 ALTER TABLE `goods` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `locations`
 --
 
 DROP TABLE IF EXISTS `locations`;
-CREATE TABLE IF NOT EXISTS `locations` (
-`id` int(10) unsigned NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `locations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `description` varchar(1024) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+  `description` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `locations`
 --
 
-INSERT INTO `locations` (`id`, `name`, `description`) VALUES(1, 'I Bootis A - Chango Dock', NULL);
-INSERT INTO `locations` (`id`, `name`, `description`) VALUES(2, 'Eranin - Azeban City', NULL);
-INSERT INTO `locations` (`id`, `name`, `description`) VALUES(3, 'Asellus Prime - Beagle 2 Landing', NULL);
-INSERT INTO `locations` (`id`, `name`, `description`) VALUES(4, 'LP 98-132 - Freeport', NULL);
-
--- --------------------------------------------------------
+LOCK TABLES `locations` WRITE;
+/*!40000 ALTER TABLE `locations` DISABLE KEYS */;
+INSERT INTO `locations` VALUES (1,'I Bootis - Chango Dock','Federation jurisdiction, marine agriculture & machines'),(2,'Eranin - Azeban City','Agriculture, Eranin jurisdiction'),(3,'Asellus Prime - Beagle 2 Landing','High tech'),(4,'LP 98-132 - Freeport','Anarchy, mining'),(5,'Aulin - Aulin Enterprise','Federation jurisdiction'),(6,'Dahan - Dahan Gateway','Mining'),(7,'Styx',''),(8,'Opala - Romanenko Estate','Black market'),(9,'Morgor - Romanek\'s folly','Anarchy, mining, black market'),(10,'Rakapila',''),(11,'Chi Hercules','Agriculture, federation'),(12,'Ovid','Industrial, federation'),(13,'BD+47 2112',''),(14,'LHS 3006 - WCM Transfer Orbital','Fed jurisdiction'),(15,'Keries',''),(16,'LP 271-25','');
+/*!40000 ALTER TABLE `locations` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `prices`
 --
 
 DROP TABLE IF EXISTS `prices`;
-CREATE TABLE IF NOT EXISTS `prices` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `prices` (
   `good_id` int(10) unsigned NOT NULL,
   `location_id` int(10) unsigned NOT NULL,
   `price_buy` int(10) unsigned NOT NULL,
   `price_sell` int(10) unsigned DEFAULT NULL,
-  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `good_location` (`good_id`,`location_id`),
+  KEY `location` (`location_id`),
+  KEY `good` (`good_id`),
+  CONSTRAINT `locations` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `goods` FOREIGN KEY (`good_id`) REFERENCES `goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Commodity - Location relation';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `prices`
 --
 
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(50, 1, 1082, 1082, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(50, 2, 1086, 1086, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(50, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(50, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(51, 1, 1, 1, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(51, 2, 0, 0, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(51, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(51, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(52, 1, 1395, 1395, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(52, 2, 1042, 1042, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(52, 3, 1329, 1329, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(52, 4, 1239, 1239, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(53, 1, 288, 288, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(53, 2, 289, 289, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(53, 3, 150, 150, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(53, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(54, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(54, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(54, 3, 129, 129, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(54, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(55, 1, 3927, 3927, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(55, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(55, 3, 3085, 3085, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(55, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(56, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(56, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(56, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(56, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(57, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(57, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(57, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(57, 4, 1830, 1830, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(58, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(58, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(58, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(58, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(59, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(59, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(59, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(59, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(60, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(60, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(60, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(60, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(61, 1, 1393, 1393, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(61, 2, 1048, 1048, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(61, 3, 1360, 1360, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(61, 4, 1239, 1239, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(62, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(62, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(62, 3, 940, 940, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(62, 4, 914, 914, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(63, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(63, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(63, 3, 550, 550, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(63, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(64, 1, 7090, 7090, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(64, 2, 7115, 7115, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(64, 3, 6595, 6595, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(64, 4, 6588, 6588, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(65, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(65, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(65, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(65, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(66, 1, 1904, 1904, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(66, 2, 2341, 2341, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(66, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(66, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(67, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(67, 2, 550, 550, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(67, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(67, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(68, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(68, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(68, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(68, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(69, 1, 360, 360, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(69, 2, 645, 645, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(69, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(69, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(70, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(70, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(70, 3, 102, 102, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(70, 4, 103, 103, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(71, 1, 305, 305, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(71, 2, 161, 161, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(71, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(71, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(72, 1, 9862, 9862, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(72, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(72, 3, 9702, 9702, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(72, 4, 9119, 9119, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(73, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(73, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(73, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(73, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(74, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(74, 2, 56, 56, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(74, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(74, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(75, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(75, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(75, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(75, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(76, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(76, 2, 659, 659, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(76, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(76, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(77, 1, 1690, 1690, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(77, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(77, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(77, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(78, 1, 4476, 4476, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(78, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(78, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(78, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(79, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(79, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(79, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(79, 4, 624, 624, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(80, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(80, 2, 62, 62, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(80, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(80, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(81, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(81, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(81, 3, 1787, 1787, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(81, 4, 1942, 1942, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(82, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(82, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(82, 3, 13478, 13478, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(82, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(83, 1, 7090, 7090, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(83, 2, 7115, 7115, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(83, 3, 7116, 7116, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(83, 4, 7110, 7110, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(84, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(84, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(84, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(84, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(85, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(85, 2, 4491, 4491, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(85, 3, 3863, 3863, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(85, 4, 4115, 4115, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(86, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(86, 2, 199, 199, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(86, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(86, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(87, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(87, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(87, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(87, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(88, 1, 7090, 7090, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(88, 2, 7115, 7115, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(88, 3, 7061, 7061, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(88, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(89, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(89, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(89, 3, 1958, 1958, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(89, 4, 2209, 2209, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(90, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(90, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(90, 3, 4921, 4921, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(90, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(91, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(91, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(91, 3, 1539, 1539, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(91, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(92, 1, 7090, 7090, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(92, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(92, 3, 7116, 7116, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(92, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(93, 1, 232, 232, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(93, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(93, 3, 233, 233, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(93, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(94, 1, 4192, 4192, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(94, 2, 0, 0, '2014-08-08 08:33:41');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(94, 3, 4149, 4149, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(94, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(95, 1, 1582, 1582, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(95, 2, 1203, 1203, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(95, 3, 1405, 1405, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(95, 4, 1414, 1414, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(96, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(96, 2, 4675, 4675, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(96, 3, 4614, 4614, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(96, 4, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(97, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(97, 2, 4675, 4675, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(97, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(97, 4, 5158, 5158, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(98, 1, 0, 0, '2014-08-08 08:33:28');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(98, 2, 256, 256, '2014-08-08 12:38:32');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(98, 3, 0, 0, '2014-08-08 08:02:57');
-INSERT INTO `prices` (`good_id`, `location_id`, `price_buy`, `price_sell`, `ts`) VALUES(98, 4, 0, 0, '2014-08-08 08:02:57');
-
--- --------------------------------------------------------
+LOCK TABLES `prices` WRITE;
+/*!40000 ALTER TABLE `prices` DISABLE KEYS */;
+INSERT INTO `prices` VALUES (50,1,1082,0,'2014-08-18 17:59:44'),(50,2,964,0,'2014-08-20 17:32:09'),(50,3,0,0,'2014-08-08 08:02:57'),(50,4,0,0,'2014-08-08 08:02:57'),(50,5,624,653,'2014-08-20 17:19:05'),(50,8,1084,0,'2014-08-19 20:02:11'),(51,1,10,15,'2014-08-20 18:03:35'),(51,2,0,0,'2014-08-08 12:38:32'),(51,3,0,0,'2014-08-08 08:02:57'),(51,4,0,0,'2014-08-08 08:02:57'),(51,8,10,16,'2014-08-19 19:59:07'),(52,1,1395,0,'2014-08-14 18:18:47'),(52,2,1067,1114,'2014-08-20 17:31:27'),(52,3,1231,0,'2014-08-19 17:58:19'),(52,4,1239,0,'2014-08-14 18:42:50'),(52,5,1392,0,'2014-08-18 20:02:14'),(52,6,1235,0,'2014-08-20 20:03:43'),(52,8,1379,0,'2014-08-19 20:00:49'),(52,9,1401,0,'2014-08-19 18:28:14'),(52,14,1246,0,'2014-08-20 19:41:21'),(53,1,288,0,'2014-08-14 18:18:47'),(53,2,289,0,'2014-08-20 17:33:04'),(53,3,150,166,'2014-08-14 19:06:58'),(53,4,0,0,'2014-08-08 08:02:57'),(53,8,289,0,'2014-08-19 20:03:03'),(54,1,258,0,'2014-08-18 18:02:32'),(54,2,0,0,'2014-08-08 08:33:41'),(54,3,129,144,'2014-08-14 19:06:58'),(54,4,0,0,'2014-08-08 08:02:57'),(54,8,259,0,'2014-08-19 20:02:41'),(55,1,3849,0,'2014-08-20 18:03:35'),(55,2,0,0,'2014-08-08 08:33:41'),(55,3,3088,3165,'2014-08-20 17:49:06'),(55,4,0,0,'2014-08-08 08:02:57'),(56,1,342,0,'2014-08-18 18:00:03'),(56,2,306,0,'2014-08-20 17:32:09'),(56,3,306,0,'2014-08-14 19:01:30'),(56,4,308,0,'2014-08-14 19:34:52'),(56,5,305,0,'2014-08-18 20:03:58'),(56,6,307,0,'2014-08-20 20:03:43'),(56,8,306,0,'2014-08-19 20:01:45'),(56,9,307,0,'2014-08-19 18:29:30'),(56,14,307,0,'2014-08-20 19:43:37'),(57,1,0,0,'2014-08-08 08:33:28'),(57,2,0,0,'2014-08-08 08:33:41'),(57,3,0,0,'2014-08-08 08:02:57'),(57,4,1830,0,'2014-08-14 18:42:50'),(57,6,2400,0,'2014-08-20 20:07:17'),(57,9,1820,1868,'2014-08-19 18:30:02'),(57,14,1823,1871,'2014-08-20 19:44:10'),(58,1,67,0,'2014-08-18 18:04:50'),(58,2,68,0,'2014-08-20 17:34:00'),(58,3,11,18,'2014-08-14 19:10:27'),(58,4,0,0,'2014-08-08 08:02:57'),(58,5,11,18,'2014-08-18 20:08:52'),(58,6,11,18,'2014-08-14 23:27:00'),(58,8,68,0,'2014-08-19 20:03:14'),(58,9,11,18,'2014-08-19 18:30:55'),(58,14,11,18,'2014-08-20 19:45:55'),(59,1,116,129,'2014-08-20 18:03:35'),(59,2,263,0,'2014-08-20 17:29:48'),(59,3,264,0,'2014-08-20 17:47:29'),(59,4,308,0,'2014-08-14 19:29:55'),(59,5,305,0,'2014-08-18 20:01:43'),(59,6,253,0,'2014-08-20 20:02:44'),(59,8,306,0,'2014-08-19 19:58:46'),(59,9,307,0,'2014-08-19 18:26:07'),(59,14,307,0,'2014-08-20 19:40:29'),(60,1,0,0,'2014-08-08 08:33:28'),(60,2,0,0,'2014-08-08 08:33:41'),(60,3,746,0,'2014-08-14 19:02:42'),(60,4,0,0,'2014-08-08 08:02:57'),(60,5,743,0,'2014-08-18 20:05:52'),(60,6,502,535,'2014-08-14 23:23:08'),(61,1,1361,0,'2014-08-19 19:44:58'),(61,2,1067,1114,'2014-08-20 17:31:27'),(61,3,1231,0,'2014-08-20 17:48:26'),(61,4,1239,0,'2014-08-14 18:42:50'),(61,5,1376,0,'2014-08-18 20:02:27'),(61,6,1235,0,'2014-08-20 20:03:43'),(61,8,1394,0,'2014-08-19 19:59:31'),(61,9,1359,0,'2014-08-19 18:28:48'),(61,14,1302,0,'2014-08-20 19:42:04'),(62,1,0,0,'2014-08-08 08:33:28'),(62,2,0,0,'2014-08-08 08:33:41'),(62,3,940,0,'2014-08-14 18:43:52'),(62,4,914,953,'2014-08-14 19:36:24'),(62,6,1397,0,'2014-08-20 20:07:17'),(63,1,346,371,'2014-08-14 18:22:41'),(63,2,0,0,'2014-08-08 08:33:41'),(63,3,550,0,'2014-08-14 19:06:59'),(63,4,0,0,'2014-08-08 08:02:57'),(63,5,547,0,'2014-08-18 20:08:28'),(64,1,7090,0,'2014-08-14 18:18:47'),(64,2,6863,0,'2014-08-20 17:29:48'),(64,3,6595,6671,'2014-08-20 17:47:29'),(64,4,6588,0,'2014-08-14 18:42:50'),(64,5,6733,0,'2014-08-18 20:01:54'),(64,6,6566,0,'2014-08-20 20:02:44'),(64,8,7096,0,'2014-08-19 19:58:38'),(64,9,6553,0,'2014-08-19 18:25:57'),(64,14,6563,0,'2014-08-20 19:40:46'),(65,1,0,0,'2014-08-08 08:33:28'),(65,2,0,0,'2014-08-08 08:33:41'),(65,3,0,0,'2014-08-08 08:02:57'),(65,4,0,0,'2014-08-08 08:02:57'),(66,1,1935,1990,'2014-08-20 18:03:35'),(66,2,2157,0,'2014-08-20 17:32:09'),(66,3,0,0,'2014-08-08 08:02:57'),(66,4,0,0,'2014-08-08 08:02:57'),(66,8,2336,0,'2014-08-19 20:01:20'),(67,1,548,0,'2014-08-18 17:56:49'),(67,2,550,0,'2014-08-20 17:29:48'),(67,3,547,0,'2014-08-20 17:47:29'),(67,4,550,0,'2014-08-14 19:31:00'),(67,5,547,0,'2014-08-18 19:59:24'),(67,6,542,0,'2014-08-20 20:02:44'),(67,8,549,0,'2014-08-19 19:58:23'),(67,9,543,0,'2014-08-19 18:25:44'),(67,14,551,0,'2014-08-20 19:40:19'),(68,1,0,0,'2014-08-08 08:33:28'),(68,2,0,0,'2014-08-08 08:33:41'),(68,3,0,0,'2014-08-08 08:02:57'),(68,4,0,0,'2014-08-08 08:02:57'),(69,1,449,485,'2014-08-20 18:03:35'),(69,2,645,0,'2014-08-20 17:31:27'),(69,3,645,0,'2014-08-14 19:00:24'),(69,4,650,0,'2014-08-14 19:33:51'),(69,5,643,0,'2014-08-20 17:18:00'),(69,6,647,0,'2014-08-20 20:07:17'),(69,8,443,478,'2014-08-19 20:00:02'),(69,9,646,0,'2014-08-19 18:28:03'),(69,14,647,0,'2014-08-20 19:42:26'),(70,1,13,19,'2014-08-20 18:03:35'),(70,2,0,0,'2014-08-08 08:33:41'),(70,3,102,0,'2014-08-14 18:43:53'),(70,4,103,0,'2014-08-14 18:42:50'),(70,6,103,0,'2014-08-14 23:19:20'),(70,9,102,0,'2014-08-19 18:27:51'),(70,14,103,0,'2014-08-20 19:42:39'),(71,1,305,0,'2014-08-14 18:18:47'),(71,2,165,183,'2014-08-20 17:31:27'),(71,3,282,0,'2014-08-20 17:48:26'),(71,4,275,0,'2014-08-14 19:33:22'),(71,5,305,0,'2014-08-18 20:03:18'),(71,6,307,0,'2014-08-14 23:19:34'),(71,8,306,0,'2014-08-19 19:59:21'),(71,9,307,0,'2014-08-19 18:28:37'),(71,14,301,0,'2014-08-20 19:41:33'),(72,1,9862,0,'2014-08-14 18:18:47'),(72,2,0,0,'2014-08-08 08:33:41'),(72,3,9525,0,'2014-08-14 19:02:29'),(72,4,9119,0,'2014-08-14 18:42:50'),(72,5,9857,0,'2014-08-18 20:05:03'),(73,1,180,0,'2014-08-10 19:44:40'),(73,2,71,83,'2014-08-20 17:34:36'),(73,3,180,0,'2014-08-20 17:48:26'),(73,4,182,0,'2014-08-14 19:33:37'),(73,5,180,0,'2014-08-20 17:18:00'),(73,6,181,0,'2014-08-14 23:20:26'),(73,8,71,84,'2014-08-19 20:01:04'),(73,9,181,0,'2014-08-19 18:28:27'),(73,14,181,0,'2014-08-20 19:41:52'),(74,1,58,0,'2014-08-18 17:55:44'),(74,2,56,0,'2014-08-20 17:29:14'),(74,3,56,0,'2014-08-20 17:47:29'),(74,4,71,72,'2014-08-14 19:29:32'),(74,5,56,0,'2014-08-18 19:59:12'),(74,6,80,81,'2014-08-20 20:02:44'),(74,8,56,0,'2014-08-19 19:57:35'),(74,9,80,81,'2014-08-19 18:24:18'),(74,14,80,81,'2014-08-20 19:39:50'),(75,1,142,0,'2014-08-18 18:03:53'),(75,2,46,58,'2014-08-20 17:33:47'),(75,3,0,0,'2014-08-08 08:02:57'),(75,4,0,0,'2014-08-08 08:02:57'),(76,1,0,0,'2014-08-08 08:33:28'),(76,2,659,0,'2014-08-20 17:30:21'),(76,3,0,0,'2014-08-08 08:02:57'),(76,4,664,0,'2014-08-14 19:32:26'),(76,9,660,0,'2014-08-19 18:26:32'),(77,1,1690,0,'2014-08-14 18:18:47'),(77,2,0,0,'2014-08-08 08:33:41'),(77,3,1696,0,'2014-08-14 19:04:06'),(77,4,0,0,'2014-08-08 08:02:57'),(77,5,1689,0,'2014-08-18 20:05:25'),(78,1,4476,0,'2014-08-14 18:18:09'),(78,2,0,0,'2014-08-08 08:33:41'),(78,3,0,0,'2014-08-08 08:02:57'),(78,4,0,0,'2014-08-08 08:02:57'),(78,8,4484,0,'2014-08-19 20:01:35'),(79,1,393,421,'2014-08-20 18:03:35'),(79,2,0,0,'2014-08-08 08:33:41'),(79,3,0,0,'2014-08-08 08:02:57'),(79,4,624,0,'2014-08-14 18:42:50'),(79,6,530,0,'2014-08-20 20:07:17'),(79,9,621,0,'2014-08-19 18:29:03'),(79,14,619,0,'2014-08-20 19:42:57'),(80,1,50,60,'2014-08-20 18:03:35'),(80,2,62,73,'2014-08-20 17:29:14'),(80,3,0,0,'2014-08-08 08:02:57'),(80,4,0,0,'2014-08-08 08:02:57'),(80,6,164,0,'2014-08-20 20:02:44'),(81,1,0,0,'2014-08-08 08:33:28'),(81,2,0,0,'2014-08-08 08:33:41'),(81,3,1787,0,'2014-08-14 18:43:53'),(81,4,1942,0,'2014-08-14 18:42:50'),(81,6,1936,0,'2014-08-14 23:27:21'),(81,14,1719,0,'2014-08-20 19:46:08'),(82,1,0,0,'2014-08-08 08:33:28'),(82,2,0,0,'2014-08-08 08:33:41'),(82,3,13696,0,'2014-08-14 19:02:29'),(82,4,0,0,'2014-08-08 08:02:57'),(82,5,13676,0,'2014-08-18 20:05:40'),(83,1,7090,0,'2014-08-14 18:18:09'),(83,2,7115,0,'2014-08-20 17:32:09'),(83,3,7116,0,'2014-08-14 18:43:53'),(83,4,6974,0,'2014-08-14 19:34:40'),(83,5,6508,6587,'2014-08-18 20:04:48'),(83,6,7137,0,'2014-08-20 20:04:49'),(83,8,7103,0,'2014-08-19 20:02:00'),(83,9,7022,0,'2014-08-19 18:29:18'),(83,14,7134,0,'2014-08-20 19:43:25'),(84,1,0,0,'2014-08-08 08:33:28'),(84,2,0,0,'2014-08-08 08:33:41'),(84,3,0,0,'2014-08-08 08:02:57'),(84,4,0,0,'2014-08-08 08:02:57'),(85,1,0,0,'2014-08-08 08:33:28'),(85,2,4248,0,'2014-08-20 17:34:19'),(85,3,3966,4064,'2014-08-20 17:50:19'),(85,4,4373,0,'2014-08-14 19:37:30'),(85,9,4291,0,'2014-08-19 18:31:12'),(86,1,198,0,'2014-08-18 17:56:02'),(86,2,199,0,'2014-08-20 17:29:14'),(86,3,0,0,'2014-08-08 08:02:57'),(86,4,0,0,'2014-08-08 08:02:57'),(86,5,83,97,'2014-08-18 19:58:56'),(86,8,199,0,'2014-08-19 19:58:10'),(87,1,0,0,'2014-08-08 08:33:28'),(87,2,0,0,'2014-08-08 08:33:41'),(87,3,0,0,'2014-08-08 08:02:57'),(87,4,0,0,'2014-08-08 08:02:57'),(88,1,7090,0,'2014-08-14 18:18:47'),(88,2,7115,0,'2014-08-20 17:33:04'),(88,3,7116,0,'2014-08-14 19:01:54'),(88,4,0,0,'2014-08-08 08:02:57'),(88,5,6498,6577,'2014-08-18 20:04:17'),(88,8,7103,0,'2014-08-19 20:02:27'),(88,14,7134,0,'2014-08-20 19:43:12'),(89,1,0,0,'2014-08-08 08:33:28'),(89,2,0,0,'2014-08-08 08:33:41'),(89,3,1958,0,'2014-08-14 18:43:53'),(89,4,2192,0,'2014-08-14 19:37:49'),(89,6,2202,0,'2014-08-14 23:27:33'),(89,14,1963,0,'2014-08-20 19:46:22'),(90,1,0,0,'2014-08-08 08:33:28'),(90,2,0,0,'2014-08-08 08:33:41'),(90,3,5517,5581,'2014-08-20 17:49:28'),(90,4,0,0,'2014-08-08 08:02:57'),(90,6,5739,0,'2014-08-20 20:07:17'),(91,1,1922,0,'2014-08-18 18:03:02'),(91,2,0,0,'2014-08-08 08:33:41'),(91,3,1539,1582,'2014-08-20 17:50:19'),(91,4,0,0,'2014-08-08 08:02:57'),(91,6,0,0,'2014-08-14 23:17:02'),(92,1,7090,0,'2014-08-14 18:18:47'),(92,2,0,0,'2014-08-08 08:33:41'),(92,3,7116,0,'2014-08-14 18:43:53'),(92,4,0,0,'2014-08-08 08:02:57'),(92,5,7086,0,'2014-08-18 20:03:34'),(93,1,232,0,'2014-08-14 18:18:47'),(93,2,0,0,'2014-08-08 08:33:41'),(93,3,233,0,'2014-08-14 18:43:53'),(93,4,235,0,'2014-08-14 19:33:07'),(93,5,77,0,'2014-08-18 20:02:53'),(93,6,234,0,'2014-08-20 20:03:43'),(93,9,234,0,'2014-08-19 18:27:39'),(93,14,234,0,'2014-08-20 19:42:17'),(94,1,4192,0,'2014-08-14 18:18:47'),(94,2,0,0,'2014-08-08 08:33:41'),(94,3,4132,0,'2014-08-18 19:29:49'),(94,4,0,0,'2014-08-08 08:02:57'),(94,5,4190,0,'2014-08-18 20:06:17'),(94,6,3647,3737,'2014-08-20 20:04:49'),(95,1,1585,0,'2014-08-18 17:55:18'),(95,2,1243,1297,'2014-08-20 17:31:27'),(95,3,1405,0,'2014-08-20 17:48:26'),(95,4,1414,0,'2014-08-14 18:42:50'),(95,5,1522,0,'2014-08-18 20:03:05'),(95,6,1409,0,'2014-08-20 20:03:43'),(95,8,1579,0,'2014-08-19 19:59:45'),(95,9,1407,0,'2014-08-19 18:27:28'),(95,14,1485,0,'2014-08-20 19:41:09'),(96,1,4659,0,'2014-08-18 18:02:49'),(96,2,4675,0,'2014-08-20 17:33:04'),(96,3,4614,4669,'2014-08-19 18:00:50'),(96,4,0,0,'2014-08-08 08:02:57'),(96,5,3912,3961,'2014-08-20 17:19:05'),(96,8,4668,0,'2014-08-19 20:02:50'),(97,1,0,0,'2014-08-08 08:33:28'),(97,2,4675,0,'2014-08-20 17:30:08'),(97,3,0,0,'2014-08-08 08:02:57'),(97,4,5158,0,'2014-08-14 18:42:51'),(97,9,4681,0,'2014-08-19 18:27:04'),(98,1,0,0,'2014-08-08 08:33:28'),(98,2,256,0,'2014-08-20 17:30:21'),(98,3,233,0,'2014-08-20 17:48:26'),(98,4,235,0,'2014-08-14 19:31:42'),(98,9,234,0,'2014-08-19 18:27:15'),(99,1,0,0,'2014-08-15 09:28:29'),(99,2,0,16000,'2014-08-19 16:59:29'),(99,3,0,1,'2014-08-18 18:59:13'),(99,5,0,16000,'2014-08-18 20:10:14'),(100,1,0,0,'2014-08-15 09:28:29'),(100,2,0,3200,'2014-08-19 16:59:40'),(101,1,0,0,'2014-08-15 09:28:29'),(101,3,0,23920,'2014-08-19 17:11:49'),(101,5,0,23920,'2014-08-18 20:10:28'),(102,1,0,210677,'2014-08-19 17:27:57'),(102,2,0,0,'2014-08-18 18:21:30'),(102,5,0,212145,'2014-08-18 20:10:55'),(103,1,45,53,'2014-08-20 18:03:35'),(103,6,172,0,'2014-08-14 23:21:08'),(104,1,20,25,'2014-08-20 18:03:49'),(104,3,27,34,'2014-08-14 19:10:44'),(104,5,28,35,'2014-08-18 20:09:05'),(104,6,91,0,'2014-08-14 23:27:09'),(105,1,142,0,'2014-08-18 17:57:01'),(105,2,143,0,'2014-08-20 17:30:08'),(105,3,143,0,'2014-08-20 17:47:29'),(105,4,143,0,'2014-08-14 19:32:03'),(105,5,142,0,'2014-08-18 20:02:03'),(105,6,143,0,'2014-08-20 20:03:43'),(105,8,142,0,'2014-08-19 19:58:56'),(105,9,143,0,'2014-08-19 18:26:17'),(105,14,143,0,'2014-08-20 19:40:59'),(106,1,2834,0,'2014-08-18 18:00:45'),(106,3,2845,0,'2014-08-14 19:03:08'),(106,5,2833,0,'2014-08-18 20:06:27'),(107,1,6216,0,'2014-08-18 18:01:46'),(107,3,6179,0,'2014-08-18 18:57:49'),(107,5,6188,0,'2014-08-18 20:06:06'),(107,6,5751,5819,'2014-08-20 20:04:49'),(108,3,5121,0,'2014-08-14 19:04:21'),(108,5,5100,0,'2014-08-18 20:05:12'),(109,3,324,0,'2014-08-14 19:04:48'),(109,4,144,160,'2014-08-14 19:36:06'),(109,5,323,0,'2014-08-18 20:06:40'),(109,6,325,0,'2014-08-20 20:07:17'),(110,1,8642,0,'2014-08-18 18:02:13'),(110,3,8673,0,'2014-08-14 19:05:12'),(110,5,8449,0,'2014-08-18 20:07:26'),(111,3,1905,0,'2014-08-19 18:44:48'),(111,5,2049,0,'2014-08-18 20:07:07'),(111,6,1838,0,'2014-08-20 20:07:17'),(111,9,1339,1376,'2014-08-19 18:29:48'),(111,14,1514,1555,'2014-08-20 19:44:45'),(112,1,5450,0,'2014-08-18 18:02:00'),(112,3,5470,0,'2014-08-14 19:05:50'),(112,5,5447,0,'2014-08-18 20:06:54'),(113,3,2214,2271,'2014-08-19 18:00:26'),(113,5,2247,2306,'2014-08-18 20:08:03'),(113,6,2742,0,'2014-08-19 18:13:30'),(113,14,2144,2145,'2014-08-20 19:45:12'),(114,1,258,0,'2014-08-18 18:03:29'),(114,3,103,115,'2014-08-14 19:07:56'),(114,4,261,0,'2014-08-14 19:36:40'),(114,5,128,143,'2014-08-18 20:08:17'),(114,6,259,0,'2014-08-19 18:13:30'),(114,9,259,0,'2014-08-19 18:30:29'),(114,14,260,0,'2014-08-20 19:45:28'),(115,4,291,0,'2014-08-14 19:29:44'),(115,6,145,162,'2014-08-20 20:02:44'),(115,9,289,0,'2014-08-19 18:25:32'),(115,14,290,0,'2014-08-20 19:40:04'),(116,4,144,0,'2014-08-14 19:31:27'),(116,9,134,0,'2014-08-19 18:26:46'),(117,4,19,25,'2014-08-14 19:35:46'),(117,6,113,0,'2014-08-14 23:24:42'),(117,14,29,39,'2014-08-20 19:44:21'),(118,4,1026,0,'2014-08-14 19:37:04'),(118,5,732,766,'2014-08-18 20:08:40'),(118,6,1016,0,'2014-08-20 20:07:17'),(118,9,1020,0,'2014-08-19 18:30:41'),(118,14,1022,0,'2014-08-20 19:45:41'),(119,1,115,0,'2014-08-18 17:58:44'),(119,6,29,39,'2014-08-14 23:20:53'),(120,5,2122,2179,'2014-08-18 20:04:31'),(120,6,2742,0,'2014-08-20 20:04:49'),(121,1,1082,0,'2014-08-18 18:01:00'),(121,6,635,664,'2014-08-20 20:11:54'),(122,1,323,0,'2014-08-18 18:01:25'),(122,6,154,170,'2014-08-20 20:07:31'),(123,6,1888,1938,'2014-08-20 20:05:15'),(123,14,1947,1999,'2014-08-20 19:43:54'),(124,6,908,0,'2014-08-14 23:25:28'),(125,6,573,0,'2014-08-20 20:07:17'),(125,9,302,323,'2014-08-19 18:30:15'),(125,14,302,323,'2014-08-20 19:44:59'),(126,1,0,92663,'2014-08-19 17:27:29'),(126,3,0,94131,'2014-08-19 17:12:19'),(126,5,0,94131,'2014-08-18 20:10:41'),(127,1,0,141835,'2014-08-19 17:27:44'),(127,3,0,0,'2014-08-15 06:03:47'),(127,5,0,143303,'2014-08-18 20:10:03'),(128,1,954,0,'2014-08-18 17:58:28'),(129,1,485,0,'2014-08-18 18:01:16'),(130,1,407,0,'2014-08-18 18:04:13'),(130,2,237,256,'2014-08-20 17:33:22'),(131,1,155,0,'2014-08-18 18:04:33'),(132,1,0,3525574,'2014-08-19 17:28:33');
+/*!40000 ALTER TABLE `prices` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `roads`
 --
 
 DROP TABLE IF EXISTS `roads`;
-CREATE TABLE IF NOT EXISTS `roads` (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roads` (
   `location_id_from` int(10) unsigned NOT NULL,
   `location_id_to` int(10) unsigned NOT NULL,
-  `distance` decimal(10,2) unsigned NOT NULL
+  `distance` decimal(10,2) unsigned NOT NULL,
+  UNIQUE KEY `location_id_from_to` (`location_id_from`,`location_id_to`),
+  KEY `locations_to` (`location_id_to`),
+  CONSTRAINT `locations_to` FOREIGN KEY (`location_id_to`) REFERENCES `locations` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `location_from` FOREIGN KEY (`location_id_from`) REFERENCES `locations` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Location - location relations';
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `roads`
 --
 
-INSERT INTO `roads` (`location_id_from`, `location_id_to`, `distance`) VALUES(1, 2, 1.00);
-INSERT INTO `roads` (`location_id_from`, `location_id_to`, `distance`) VALUES(2, 1, 1.00);
-INSERT INTO `roads` (`location_id_from`, `location_id_to`, `distance`) VALUES(2, 4, 2.00);
-INSERT INTO `roads` (`location_id_from`, `location_id_to`, `distance`) VALUES(3, 4, 1.00);
-INSERT INTO `roads` (`location_id_from`, `location_id_to`, `distance`) VALUES(4, 2, 2.00);
-INSERT INTO `roads` (`location_id_from`, `location_id_to`, `distance`) VALUES(4, 3, 1.00);
+LOCK TABLES `roads` WRITE;
+/*!40000 ALTER TABLE `roads` DISABLE KEYS */;
+INSERT INTO `roads` VALUES (1,2,5.48),(1,5,3.53),(1,7,4.04),(1,8,6.15),(2,1,5.48),(2,3,4.48),(2,4,5.23),(2,5,7.75),(2,6,9.99),(2,7,99.00),(2,14,7.50),(3,2,4.48),(3,4,1.00),(3,6,4.66),(4,2,5.23),(4,3,1.00),(5,1,3.53),(5,2,7.75),(5,7,6.97),(5,8,7.80),(5,10,6.55),(5,13,7.16),(5,14,7.74),(5,15,9.54),(5,16,9.60),(6,2,9.99),(6,3,4.66),(6,9,5.12),(7,1,4.04),(7,2,99.00),(7,5,6.97),(7,8,4.27),(8,1,6.15),(8,5,7.80),(8,7,4.27),(8,11,7.73),(8,12,6.09),(9,6,5.12),(9,13,99.00),(10,5,6.55),(11,8,7.73),(12,8,6.09),(13,5,7.16),(13,9,99.00),(14,2,7.50),(14,5,7.74),(15,5,9.54),(16,5,9.60);
+/*!40000 ALTER TABLE `roads` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `goods`
---
-ALTER TABLE `goods`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `locations`
---
-ALTER TABLE `locations`
- ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `prices`
---
-ALTER TABLE `prices`
- ADD UNIQUE KEY `good_location` (`good_id`,`location_id`), ADD KEY `location` (`location_id`), ADD KEY `good` (`good_id`);
-
---
--- Indexes for table `roads`
---
-ALTER TABLE `roads`
- ADD UNIQUE KEY `location_id_from_to` (`location_id_from`,`location_id_to`), ADD KEY `locations_to` (`location_id_to`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `goods`
---
-ALTER TABLE `goods`
-MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=99;
---
--- AUTO_INCREMENT for table `locations`
---
-ALTER TABLE `locations`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `prices`
---
-ALTER TABLE `prices`
-ADD CONSTRAINT `locations` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD CONSTRAINT `goods` FOREIGN KEY (`good_id`) REFERENCES `goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `roads`
---
-ALTER TABLE `roads`
-ADD CONSTRAINT `locations_to` FOREIGN KEY (`location_id_to`) REFERENCES `locations` (`id`) ON DELETE CASCADE,
-ADD CONSTRAINT `location_from` FOREIGN KEY (`location_id_from`) REFERENCES `locations` (`id`) ON DELETE CASCADE;
-
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2014-08-21  6:58:05
