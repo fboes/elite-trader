@@ -1,7 +1,20 @@
-						<li><a href="<?php _echo($app->url('trader'));?>#modal-trader" class="modal"><i class="fa fa-bars"></i> <span class="icon-hide">Create connection</span></a></li>
+						<?php if ($data->currentTrader->is_editor): ?>
+							<li><a href="<?php _echo($app->url('trader'));?>#modal-trader" class="modal"><i class="fa fa-bars"></i> <span class="icon-hide">Create connection</span></a></li>
+						<?php endif; ?>
 					<ul>
 				</nav>
 			</div>
 		</div>
 		<div id="main" class="main">
 			<main role="main">
+				<?php if(!empty($data->messages)): ?>
+					<div class="block-container-1" id="messages">
+						<section>
+							<ul>
+								<?php foreach ($data->messages as $m): ?>
+									<li class="<?php _echo($m->isSuccess() ? 'success' : 'error');?>"><?php _echo($m->message);?></li>
+								<?php endforeach; ?>
+							</ul>
+						</section>
+					</div>
+				<?php endif; ?>

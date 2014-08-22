@@ -86,12 +86,20 @@
 					options
 				),
 				elements : {
-					parent : null,
-					modal  : null,
+					parent   : null,
+					modal    : null,
+					messages : null
 				},
 				init : function (el) {
+					var that = this;
 					this.elements.parent = el;
 					this.elements.modal  = el.find('#modal');
+					this.elements.messages = el.find('#messages');
+					if (this.elements.messages.length) {
+						var timer = setTimeout(function () {
+							that.elements.messages.slideUp('fast');
+						}, 2000);
+					}
 					this.bindEvents();
 				},
 				bindEvents : function () {

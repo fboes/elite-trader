@@ -1,31 +1,33 @@
 <?php require('_header.html');?>
-
-	<li><a href="<?php _echo($app->url('good-update',$data['currentLocation']['id']));?>#modal-good_update" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create price</span></a></li>
-	<li><a href="<?php _echo($app->url('location-update',$data['currentLocation']['id']));?>#modal-location_update" class="modal"><i class="fa fa-road"></i> <span class="icon-hide">Create connection</span></a></li>
-
+	<?php if ($data->currentTrader->is_editor): ?>
+		<li><a href="<?php _echo($app->url('good-update',$data->currentLocation->id));?>#modal-good_update" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create price</span></a></li>
+		<li><a href="<?php _echo($app->url('location-update',$data->currentLocation->id));?>#modal-location_update" class="modal"><i class="fa fa-road"></i> <span class="icon-hide">Create connection</span></a></li>
+	<?php endif; ?>
 <?php require('_header_break.html');?>
 
 	<div class="block-container-1">
 		<section>
-			<form action="<?php _echo($app->currentUrl());?>" method="POST">
+			<?php if ($data->currentTrader->is_editor): ?>
+				<form action="<?php _echo($app->currentUrl());?>" method="POST">
+			<?php endif; ?>
 				<?php if(empty($app->subId)): ?>
 					<div>
 
-						<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='location_name'"><?php _echo($data['currentLocation']['name']);?></span></h3>
-						<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='location_description'"><?php _echo($data['currentLocation']['description']);?></span></p>
+						<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='location_name'"><?php _echo($data->currentLocation->name);?></span></h3>
+						<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='location_description'"><?php _echo($data->currentLocation->description);?></span></p>
 					</div>
 				<?php else: ?>
-					<h3><?php _echo($data['title']);?></h3>
+					<h3><?php _echo($data->title);?></h3>
 				<?php endif; ?>
 
-				<?php if (!empty($data['prices'])): ?>
+				<?php if (!empty($data->prices)): ?>
 					<?php if(empty($app->subId)): ?>
 						<p>
 							Price is set to '0' if the good can't be bought / sold at this location.<br />
-							Prices are compared for locations in max. <?php _echo($data['currentTrader']['hops']);?> hops distance with a max. distance of <?php _echo($data['currentTrader']['hopdistance'].' '.CONFIG_UNIT_DISTANCE);?> for a single hop.
+							Prices are compared for locations in max. <?php _echo($data->currentTrader->hops);?> hops distance with a max. distance of <?php _echo($data->currentTrader->hopdistance.' '.CONFIG_UNIT_DISTANCE);?> for a single hop.
 						</p>
 					<?php else: ?>
-						<p><a href="<?php _echo($app->url($app->path,$app->id));?>">Return to chart for <?php _echo($data['currentLocation']['name']);?></a></p>
+						<p><a href="<?php _echo($app->url($app->path,$app->id));?>">Return to chart for <?php _echo($data->currentLocation->name);?></a></p>
 					<?php endif; ?>
 					<table class="sortable">
 						<thead>
@@ -41,32 +43,36 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?php foreach ($data['prices'] as $goodIndex => $price): ?>
+							<?php foreach ($data->prices as $goodIndex => $price): ?>
 								<tr>
-									<td><a href="<?php _echo($app->url('goods',$goodIndex));?>"><?php _echo($price['name']);?></a></td>
+									<td><a href="<?php _echo($app->url('goods',$goodIndex));?>"><?php _echo($price->name);?></a></td>
 									<td class="number">
-										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][buy]'"><?php $app->echoNumber($price['price_buy']);?></span>
+										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][buy]'"><?php $app->echoNumber($price->price_buy);?></span>
 									</td>
 									<td class="number">
-										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][sell]'"><?php $app->echoNumber($price['price_sell']);?></span>
+										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='price[<?php _echo($goodIndex);?>][sell]'"><?php $app->echoNumber($price->price_sell);?></span>
 									</td>
 									<td class="number">
-										<a href="<?php _echo($app->url('good-update',$data['currentLocation']['id'],$goodIndex));?>#modal-good_update" class="modal">
-											<i class="fa <?php $app->echoStatus($price['tsStatus']);?>"></i><span class="icon-hide"><?php _echo($price['tsStatus']);?></span>
-										</a>
+										<?php if ($data->currentTrader->is_editor): ?>
+											<a href="<?php _echo($app->url('good-update',$data->currentLocation->id,$goodIndex));?>#modal-good_update" class="modal">
+										<?php endif; ?>
+											<i class="fa <?php $app->echoStatus($price->tsStatus);?>"></i><span class="icon-hide"><?php _echo($price->tsStatus);?></span>
+										<?php if ($data->currentTrader->is_editor): ?>
+											</a>
+										<?php endif; ?>
 									</td>
 
-									<?php if(!empty($price['buyer'])): ?>
-										<td class="number"><?php $app->echoNumber($price['buyer']['delta']); ?></td>
-										<td><a href="<?php _echo($app->url('locations',$price['buyer']['id']));?>"><?php _echo($price['buyer']['name']); ?></a>
+									<?php if(!empty($price->buyer)): ?>
+										<td class="number"><?php $app->echoNumber($price->buyer->delta); ?></td>
+										<td><a href="<?php _echo($app->url('locations',$price->buyer->id));?>"><?php _echo($price->buyer->name); ?></a>
 										</td>
 									<?php else: ?>
 										<td class="empty"></td>
 										<td class="empty">No profits</td>
 									<?php endif; ?>
-									<?php if(!empty($price['seller'])): ?>
-										<td class="number"><?php $app->echoNumber($price['seller']['delta']); ?></td>
-										<td><a href="<?php _echo($app->url('locations',$price['seller']['id']));?>"><?php _echo($price['seller']['name']); ?></a>
+									<?php if(!empty($price->seller)): ?>
+										<td class="number"><?php $app->echoNumber($price->seller->delta); ?></td>
+										<td><a href="<?php _echo($app->url('locations',$price->seller->id));?>"><?php _echo($price->seller->name); ?></a>
 										</td>
 									<?php else: ?>
 										<td class="empty"></td>
@@ -78,44 +84,58 @@
 						</tbody>
 					</table>
 				<?php endif; ?>
-				<input type="hidden" name="action" value="update_price" />
-				<button type="submit">Save location data</button>
-				<a href="<?php _echo($app->url('good-update',$data['currentLocation']['id']));?>#modal-good_update" class="modal button"><i class="fa fa-plus"></i> New price</a>
-			</form>
+				<?php if ($data->currentTrader->is_editor): ?>
+					<input type="hidden" name="action" value="update_price" />
+					<button type="submit">Save location data</button>
+					<a href="<?php _echo($app->url('good-update',$data->currentLocation->id));?>#modal-good_update" class="modal button"><i class="fa fa-plus"></i> New price</a>
+				<?php endif; ?>
+			<?php if ($data->currentTrader->is_editor): ?>
+				</form>
+			<?php endif; ?>
 		</section>
 
 		<section>
-			<h4>Travelling connections for <?php _echo($data['currentLocation']['name']);?></h4>
+			<h4>Travelling connections for <?php _echo($data->currentLocation->name);?></h4>
 
-			<form action="<?php _echo($app->currentUrl());?>" method="POST">
-				<?php if(!empty($data['connections'])): ?>
+			<?php if ($data->currentTrader->is_editor): ?>
+				<form action="<?php _echo($app->currentUrl());?>" method="POST">
+				<?php endif; ?>
+				<?php if(!empty($data->connections)): ?>
 					<table class="sortable">
 						<thead>
 							<tr>
 								<th>Location</th>
 								<th class="number" style="width:4.5em;">Distance</th>
 								<th style="width:15em;">Compare prices</th>
-								<th class="number" style="width:3em;"><i class="fa fa-trash-o"></i></th>
+								<?php if ($data->currentTrader->is_editor): ?>
+									<th class="number" style="width:3em;"><i class="fa fa-trash-o"></i></th>
+								<?php endif; ?>
 							</tr>
 						</thead>
 						<tbody>
-							<?php foreach($data['connections'] as $c): ?>
-								<tr<?php echo(($c['distance'] > $data['currentTrader']['hopdistance']) ? ' class="error" title="Out of reach"': '');?>>
-									<td><a href="<?php _echo($app->url('locations',$c['id']));?>"><?php _echo($c['name']); ?></a></td>
-									<td class="number"><span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='0.01' name='lanes[<?php _echo(urlencode($c['id']));?>]'"><?php $app->echoNumber($c['distance']); ?></span></td>
-									<td><a href="<?php _echo($app->url($app->path,$app->id, $c['id']));?>"><i class="fa fa-exchange"></i> <?php _echo($data['currentLocation']['name']);?></a></td>
-									<td class="number"><input class="delete" type="checkbox" name="lanes_delete[<?php _echo(urlencode($c['id']));?>]" value="x" /></td>
+							<?php foreach($data->connections as $c): ?>
+								<tr<?php echo(($c->distance > $data->currentTrader->hopdistance) ? ' class="error" title="Out of reach"': '');?>>
+									<td><a href="<?php _echo($app->url('locations',$c->id));?>"><?php _echo($c->name); ?></a></td>
+									<td class="number"><span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='0.01' name='lanes[<?php _echo(urlencode($c->id));?>]'"><?php $app->echoNumber($c->distance); ?></span></td>
+									<td><a href="<?php _echo($app->url($app->path,$app->id, $c->id));?>"><i class="fa fa-exchange"></i><?php _echo($data->currentLocation->name);?></a></td>
+									<?php if ($data->currentTrader->is_editor): ?>
+										<td class="number"><input class="delete" type="checkbox" name="lanes_delete[<?php _echo(urlencode($c->id));?>]" value="x" /></td>
+									<?php endif; ?>
 								</tr>
 							<?php endforeach; ?>
 						</tbody>
 					</table>
-					<input type="hidden" name="location" value="<?php _echo($data['currentLocation']['id']);?>" />
-					<input type="hidden" name="action" value="update_lane" />
-					<button type="submit">Save connection data</button>
+					<?php if ($data->currentTrader->is_editor): ?>
+						<input type="hidden" name="location" value="<?php _echo($data->currentLocation->id);?>" />
+						<input type="hidden" name="action" value="update_lane" />
+						<button type="submit">Save connection data</button>
+					<?php endif; ?>
 				<?php endif; ?>
 
-				<a href="<?php _echo($app->url('location-update',$data['currentLocation']['id']));?>#modal-location_update" class="modal button"><i class="fa fa-plus"></i> New connection</a>
-			</form>
+			<?php if ($data->currentTrader->is_editor): ?>
+					<a href="<?php _echo($app->url('location-update',$data->currentLocation->id));?>#modal-location_update" class="modal button"><i class="fa fa-plus"></i> New connection</a>
+				</form>
+			<?php endif; ?>
 		</section>
 	</div>
 

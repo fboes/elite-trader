@@ -1,13 +1,13 @@
 <section>
-	<h4><?php _echo($data['title']);?></h4>
-	<form action="<?php _echo($app->url('locations',$data['currentLocation']['id']));?>" method="POST">
+	<h4><?php _echo($data->title);?></h4>
+	<form action="<?php _echo($app->url('locations',$data->currentLocation->id));?>" method="POST">
 		<?php if(!empty($app->id)): ?>
 			<div class="form-field">
 				<label for="location_update-location_id">Location</label>
 				<select id="location_update-location_id" name="location_id" class="show-on-empty" data-show-on-empty="#location_update-new">
 					<option value="">-- New location --</option>
-					<?php foreach($data['allLocations'] as $location):?>
-						<option value="<?php _echo($location['id']);?>"><?php _echo($location['name']);?></option>
+					<?php foreach($data->allLocations as $location):?>
+						<option value="<?php _echo($location->id);?>"><?php _echo($location->name);?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>

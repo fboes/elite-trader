@@ -190,5 +190,22 @@ span.icon-hide {
 	section {
 		position:fixed;
 		display:none;
+		min-width:50%;
+	}
+}
+#messages {
+	section {
+		background-color: $color-yellow-light;
+		ul {
+			margin:0;
+			padding:0;
+			list-style:none;
+			li {
+				margin:0 0 0.5rem;
+				&.error {
+					background-color: $color-red-light;
+				}
+			}
+		}
 	}
 }

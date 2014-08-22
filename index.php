@@ -10,6 +10,7 @@ session_name(CONFIG_SESSION_NAME);
 session_start();
 require('app/vendor/small-php-helpers/toolshed.php');
 require('app/vendor/small-php-helpers/SuperPDO.php');
+require('app/vendor/small-php-helpers/Messages.php');
 require('app/TraderApi.php');
 require('app/EliteTrader.php');
 require('app/App.php');
@@ -17,15 +18,18 @@ require('app/App.php');
 // Logic
 
 $app = new App();
+$messages = new Messages();
+$messages->restoreFromSession();
 $data = array(
 	'template' => 'index',
 	'title'    => NULL,
+	'messages' => &$messages->messages,
 );
 $elite = new EliteTrader(
 	new SuperPDO(CONFIG_DB_DSN,CONFIG_DB_USR,CONFIG_DB_PWD)
 	#,TraderApi::init(CONFIG_API_BASEURL, TraderApi::REPLY_TYPE_JSON)->setHttpCredentials(CONFIG_API_USR,CONFIG_API_PWD)
 );
-$elite->getCurrentTrader(session_id());
+$elite->getCurrentTrader();
 $data['currentTrader'] = &$elite->currentTrader;
 
 if (!empty($_POST['action'])) {
@@ -44,9 +48,11 @@ if (!empty($_POST['action'])) {
 switch ($app->path) {
 	case 'locations':
 		if (empty($app->id)) {
-			if (!empty($_POST['name'])) {
+			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
 				$success = $elite->createLocation($_POST['name'],@$_POST['description']);
+				$messages->addMessageOnAssert($success, 'Location created', 'An error occured, please try again later');
 				if ($success) {
+					$messages->storeInSession();
 					$app->redirect ($app->path, $app->id);
 				}
 			}
@@ -59,7 +65,7 @@ switch ($app->path) {
 			if (empty($elite->currentLocation)) {
 				$app->redirect ($app->path, NULL, 307);
 			}
-			if (!empty($_POST['action'])) {
+			if ($elite->currentTrader->is_editor && !empty($_POST['action'])) {
 				$success = TRUE;
 				switch ($_POST['action']) {
 					case 'update_lane':
@@ -106,18 +112,20 @@ switch ($app->path) {
 						}
 						break;
 				}
+				$messages->addMessageOnAssert($success, 'Update(s) saved', 'An error occured, please try again later');
 				if ($success) {
+					$messages->storeInSession();
 					$app->redirect ($app->path, $app->id);
 				}
 			}
 
 			if (!empty($app->subId)) {
 				$data['prices']       = $elite->getPricesForCurrentAndSpecificLocation($app->subId);
-				$data['title']        = 'Comparing prices for '.$elite->currentLocation['name'].' with location '.$app->id;
+				$data['title']        = 'Comparing prices for '.$elite->currentLocation->name.' with location '.$app->id;
 			}
 			else {
-				$data['prices']       = $elite->getPricesForCurrentAndNeighbouringLocations($elite->currentTrader['hops'],$elite->currentTrader['hopdistance']);
-				$data['title']        = $elite->currentLocation['name'];
+				$data['prices']       = $elite->getPricesForCurrentAndNeighbouringLocations($elite->currentTrader->hops,$elite->currentTrader->hopdistance);
+				$data['title']        = $elite->currentLocation->name;
 			}
 			$data['template']     = 'location';
 			$data['connections']  = $elite->getNextLocationsForCurrentLocation(1);
@@ -126,9 +134,11 @@ switch ($app->path) {
 		break;
 	case 'goods':
 		if (empty($app->id)) {
-			if (!empty($_POST['name'])) {
+			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
 				$success = $elite->createGood($_POST['name'],@$_POST['description']);
+				$messages->addMessageOnAssert($success, 'Good created', 'An error occured, please try again later');
 				if ($success) {
+					$messages->storeInSession();
 					$app->redirect ($app->path, $app->id);
 				}
 			}
@@ -137,9 +147,11 @@ switch ($app->path) {
 			$data['title']        = 'Goods';
 		}
 		else {
-			if (!empty($_POST['name'])) {
+			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
 				$success = $elite->createGood($_POST['name'],@$_POST['description']);
+				$messages->addMessageOnAssert($success, 'Good updated', 'An error occured, please try again later');
 				if ($success) {
+					$messages->storeInSession();
 					$app->redirect ($app->path, $app->id);
 				}
 			}
@@ -156,13 +168,15 @@ switch ($app->path) {
 						}
 						break;
 				}
+				$messages->addMessageOnAssert($success, 'Good saved', 'An error occured, please try again later');
 				if ($success) {
+					$messages->storeInSession();
 					$app->redirect ($app->path, $app->id);
 				}
 			}
 
 			$data['template']     = 'good';
-			$data['title']        = $data['good']['name'];
+			$data['title']        = $data['good']->name;
 		}
 		break;
 	case 'trader':
@@ -174,7 +188,7 @@ switch ($app->path) {
 		if (!empty($app->id)) {
 			$elite->setCurrentLocation($app->id);
 			$data['currentLocation'] = $elite->currentLocation;
-			$data['title']        = 'New price for '.$elite->currentLocation['name'];
+			$data['title']        = 'New price for '.$elite->currentLocation->name;
 		}
 		$data['allGoods']        = $elite->getAllGoods();
 
@@ -185,7 +199,7 @@ switch ($app->path) {
 		if (!empty($app->id)) {
 			$elite->setCurrentLocation($app->id);
 			$data['currentLocation'] = $elite->currentLocation;
-			$data['title']        = 'New connection for '.$elite->currentLocation['name'];
+			$data['title']        = 'New connection for '.$elite->currentLocation->name;
 		}
 		$data['allLocations']    = $elite->getAllLocations();
 		$data['currentLocation'] = $elite->currentLocation;
@@ -196,6 +210,7 @@ switch ($app->path) {
 		break;
 }
 $elite->persistCurrentTrader();
+$data = (object)$data;
 
 // View
 
@@ -204,5 +219,5 @@ if (isset($_GET['json'])) {
 	echo(json_encode((object)$data));
 }
 else {
-	require('views/'.$data['template'].'.html');
+	require('views/'.$data->template.'.html');
 }

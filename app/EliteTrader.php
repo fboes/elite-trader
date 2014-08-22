@@ -31,34 +31,38 @@ class EliteTrader {
 	public function __construct(SuperPDO $pdo, HttpApi $api = NULL) {
 		$this->pdo = $pdo;
 		$this->pdo->useUtf8();
+		$this->pdo->setAttribute(SuperPDO::ATTR_DEFAULT_FETCH_MODE, SuperPDO::FETCH_OBJ);
 		$this->api = $api;
 		$this->tsNow = time();
 		$this->currentTrader = array();
 	}
 
-	public function getCurrentTrader ($id) {
-		$this->currentTrader = array(
-			'hops' =>  2,
-			'hopdistance' =>  5.8,
-			'last_station_id' =>  NULL,
-			'last_good_id' =>  NULL,
+	public function getCurrentTrader () {
+		$this->currentTrader = (object)array(
+			'hops'            => 2,
+			'hopdistance'     => 5.8,
+			'last_station_id' => NULL,
+			'last_good_id'    => NULL,
+			'is_editor'       => TRUE,
 		);
-		if (!empty($id)) {
-			$this->currentTrader = $_SESSION;
+		foreach ($_SESSION as $key => $value) {
+			if (isset($value)) {
+				$this->currentTrader->$key = $value;
+			}
 		}
 	}
 
 	public function setTraderHops ($hops) {
 		$hops = (int)$hops;
 		if (!empty($hops) && $hops > 0  && $hops <= 15) {
-			$this->currentTrader['hops'] = $hops;
+			$this->currentTrader->hops = $hops;
 		}
 	}
 
 	public function setTraderHopDistance ($hopdistance) {
-		$hopdistance = (int)$hopdistance;
+		$hopdistance = (float)$hopdistance;
 		if (!empty($hopdistance) && $hopdistance > 0  && $hopdistance <= 2000) {
-			$this->currentTrader['hopdistance'] = $hopdistance;
+			$this->currentTrader->hopdistance = $hopdistance;
 		}
 	}
 
@@ -76,9 +80,9 @@ class EliteTrader {
 	public function setCurrentLocation ($id) {
 		$id = (int)$id;
 		$this->currentLocation = $this->getLocation($id);
-		$this->currentTrader['last_station_id'] = $id;
+		$this->currentTrader->last_station_id = $id;
 		if (!empty($this->currentLocation)) {
-			$this->currentLocation['id'] = (int)$this->currentLocation['id'];
+			$this->currentLocation->id = (int)$this->currentLocation->id;
 			return TRUE;
 		}
 		return FALSE;
@@ -94,12 +98,12 @@ class EliteTrader {
 		$this->pdo->lastData = NULL;
 		$sth = $this->pdo->prepare($this->pdo->lastCmd);
 		$sth->execute();
-		$result = $sth->fetchAll(SuperPDO::FETCH_ASSOC);
+		$result = $sth->fetchAll();
 		return (!empty($result[0]) ? $result[0] : array());
 	}
 
 	public function getCurrentTraderId () {
-		return !empty($this->currentTrader) ? $this->currentTrader['id'] : NULL;
+		return !empty($this->currentTrader) ? $this->currentTrader->id : NULL;
 	}
 
 	// -------------------------------------------
@@ -166,8 +170,8 @@ class EliteTrader {
 		$sth->execute();
 
 		$goods = array();
-		while (($row = $sth->fetch(SuperPDO::FETCH_ASSOC)) !== false) {
-			$this->listGoods[$row['id']] = $row['name'];
+		while (($row = $sth->fetch()) !== false) {
+			$this->listGoods[$row->id] = $row->name;
 			$goods[] = $row;
 		}
 		return $goods;
@@ -187,8 +191,8 @@ class EliteTrader {
 		$sth->execute();
 
 		$locations = array();
-		while (($row = $sth->fetch(SuperPDO::FETCH_ASSOC)) !== false) {
-			$this->listLocations[$row['id']] = $row['name'];
+		while (($row = $sth->fetch()) !== false) {
+			$this->listLocations[$row->id] = $row->name;
 			$locations[] = $row;
 		}
 		return $locations;
@@ -200,7 +204,7 @@ class EliteTrader {
 
 	public function getCompleteGood ($idGood) {
 		$idGood = (int)$idGood;
-		$this->currentTrader['last_good_id'] = $idGood;
+		$this->currentTrader->last_good_id = $idGood;
 		$this->pdo->lastCmd =
 			'SELECT *'
 			.' FROM '.self::TABLE_GOODS
@@ -209,37 +213,37 @@ class EliteTrader {
 		$this->pdo->lastData = NULL;
 		$sth = $this->pdo->prepare($this->pdo->lastCmd);
 		$sth->execute();
-		$result = $sth->fetchAll(SuperPDO::FETCH_ASSOC);
+		$result = $sth->fetchAll();
 		$good = !empty($result[0]) ? $result[0] : array();
 
 		if ($good) {
-			$good['prices'] = $this->getPricesForGood($idGood);
+			$good->prices = $this->getPricesForGood($idGood);
 		}
-		$good['delta'] = array(
+		$good->delta = (object)array(
 			'highestBuy'  => NULL,
 			'highestSell' => NULL,
 			'lowestBuy'   => NULL,
 			'lowestSell'  => NULL,
 		);
-		foreach ($good['prices'] as $p) {
-			if (!empty($p['price_buy'])) {
-				if (empty($good['delta']['highestBuy']) || $good['delta']['highestBuy']['price'] < $p['price_buy']) {
-					$good['delta']['highestBuy'] = $p;
-					$good['delta']['highestBuy']['price'] = $p['price_buy'];
+		foreach ($good->prices as $p) {
+			if (!empty($p->price_buy)) {
+				if (empty($good->delta->highestBuy) || $good->delta->highestBuy->price < $p->price_buy) {
+					$good->delta->highestBuy = $p;
+					$good->delta->highestBuy->price = $p->price_buy;
 				}
-				if (empty($good['delta']['lowestBuy']) || $good['delta']['lowestBuy']['price'] > $p['price_buy']) {
-					$good['delta']['lowestBuy'] = $p;
-					$good['delta']['lowestBuy']['price'] = $p['price_buy'];
+				if (empty($good->delta->lowestBuy) || $good->delta->lowestBuy->price > $p->price_buy) {
+					$good->delta->lowestBuy = $p;
+					$good->delta->lowestBuy->price = $p->price_buy;
 				}
 			}
-			if (!empty($p['price_sell'])) {
-				if (empty($good['delta']['highestSell']) || $good['delta']['highestSell']['price'] < $p['price_sell']) {
-					$good['delta']['highestSell'] = $p;
-					$good['delta']['highestSell']['price'] = $p['price_sell'];
+			if (!empty($p->price_sell)) {
+				if (empty($good->delta->highestSell) || $good->delta->highestSell->price < $p->price_sell) {
+					$good->delta->highestSell = $p;
+					$good->delta->highestSell->price = $p->price_sell;
 				}
-				if (empty($good['delta']['lowestSell']) || $good['delta']['lowestSell']['price'] > $p['price_sell']) {
-					$good['delta']['lowestSell'] = $p;
-					$good['delta']['lowestSell']['price'] = $p['price_sell'];
+				if (empty($good->delta->lowestSell) || $good->delta->lowestSell->price > $p->price_sell) {
+					$good->delta->lowestSell = $p;
+					$good->delta->lowestSell->price = $p->price_sell;
 				}
 			}
 		}
@@ -258,7 +262,7 @@ class EliteTrader {
 		$this->pdo->lastData = NULL;
 		$sth = $this->pdo->prepare($this->pdo->lastCmd);
 		$sth->execute();
-		return $sth->fetchAll(SuperPDO::FETCH_ASSOC);
+		return $sth->fetchAll();
 	}
 
 	/**
@@ -272,38 +276,36 @@ class EliteTrader {
 
 	/**
 	 * [getPricesSpecificLocation description]
-	 * @param  array  $location   [description]
-	 * @param  [type] $locationId [description]
-	 * @return [type]             [description]
+	 * @param  stdClass  $location   [description]
+	 * @param  [type]    $locationId [description]
+	 * @return [type]                [description]
 	 */
-	public function getPricesSpecificLocation (array $location, $locationId) {
-		$pricesForThisLocation = $this->getPricesForLocations(array($location['id']), TRUE);
+	public function getPricesSpecificLocation (stdClass $location, $locationId) {
+		$pricesForThisLocation = $this->getPricesForLocations(array($location->id), TRUE);
 
 		$pricesOfOtherLocations = $this->getPricesForLocations(array($locationId));
 		foreach ($pricesForThisLocation as $goodIndex => &$price) {
 			if (!empty($pricesOfOtherLocations[$goodIndex])) {
 				$goods   = &$pricesOfOtherLocations[$goodIndex];
 				$profits = $this->getProfitSpan($goods);
-				$price['buyer']  = array();
-				$price['seller'] = array();
 
-				if (!empty($price['price_sell']) && !empty($profits['highestId'])) {
-					if ($profits['highestPrice'] > $price['price_sell'] && $profits['highestPrice'] > $price['price_buy']) {
-						$price['buyer'] = array(
-							'id'    => $profits['highestId'],
-							'price' => (int)$profits['highestPrice'],
-							'delta' => (int)$profits['highestPrice'] - $price['price_sell'],
-							'name'  => $goods[$profits['highestId']]['location_name'],
+				if (!empty($price->price_sell) && !empty($profits->highestId)) {
+					if ($profits->highestPrice > $price->price_sell && $profits->highestPrice > $price->price_buy) {
+						$price->buyer = (object)array(
+							'id'    => $profits->highestId,
+							'price' => (int)$profits->highestPrice,
+							'delta' => (int)$profits->highestPrice - $price->price_sell,
+							'name'  => $goods[$profits->highestId]->location_name,
 						);
 					}
 				}
-				if (!empty($price['price_buy']) && !empty($profits['lowestId'])) {
-					if ($profits['lowestPrice'] < $price['price_buy'] && $profits['lowestPrice'] < $price['price_sell'] || $price['price_sell'] == 0) {
-						$price['seller'] = array(
-							'id'    => $profits['lowestId'],
-							'price' => (int)$profits['lowestPrice'],
-							'delta' => (int)$price['price_buy'] - $profits['lowestPrice'],
-							'name'  => $goods[$profits['lowestId']]['location_name'],
+				if (!empty($price->price_buy) && !empty($profits->lowestId)) {
+					if ($profits->lowestPrice < $price->price_buy && $profits->lowestPrice < $price->price_sell || $price->price_sell == 0) {
+						$price->seller = (object)array(
+							'id'    => $profits->lowestId,
+							'price' => (int)$profits->lowestPrice,
+							'delta' => (int)$price->price_buy - $profits->lowestPrice,
+							'name'  => $goods[$profits->lowestId]->location_name,
 						);
 					}
 				}
@@ -329,45 +331,43 @@ class EliteTrader {
 
 	/**
 	 * [getPricesForThisAndNeighbouringLocations description]
-	 * @param  array   $location [description]
-	 * @param  integer $hops     [description]
-	 * @param  float   $hopdistance Maximum distance for a hop
-	 * @return array             [description]
+	 * @param  stdClass $location [description]
+	 * @param  integer  $hops     [description]
+	 * @param  float    $hopdistance Maximum distance for a hop
+	 * @return array              [description]
 	 */
-	public function getPricesForThisAndNeighbouringLocations ($location, $hops = 1, $hopdistance = 999) {
-		$pricesForThisLocation = $this->getPricesForLocations(array($location['id']), TRUE);
+	public function getPricesForThisAndNeighbouringLocations (stdClass $location, $hops = 1, $hopdistance = 999) {
+		$pricesForThisLocation = $this->getPricesForLocations(array($location->id), TRUE);
 
 		$locations = $this->getNextLocations(array($location),$hops,$hopdistance);
 		if (!empty($locations)) {
 			$locationIds = array();
 			foreach ($locations as $s) {
-				$locationIds[] = $s['id'];
+				$locationIds[] = $s->id;
 			}
 			$pricesOfOtherLocations = $this->getPricesForLocations($locationIds);
 			foreach ($pricesForThisLocation as $goodIndex => &$price) {
 				if (!empty($pricesOfOtherLocations[$goodIndex])) {
 					$goods   = &$pricesOfOtherLocations[$goodIndex];
 					$profits = $this->getProfitSpan($goods);
-					$price['buyer']  = array();
-					$price['seller'] = array();
 
-					if (!empty($price['price_sell']) && !empty($profits['highestId'])) {
-						if ($profits['highestPrice'] > $price['price_sell'] && $profits['highestPrice'] > $price['price_buy']) {
-							$price['buyer'] = array(
-								'id'    => $profits['highestId'],
-								'price' => (int)$profits['highestPrice'],
-								'delta' => (int)$profits['highestPrice'] - $price['price_sell'],
-								'name'  => $goods[$profits['highestId']]['location_name'],
+					if (!empty($price->price_sell) && !empty($profits->highestId)) {
+						if ($profits->highestPrice > $price->price_sell && $profits->highestPrice > $price->price_buy) {
+							$price->buyer = (object)array(
+								'id'    => $profits->highestId,
+								'price' => (int)$profits->highestPrice,
+								'delta' => (int)$profits->highestPrice - $price->price_sell,
+								'name'  => $goods[$profits->highestId]->location_name,
 							);
 						}
 					}
-					if (!empty($price['price_buy']) && !empty($profits['lowestId'])) {
-						if ($profits['lowestPrice'] < $price['price_buy'] && $profits['lowestPrice'] < $price['price_sell'] || $price['price_sell'] == 0) {
-							$price['seller'] = array(
-								'id'    => $profits['lowestId'],
-								'price' => (int)$profits['lowestPrice'],
-								'delta' => (int)$price['price_buy'] - $profits['lowestPrice'],
-								'name'  => $goods[$profits['lowestId']]['location_name'],
+					if (!empty($price->price_buy) && !empty($profits->lowestId)) {
+						if ($profits->lowestPrice < $price->price_buy && $profits->lowestPrice < $price->price_sell || $price->price_sell == 0) {
+							$price->seller = (object)array(
+								'id'    => $profits->lowestId,
+								'price' => (int)$profits->lowestPrice,
+								'delta' => (int)$price->price_buy - $profits->lowestPrice,
+								'name'  => $goods[$profits->lowestId]->location_name,
 							);
 						}
 					}
@@ -380,26 +380,27 @@ class EliteTrader {
 
 	/**
 	 * Return id of highest buyer
-	 * @param  [type] $priceSell [description]
-	 * @return [type]            [description]
+	 * @param  array  $traders [description]
+	 * @return [type]          [description]
 	 */
 	protected function getProfitSpan (array $traders) {
-		$result = array();
-		$result['highestId'] = NULL;
-		$result['highestPrice'] = NULL;
-		$result['lowestId']  = NULL;
-		$result['lowestPrice']  = NULL;
+		$result = (object)array(
+			'highestId'    => NULL,
+			'highestPrice' => NULL,
+			'lowestId'     => NULL,
+			'lowestPrice'  => NULL,
+		);
 		foreach ($traders as $tryId => $trader) {
-			if ((int)$trader['price_buy'] > 0 && (empty($result['highestId']) || (int)$trader['price_buy'] > $result['highestPrice'])) {
-				$result['highestPrice']   = (int)$trader['price_buy'];
-				$result['highestId']      = $tryId;
+			if ((int)$trader->price_buy > 0 && (empty($result->highestId) || (int)$trader->price_buy > $result->highestPrice)) {
+				$result->highestPrice   = (int)$trader->price_buy;
+				$result->highestId      = $tryId;
 			}
-			if ((int)$trader['price_sell'] > 0 && (empty($result['lowestId']) || (int)$trader['price_sell'] < $result['lowestPrice'])) {
-				$result['lowestPrice']    = (int)$trader['price_sell'];
-				$result['lowestId']       = $tryId;
+			if ((int)$trader->price_sell > 0 && (empty($result->lowestId) || (int)$trader->price_sell < $result->lowestPrice)) {
+				$result->lowestPrice    = (int)$trader->price_sell;
+				$result->lowestId       = $tryId;
 			}
 		}
-		if (empty($result['highestId']) && empty($result['lowestId'])) {
+		if (empty($result->highestId) && empty($result->lowestId)) {
 			return array();
 		}
 		return $result;
@@ -410,10 +411,10 @@ class EliteTrader {
 	 * @return [type] [description]
 	 */
 	public function getPricesForCurrentLocation () {
-		if (empty($this->currentLocation['id'])) {
+		if (empty($this->currentLocation->id)) {
 			throw new \Exception('No location set');
 		}
-		return $this->getPricesForLocation($this->currentLocation['id']);
+		return $this->getPricesForLocation($this->currentLocation->id);
 	}
 
 	/**
@@ -445,26 +446,26 @@ class EliteTrader {
 		$sth->execute();
 
 		$result = array();
-		while (($row = $sth->fetch(SuperPDO::FETCH_ASSOC)) !== false) {
-			$row['id']          = (int)$row['id'];
-			$row['location_id'] = (int)$row['location_id'];
-			$row['price_buy']   = (int)$row['price_buy'];
-			$row['price_sell']  = (int)$row['price_sell'];
+		while (($row = $sth->fetch()) !== false) {
+			$row->id          = (int)$row->id;
+			$row->location_id = (int)$row->location_id;
+			$row->price_buy   = (int)$row->price_buy;
+			$row->price_sell  = (int)$row->price_sell;
 			$row = $this->addTsStatus($row);
-			if (empty($result[$row['id']])) {
-				$result[$row['id']] = array();
+			if (empty($result[$row->id])) {
+				$result[$row->id] = array();
 			}
-			if (empty($this->listGoods[$row['id']])) {
-				$this->listGoods[$row['id']] = $row['name'];
+			if (empty($this->listGoods[$row->id])) {
+				$this->listGoods[$row->id] = $row->name;
 			}
-			if (empty($this->listLocations[$row['location_id']])) {
-				$this->listLocations[$row['location_id']] = $row['location_name'];
+			if (empty($this->listLocations[$row->location_id])) {
+				$this->listLocations[$row->location_id] = $row->location_name;
 			}
 			if ($singleMode) {
-				$result[$row['id']] = $row;
+				$result[$row->id] = $row;
 			}
 			else {
-				$result[$row['id']][$row['location_id']] = $row;
+				$result[$row->id][$row->location_id] = $row;
 			}
 		}
 		return $result;
@@ -502,7 +503,7 @@ class EliteTrader {
 		}
 		$locationIds = array();
 		foreach ($locations as $s) {
-			$locationIds[] = $s['id'];
+			$locationIds[] = $s->id;
 		}
 		$excludedLocationIds = array_merge($locationIds, $excludedLocationIds);
 
@@ -518,7 +519,7 @@ class EliteTrader {
 		$this->pdo->lastData = NULL;
 		$sth = $this->pdo->prepare($this->pdo->lastCmd);
 		$sth->execute();
-		$results = $sth->fetchAll(SuperPDO::FETCH_ASSOC);
+		$results = $sth->fetchAll();
 
 		$hops --;
 		if ($hops > 0) {
@@ -534,10 +535,10 @@ class EliteTrader {
 	 * @return boolean
 	 */
 	public function setLaneForCurrentLocation ($idLocation, $distance) {
-		if (empty($this->currentLocation['id'])) {
+		if (empty($this->currentLocation->id)) {
 			throw new \Exception('No location set');
 		}
-		return $this->setLane($this->currentLocation['id'], $idLocation, $distance);
+		return $this->setLane($this->currentLocation->id, $idLocation, $distance);
 	}
 
 	/**
@@ -574,10 +575,10 @@ class EliteTrader {
 	 * @return boolean           [description]
 	 */
 	public function setPriceForCurrentLocation ($idGood, $priceBuy, $priceSell = 0) {
-		if (empty($this->currentLocation['id'])) {
+		if (empty($this->currentLocation->id)) {
 			throw new \Exception('No location set');
 		}
-		return $this->setPriceForLocation($this->currentLocation['id'], $idGood, $priceBuy, $priceSell);
+		return $this->setPriceForLocation($this->currentLocation->id, $idGood, $priceBuy, $priceSell);
 	}
 
 	/**
@@ -605,10 +606,10 @@ class EliteTrader {
 	 * @return boolean           [description]
 	 */
 	public function updateCurrentLocation ($name, $description = NULL) {
-		if (empty($this->currentLocation['id'])) {
+		if (empty($this->currentLocation->id)) {
 			throw new \Exception('No location set');
 		}
-		return $this->updateLocation ($this->currentLocation['id'], $name, $description);
+		return $this->updateLocation ($this->currentLocation->id, $name, $description);
 	}
 
 	/**
@@ -665,10 +666,10 @@ class EliteTrader {
 	 * @return [type]              [description]
 	 */
 	public function deleteLaneForCurrentLocation ($idLocation) {
-		if (empty($this->currentLocation['id'])) {
+		if (empty($this->currentLocation->id)) {
 			throw new \Exception('No location set');
 		}
-		return $this->deleteLane($this->currentLocation['id'], $idLocation);
+		return $this->deleteLane($this->currentLocation->id, $idLocation);
 	}
 
 	/**
@@ -689,28 +690,28 @@ class EliteTrader {
 	// HELPERS
 	// -------------------------------------------
 
-	protected function addTsStatus(array $row) {
-		if (!empty($row['ts'])) {
-			$row['tsStatus'] = 0;
-			$ts = strtotime($row['ts']);
+	protected function addTsStatus(stdClass $row) {
+		if (!empty($row->ts)) {
+			$row->tsStatus = 0;
+			$ts = strtotime($row->ts);
 			if ($ts + self::SECONDS_VERY_OLD < $this->tsNow) {
-				$row['tsStatus'] = self::STATUS_VERY_OLD;
+				$row->tsStatus = self::STATUS_VERY_OLD;
 			}
 			elseif ($ts + self::SECONDS_OLD < $this->tsNow) {
-				$row['tsStatus'] = self::STATUS_OLD;
+				$row->tsStatus = self::STATUS_OLD;
 			}
 			elseif ($ts + self::SECONDS_NEW > $this->tsNow) {
-				$row['tsStatus'] = self::STATUS_NEW;
+				$row->tsStatus = self::STATUS_NEW;
 			}
 		}
 		return $row;
 	}
 
-	protected function modifyRow ($data) {
+	protected function modifyRow (array $row) {
 		$currentTraderId = $this->getCurrentTraderId();
 		if (!empty($currentTraderId)) {
-			$data['trader_id'] = $currentTraderId;
+			$row['trader_id'] = $currentTraderId;
 		}
-		return $data;
+		return $row;
 	}
 }

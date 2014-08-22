@@ -10,12 +10,12 @@
 		<h3>Go to…</h3>
 		<ul>
 			<li><a href="<?php _echo($app->url('locations'));?>">list of locations</a></li>
-			<?php if(!empty($data['currentTrader']['last_station_id'])): ?>
-				<li><a href="<?php _echo($app->url('locations',$data['currentTrader']['last_station_id']));?>">the last station you have visited</a></li>
+			<?php if(!empty($data->currentTrader->last_station_id)): ?>
+				<li><a href="<?php _echo($app->url('locations',$data->currentTrader->last_station_id));?>">the last station you have visited</a></li>
 			<?php endif; ?>
 			<li><a href="<?php _echo($app->url('goods'));?>">list of goods</a></li>
-			<?php if(!empty($data['currentTrader']['last_good_id'])): ?>
-				<li><a href="<?php _echo($app->url('goods',$data['currentTrader']['last_good_id']));?>">the last good you have visited</a></li>
+			<?php if(!empty($data->currentTrader->last_good_id)): ?>
+				<li><a href="<?php _echo($app->url('goods',$data->currentTrader->last_good_id));?>">the last good you have visited</a></li>
 			<?php endif; ?>
 		</ul>
 
