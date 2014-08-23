@@ -33,12 +33,12 @@
 						<thead>
 							<tr>
 								<th>Good</th>
-								<th class="number" style="width:5em;">Sell to market</th>
-								<th class="number" style="width:5em;">Buy from market</th>
+								<th class="number" style="width:5em;">Sell to market<br />(<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
+								<th class="number" style="width:5em;">Buy from market<br />(<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
 								<th style="width:3em">Age</th>
-								<th class="number">Best sell to delta</th>
+								<th class="number" style="width:6em;">Best sell to delta<br />(<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
 								<th>Best buyer</th>
-								<th class="number">Best buy from delta</th>
+								<th class="number" style="width:6em;">Best buy from delta<br />(<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
 								<th>Best seller</th>
 							</tr>
 						</thead>
@@ -105,7 +105,7 @@
 						<thead>
 							<tr>
 								<th>Location</th>
-								<th class="number" style="width:4.5em;">Distance</th>
+								<th class="number" style="width:5em;">Distance (<?php _echo(CONFIG_UNIT_DISTANCE);?>)</th>
 								<th style="width:15em;">Compare prices</th>
 								<?php if ($data->currentTrader->is_editor): ?>
 									<th class="number" style="width:3em;"><i class="fa fa-trash-o"></i></th>

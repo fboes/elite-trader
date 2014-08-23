@@ -18,7 +18,7 @@
 							Lowest seller: <a href="<?php _echo($app->url('locations',$data->good->delta->lowestSell->location_id));?>"><?php _echo($data->good->delta->lowestSell->location_name);?></a><br />
 						<?php endif; ?>
 						<?php if(!empty($data->good->delta->highestBuy) && !empty($data->good->delta->lowestSell)): ?>
-							Biggest delta: <?php $app->echoNumber($data->good->delta->highestBuy->price - $data->good->delta->lowestSell->price);?>
+							Biggest delta: <?php $app->echoNumber($data->good->delta->highestBuy->price - $data->good->delta->lowestSell->price,CONFIG_UNIT_CURRENCY_SHORT);?>
 						<?php endif; ?>
 					</p>
 				</div>
@@ -28,8 +28,8 @@
 						<thead>
 							<tr>
 								<th>Location</th>
-								<th class="number">Sell to market</th>
-								<th class="number">Buy from market</th>
+								<th class="number">Sell to market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
+								<th class="number">Buy from market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
 							</tr>
 						</thead>
 						<tbody>

@@ -147,8 +147,8 @@
 							height: $( document ).height()
 						}).show();
 						openEl.css({
-							left: (($( document ).width() - openEl.width()) / 2)
-						}).show();
+							left: (($( document ).width() - openEl.outerWidth()) / 2)
+						}).show().find(':input:first').focus();
 					}
 				}
 			}

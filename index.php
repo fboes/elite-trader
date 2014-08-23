@@ -29,7 +29,7 @@ $elite = new EliteTrader(
 	new SuperPDO(CONFIG_DB_DSN,CONFIG_DB_USR,CONFIG_DB_PWD)
 	#,TraderApi::init(CONFIG_API_BASEURL, TraderApi::REPLY_TYPE_JSON)->setHttpCredentials(CONFIG_API_USR,CONFIG_API_PWD)
 );
-$elite->getCurrentTrader();
+$elite->getCurrentTrader(CONFIG_HOPS_DEFAULT,CONFIG_HOPDISTANCE_DEFAULT);
 $data['currentTrader'] = &$elite->currentTrader;
 
 if (!empty($_POST['action'])) {
@@ -201,7 +201,7 @@ switch ($app->path) {
 			$data['currentLocation'] = $elite->currentLocation;
 			$data['title']        = 'New connection for '.$elite->currentLocation->name;
 		}
-		$data['allLocations']    = $elite->getAllLocations();
+		$data['locations']       = !empty($elite->currentLocation) ? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,CONFIG_HOPDISTANCE_SEARCH) : $elite->getAllLocations();
 		$data['currentLocation'] = $elite->currentLocation;
 
 		$data['template']     = $app->path;

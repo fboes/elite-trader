@@ -88,11 +88,12 @@ class App {
 		}
 	}
 
-	public function echoNumber ($number) {
+	public function echoNumber ($number, $unit = NULL) {
 		if (is_int($number)) {
-			_echo(number_format($number));
+			$str = (number_format($number));
 		} else {
-			_echo(number_format($number,2));
+			$str = (number_format($number,2));
 		}
+		echo ($str . (!empty($unit) ? '&nbsp;'.$unit : ''));
 	}
 }

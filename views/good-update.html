@@ -26,11 +26,11 @@
 
 		<?php if(!empty($app->id)): ?>
 			<div class="form-field form-field-half">
-				<label for="good_update-price_buy">Sell to…</label>
+				<label for="good_update-price_buy">Sell to… (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</label>
 				<input id="good_update-price_buy" type="number" min="0" step="1" name="price_buy" />
 			</div>
 			<div class="form-field form-field-half">
-				<label for="good_update-price_sell">Buy from…</label>
+				<label for="good_update-price_sell">Buy from… (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</label>
 				<input id="good_update-price_sell" type="number" min="0" step="1" name="price_sell" />
 			</div>
 		<?php endif; ?>

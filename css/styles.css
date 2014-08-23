@@ -142,7 +142,8 @@ table tr.error a { color: inherit; }
   #main .block-container-3 section { width: 31.33333%; }
   #main .block-container-3 section.double { width: 64.66667%; }
   #main .block-container-4 section { width: 23%; }
-  #main .block-container-4 section.double { width: 48%; } }
+  #main .block-container-4 section.double { width: 48%; }
+  #modal section { min-width: 80%; } }
 @media screen and (min-width: 1024px) and (max-width: 1279px) { .only-smartphone, .only-smartphone-landscape, .only-tablet, .no-screen-tablet-landscape, .only-desktop { display: none !important; } }
 @media screen and (min-width: 1280px) { html { font-size: 16px; }
   .only-smartphone, .only-smartphone-landscape, .only-tablet, .only-screen-tablet-landscape, .no-desktop { display: none !important; } }
