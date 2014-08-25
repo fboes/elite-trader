@@ -45,15 +45,15 @@ if (!empty($_POST['action'])) {
 	}
 }
 
-switch ($app->path) {
+switch ($app->path[0]) {
 	case 'locations':
-		if (empty($app->id)) {
+		if (empty($app->path[1])) {
 			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
 				$success = $elite->createLocation($_POST['name'],@$_POST['description']);
 				$messages->addMessageOnAssert($success, 'Location created', 'An error occured, please try again later');
 				if ($success) {
 					$messages->storeInSession();
-					$app->redirect ($app->path, $app->id);
+					$app->redirect ($app->path[0], $app->path[1]);
 				}
 			}
 			$data['allLocations'] = $elite->getAllLocations();
@@ -61,9 +61,9 @@ switch ($app->path) {
 			$data['title']        = 'Locations';
 		}
 		else {
-			$elite->setCurrentLocation($app->id);
+			$elite->setCurrentLocation($app->path[1]);
 			if (empty($elite->currentLocation)) {
-				$app->redirect ($app->path, NULL, 307);
+				$app->redirect ($app->path[0], NULL, 307);
 			}
 			if ($elite->currentTrader->is_editor && !empty($_POST['action'])) {
 				$success = TRUE;
@@ -115,13 +115,13 @@ switch ($app->path) {
 				$messages->addMessageOnAssert($success, 'Update(s) saved', 'An error occured, please try again later');
 				if ($success) {
 					$messages->storeInSession();
-					$app->redirect ($app->path, $app->id);
+					$app->redirect ($app->path[0], $app->path[1]);
 				}
 			}
 
-			if (!empty($app->subId)) {
-				$data['prices']       = $elite->getPricesForCurrentAndSpecificLocation($app->subId);
-				$data['title']        = 'Comparing prices for '.$elite->currentLocation->name.' with location '.$app->id;
+			if (!empty($app->path[2])) {
+				$data['prices']       = $elite->getPricesForCurrentAndSpecificLocation($app->path[2]);
+				$data['title']        = 'Comparing prices for '.$elite->currentLocation->name.' with location '.$app->path[1];
 			}
 			else {
 				$data['prices']       = $elite->getPricesForCurrentAndNeighbouringLocations($elite->currentTrader->hops,$elite->currentTrader->hopdistance);
@@ -133,13 +133,13 @@ switch ($app->path) {
 		}
 		break;
 	case 'goods':
-		if (empty($app->id)) {
+		if (empty($app->path[1])) {
 			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
 				$success = $elite->createGood($_POST['name'],@$_POST['description']);
 				$messages->addMessageOnAssert($success, 'Good created', 'An error occured, please try again later');
 				if ($success) {
 					$messages->storeInSession();
-					$app->redirect ($app->path, $app->id);
+					$app->redirect ($app->path[0], $app->path[1]);
 				}
 			}
 			$data['allGoods']     = $elite->getAllGoods();
@@ -152,26 +152,26 @@ switch ($app->path) {
 				$messages->addMessageOnAssert($success, 'Good updated', 'An error occured, please try again later');
 				if ($success) {
 					$messages->storeInSession();
-					$app->redirect ($app->path, $app->id);
+					$app->redirect ($app->path[0], $app->path[1]);
 				}
 			}
-			$data['good'] = $elite->getCompleteGood($app->id);
+			$data['good'] = $elite->getCompleteGood($app->path[1]);
 			if (empty($data['good'])) {
-				$app->redirect ($app->path, NULL, 307);
+				$app->redirect ($app->path[0], NULL, 307);
 			}
 			if (!empty($_POST['action'])) {
 				$success = TRUE;
 				switch ($_POST['action']) {
 					case 'update_good':
 						if (!empty($_POST['good_name'])) {
-							$success = $elite->updateGood($app->id, $_POST['good_name'],$_POST['good_description']) && $success;
+							$success = $elite->updateGood($app->path[1], $_POST['good_name'],$_POST['good_description']) && $success;
 						}
 						break;
 				}
 				$messages->addMessageOnAssert($success, 'Good saved', 'An error occured, please try again later');
 				if ($success) {
 					$messages->storeInSession();
-					$app->redirect ($app->path, $app->id);
+					$app->redirect ($app->path[0], $app->path[1]);
 				}
 			}
 
@@ -180,31 +180,31 @@ switch ($app->path) {
 		}
 		break;
 	case 'trader':
-		$data['template']     = $app->path;
+		$data['template']     = $app->path[0];
 		$data['title']        = 'Trader & craft settings';
 		break;
 	case 'good-update':
 		$data['title']        = 'New good';
-		if (!empty($app->id)) {
-			$elite->setCurrentLocation($app->id);
+		if (!empty($app->path[1])) {
+			$elite->setCurrentLocation($app->path[1]);
 			$data['currentLocation'] = $elite->currentLocation;
 			$data['title']        = 'New price for '.$elite->currentLocation->name;
 		}
 		$data['allGoods']        = $elite->getAllGoods();
 
-		$data['template']     = $app->path;
+		$data['template']     = $app->path[0];
 		break;
 	case 'location-update':
 		$data['title']        = 'New location';
-		if (!empty($app->id)) {
-			$elite->setCurrentLocation($app->id);
+		if (!empty($app->path[1])) {
+			$elite->setCurrentLocation($app->path[1]);
 			$data['currentLocation'] = $elite->currentLocation;
 			$data['title']        = 'New connection for '.$elite->currentLocation->name;
 		}
 		$data['locations']       = !empty($elite->currentLocation) ? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,CONFIG_HOPDISTANCE_SEARCH) : $elite->getAllLocations();
 		$data['currentLocation'] = $elite->currentLocation;
 
-		$data['template']     = $app->path;
+		$data['template']     = $app->path[0];
 		break;
 	default:
 		break;

@@ -15,7 +15,7 @@ define ('CONFIG_HOPS_SEARCH',        CONFIG_HOPS_DEFAULT);
 define ('CONFIG_HOPDISTANCE_DEFAULT',5.6);
 define ('CONFIG_HOPDISTANCE_SEARCH', 10);
 
-define ('CONFIG_USE_NICE_URLS',FALSE);
+define ('CONFIG_USE_NICE_URLS', TRUE);
 
 define ('CONFIG_API_BASEURL', 'http://localhost:3000');
 define ('CONFIG_API_USR', '');

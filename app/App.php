@@ -3,9 +3,7 @@
  * @class App
  */
 class App {
-	public $path  = NULL;
-	public $id    = NULL;
-	public $subId = NULL;
+	public $path  = array();
 
 	/**
 	 * [__construct description]
@@ -17,12 +15,7 @@ class App {
 		elseif (!empty($_SERVER['PATH_INFO'])) {
 			$path = substr($_SERVER['PATH_INFO'],1);
 		}
-		if (!empty($path)) {
-			$pathParts = explode('/', $path);
-			$this->path    = (!empty($pathParts[0])) ? $pathParts[0] : NULL;
-			$this->id      = (!empty($pathParts[1])) ? $pathParts[1] : NULL;
-			$this->subId   = (!empty($pathParts[2])) ? $pathParts[2] : NULL;
-		}
+		$this->path    = (!empty($path)) ? explode('/', $path) : array();
 	}
 
 	/**

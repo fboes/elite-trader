@@ -1,19 +1,19 @@
 <section>
 	<h4><?php _echo($data->title);?></h4>
 	<form action="<?php _echo($app->url('locations',$data->currentLocation->id));?>" method="POST">
-		<?php if(!empty($app->id)): ?>
+		<?php if(!empty($app->path[1])): ?>
 			<div class="form-field">
 				<label for="good_update-good_id">Good</label>
 				<select id="good_update-good_id" name="good_id" class="show-on-empty" data-show-on-empty="#good_update-new">
 					<option value="">-- New good --</option>
 					<?php foreach($data->allGoods as $good):?>
-						<option value="<?php _echo($good->id);?>"<?php echo(!empty($app->subId) && $app->subId == $good->id ? ' selected="selected"' : '');?>><?php _echo($good->name);?></option>
+						<option value="<?php _echo($good->id);?>"<?php echo(!empty($app->path[2]) && $app->path[2] == $good->id ? ' selected="selected"' : '');?>><?php _echo($good->name);?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>
 		<?php endif; ?>
 
-		<div class="form-fieldset" id="good_update-new"<?php echo(!empty($app->subId) ? ' style="display:none"' : '');?>>
+		<div class="form-fieldset" id="good_update-new"<?php echo(!empty($app->path[2]) ? ' style="display:none"' : '');?>>
 			<div class="form-field">
 				<label for="good_update-name">Name</label>
 				<input id="good_update-name" type="text" name="name" />
@@ -24,7 +24,7 @@
 			</div>
 		</div>
 
-		<?php if(!empty($app->id)): ?>
+		<?php if(!empty($app->path[1])): ?>
 			<div class="form-field form-field-half">
 				<label for="good_update-price_buy">Sell to… (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</label>
 				<input id="good_update-price_buy" type="number" min="0" step="1" name="price_buy" />
