@@ -16,5 +16,5 @@ AddEncoding gzip svgz
     RewriteRule ^index\.php(/(.*)|$) %{ENV:BASE}/$2 [R=301,L]
     RewriteRule ^$ %{ENV:BASE}/index.php [L]
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule (.+)$ %{ENV:BASE}/index.php?p=$1 [L]
+    RewriteRule (.+)$ %{ENV:BASE}/index.php?p=$1& [L,QSA]
 </IfModule>
