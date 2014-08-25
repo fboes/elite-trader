@@ -16,6 +16,9 @@ class App {
 			$path = substr($_SERVER['PATH_INFO'],1);
 		}
 		$this->path    = (!empty($path)) ? explode('/', $path) : array();
+		if (empty($path[0])) {$path[0] = NULL;}
+		if (empty($path[1])) {$path[1] = NULL;}
+		if (empty($path[2])) {$path[2] = NULL;}
 	}
 
 	/**
@@ -50,7 +53,7 @@ class App {
 	 * @return [type]              [description]
 	 */
 	public function currentUrl (array $parameters = array(), $absolute = FALSE) {
-		return $this->url($this->path, $this->id, $this->subId, $parameters, $absolute);
+		return $this->url($this->path[0], $this->path[1], $this->path[2], $parameters, $absolute);
 	}
 
 	/**
