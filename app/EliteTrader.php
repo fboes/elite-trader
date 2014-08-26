@@ -638,7 +638,6 @@ class EliteTrader {
 			'old' => $oldGoods,
 			'new' => $newGoods,
 		);
-
 		return $return;
 	}
 
@@ -662,6 +661,7 @@ class EliteTrader {
 			'SELECT g.*'
 			.' FROM '.self::TABLE_GOODS.' AS g'
 			.' WHERE g.id NOT IN ('.implode(',',$ids).')'
+			.' ORDER BY g.name'
 		;
 		$this->pdo->lastData = NULL;
 		$sth = $this->pdo->prepare($this->pdo->lastCmd);
