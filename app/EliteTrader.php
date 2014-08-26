@@ -71,6 +71,7 @@ class EliteTrader {
 		$hops = (int)$hops;
 		if (!empty($hops) && $hops > 0  && $hops <= 15) {
 			$this->currentTrader->hops = $hops;
+			$this->saveCurrentTrader();
 		}
 	}
 
@@ -82,6 +83,7 @@ class EliteTrader {
 		$hopdistance = (float)$hopdistance;
 		if (!empty($hopdistance) && $hopdistance > 0  && $hopdistance <= 2000) {
 			$this->currentTrader->hopdistance = $hopdistance;
+			$this->saveCurrentTrader();
 		}
 	}
 
@@ -93,6 +95,58 @@ class EliteTrader {
 		foreach ($this->currentTrader as $key => $value) {
 			$_SESSION[$key] = $value;
 		}
+	}
+
+	public function createTrader ($email, $password) {
+		unset($this->currentTrader->id);
+		$success = $this->pdo->insert(self::TABLE_TRADERS, array(
+			'name'  => $email,
+			'email' => $email,
+			'pwd'   => $this->returnPassword($password),
+			'settings_json' => json_encode($this->currentTrader),
+			'location_id' => $this->currentTrader->last_station_id,
+		));
+		$this->currentTrader->id = $this->pdo->lastInsertId();
+		return $success;
+	}
+
+	public function login ($email, $password) {
+		$id = (int)$id;
+		$this->pdo->lastCmd =
+			'SELECT t.*'
+			.' FROM '.self::TABLE_TRADERS.' AS t'
+			.' WHERE t.email = '.$this->pdo->quote($email)
+			.' AND t.pwd = '.$this->pdo->quote($this->returnPassword($password))
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+		$result = $sth->fetchAll();
+		$this->currentTrader = (!empty($result[0]) ? $result[0] : array());
+		if (!empty($this->currentTrader->settings_json)) {
+			$settings = json_decode($this->currentTrader->settings_json);
+			foreach ($settings as $key => $value) {
+				$this->currentTrader->$key = $value;
+			}
+		}
+	}
+
+	public function saveCurrentTrader () {
+		if (!empty($this->currentTrader->id)) {
+			return $this->pdo->update(
+				self::TABLE_TRADERS,
+				array(
+					'settings_json' => json_encode($this->currentTrader),
+					'location_id' => $this->currentTrader->last_station_id,
+				),
+				'id='.$this->pdo->quote($this->currentTrader->id)
+			);
+		}
+		return FALSE;
+	}
+
+	protected function returnPassword($password) {
+		return crypt($password);
 	}
 
 	/**

@@ -34,14 +34,31 @@ $data['currentTrader'] = &$elite->currentTrader;
 
 if (!empty($_POST['action'])) {
 	switch ($_POST['action']) {
-		case 'trader':
-			if (!empty($_POST['hops'])) {
-				$elite->setTraderHops($_POST['hops']);
-			}
-			if (!empty($_POST['hopdistance'])) {
-				$elite->setTraderHopDistance($_POST['hopdistance']);
+		case 'trader-login':
+			if (!empty($_POST['email']) && !empty($_POST['password'])) {
+				$success = $elite->login($_POST['email'],$_POST['password']);
 			}
 			break;
+		case 'trader-logout':
+			session_unset();
+			$success = TRUE;
+			break;
+		case 'trader-create':
+			if (!empty($_POST['email']) && !empty($_POST['password'])) {
+				$success = $elite->createTrader($_POST['email'],$_POST['password']);
+			}
+			break;
+		case 'trader':
+			if (!empty($_POST['hops'])) {
+				$success = $elite->setTraderHops($_POST['hops']);
+			}
+			if (!empty($_POST['hopdistance'])) {
+				$success = $elite->setTraderHopDistance($_POST['hopdistance']);
+			}
+			break;
+	}
+	if (!empty($success)) {
+		$app->redirect ($app->path[0], $app->path[1]);
 	}
 }
 
@@ -182,6 +199,10 @@ switch ($app->path[0]) {
 	case 'trader':
 		$data['template']     = $app->path[0];
 		$data['title']        = 'Trader & craft settings';
+		break;
+	case 'trader-login':
+		$data['template']     = $app->path[0];
+		$data['title']        = 'Login';
 		break;
 	case 'good-update':
 		$data['title']        = 'New good';

@@ -56,11 +56,11 @@
 						})
 						.on('change','.show-on-empty', function (event) {
 							var el = $($(this).data('show-on-empty'));
-							if ($(this).val() && el.is(":visible") ) {
-								el.slideUp('fast');
+							if ($(this).val() && !el.hasClass('js-hidden') ) {
+								el.addClass('js-hidden');
 							}
-							else if (!$(this).val() && el.is(":hidden")  ) {
-								el.slideDown('fast');
+							else if (!$(this).val() && el.hasClass('js-hidden') ) {
+								el.removeClass('js-hidden');
 							}
 						})
 						.on('change click','input.delete', function (event) {
@@ -97,7 +97,7 @@
 					this.elements.messages = el.find('#messages');
 					if (this.elements.messages.length) {
 						var timer = setTimeout(function () {
-							that.elements.messages.slideUp('fast');
+							that.elements.messages.addClass('js-hidden');
 						}, 2000);
 					}
 					this.bindEvents();
@@ -120,7 +120,7 @@
 										that.elements.modal.find('aside').append(
 											data
 											.replace(/<section/,'<section id="'+links[1]+'"')
-											.replace(/action="#"/, 'action="'+document.location.href+'"')
+											.replace(/action="#"/g, 'action="'+document.location.href+'"')
 										);
 										that.openModal(that.elements.modal.find('#' + links[1]));
 									})

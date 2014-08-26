@@ -1,5 +1,10 @@
 						<?php if ($data->currentTrader->is_editor): ?>
-							<li><a href="<?php _echo($app->url('trader'));?>#modal-trader" class="modal"><i class="fa fa-bars"></i> <span class="icon-hide">Create connection</span></a></li>
+							<li><a href="<?php _echo($app->url('trader'));?>#modal-trader" class="modal"><i class="fa fa-cog"></i> <span class="icon-hide">Trader settings</span></a></li>
+						<?php endif; ?>
+						<?php if (!empty($data->currentTrader->id)): ?>
+							<li><a href="<?php _echo($app->url('trader-login'));?>#modal-trader-login" class="modal"><i class="fa fa-power-off"></i> <span class="icon-hide">Logout</span></a></li>
+						<?php else: ?>
+							<li><a href="<?php _echo($app->url('trader-login'));?>#modal-trader-login" class="modal"><i class="fa fa-user"></i> <span class="icon-hide">Create / login trader</span></a></li>
 						<?php endif; ?>
 					<ul>
 				</nav>
@@ -8,7 +13,7 @@
 		<div id="main" class="main">
 			<main role="main">
 				<?php if(!empty($data->messages)): ?>
-					<div class="block-container-1" id="messages">
+					<div class="block-container-1 js-slide" id="messages">
 						<section>
 							<ul>
 								<?php foreach ($data->messages as $m): ?>

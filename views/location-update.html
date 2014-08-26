@@ -17,7 +17,7 @@
 				</select>
 			</div>
 		<?php endif; ?>
-		<div class="form-fieldset" id="location_update-new">
+		<div class="form-fieldset js-slide<?php _echo(!empty($app->path[2]) ? ' js-hidden' : '');?>" id="location_update-new">
 			<div class="form-field">
 				<label for="location_update-name">Name</label>
 				<input id="location_update-name" type="text" name="name" />

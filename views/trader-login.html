@@ -1,0 +1,47 @@
+<?php if (!isset($_GET['ajax'])): ?>
+	<?php require('_header.html');?>
+	<?php require('_header_break.html');?>
+<?php endif; ?>
+
+<section>
+	<?php if(empty($data->currentTrader->id)): ?>
+		<h4>Login trader</h4>
+		<form action="#" method="POST">
+			<div class="form-field form-field-half">
+				<label for="login_trader-email">E-Mail</label>
+				<input id="login_trader-email" name="email" type="email" />
+			</div>
+			<div class="form-field form-field-half">
+				<label for="login_trader-password">Password</label>
+				<input id="login_trader-password" name="password" type="password" />
+			</div>
+			<input type="hidden" name="action" value="trader-login" />
+			<button type="submit">Login</button>
+		</form>
+
+		<h4>Create trader</h4>
+		<form action="#" method="POST">
+			<div class="form-field form-field-half">
+				<label for="create_trader-email">E-Mail</label>
+				<input id="create_trader-email" name="email" type="email" />
+			</div>
+			<div class="form-field form-field-half">
+				<label for="create_trader-password">Password</label>
+				<input id="create_trader-password" name="password" type="password" />
+			</div>
+			<input type="hidden" name="action" value="trader-create" />
+			<button type="submit">Create</button>
+		</form>
+	<?php else: ?>
+		<h4>Logout</h4>
+		<form action="#" method="POST">
+			<input type="hidden" name="action" value="trader-logout" />
+			<button type="submit">Logout</button>
+		</form>
+	<?php endif; ?>
+</section>
+
+<?php if (!isset($_GET['ajax'])): ?>
+	<?php require('_footer_break.html');?>
+	<?php require('_footer.html');?>
+<?php endif; ?>
