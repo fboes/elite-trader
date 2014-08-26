@@ -11,9 +11,27 @@
 				<label for="good_update-good_id">Good</label>
 				<select id="good_update-good_id" name="good_id" class="show-on-empty" data-show-on-empty="#good_update-new">
 					<option value="">-- New good --</option>
-					<?php foreach($data->allGoods as $good):?>
-						<option value="<?php _echo($good->id);?>"<?php echo(!empty($app->path[2]) && $app->path[2] == $good->id ? ' selected="selected"' : '');?>><?php _echo($good->name);?></option>
-					<?php endforeach; ?>
+					<?php if(!empty($data->allGoods)): ?>
+						<optgroup label="All goods">
+						<?php foreach($data->allGoods as $good):?>
+							<option value="<?php _echo($good->id);?>"<?php echo(!empty($app->path[2]) && $app->path[2] == $good->id ? ' selected="selected"' : '');?>><?php _echo($good->name);?></option>
+						<?php endforeach; ?>
+						</optgroup>
+					<?php endif; ?>
+					<?php if(!empty($data->locationGoods->new)): ?>
+						<optgroup label="New prices">
+						<?php foreach($data->locationGoods->new as $good):?>
+							<option value="<?php _echo($good->id);?>"<?php echo(!empty($app->path[2]) && $app->path[2] == $good->id ? ' selected="selected"' : '');?>><?php _echo($good->name);?></option>
+						<?php endforeach; ?>
+						</optgroup>
+					<?php endif; ?>
+					<?php if(!empty($data->locationGoods->old)): ?>
+						<optgroup label="Old prices">
+						<?php foreach($data->locationGoods->old as $good):?>
+							<option value="<?php _echo($good->id);?>"<?php echo(!empty($app->path[2]) && $app->path[2] == $good->id ? ' selected="selected"' : '');?>><?php _echo($good->name);?></option>
+						<?php endforeach; ?>
+						</optgroup>
+					<?php endif; ?>
 				</select>
 			</div>
 		<?php endif; ?>

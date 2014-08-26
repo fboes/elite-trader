@@ -15,10 +15,10 @@ class App {
 		elseif (!empty($_SERVER['PATH_INFO'])) {
 			$path = substr($_SERVER['PATH_INFO'],1);
 		}
-		$this->path    = (!empty($path)) ? explode('/', $path) : array();
 		if (empty($path[0])) {$path[0] = NULL;}
 		if (empty($path[1])) {$path[1] = NULL;}
 		if (empty($path[2])) {$path[2] = NULL;}
+		$this->path    = (!empty($path)) ? explode('/', $path) : array();
 	}
 
 	/**

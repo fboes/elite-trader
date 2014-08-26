@@ -188,9 +188,12 @@ switch ($app->path[0]) {
 		if (!empty($app->path[1])) {
 			$elite->setCurrentLocation($app->path[1]);
 			$data['currentLocation'] = $elite->currentLocation;
-			$data['title']        = 'New price for '.$elite->currentLocation->name;
+			$data['title']           = 'New price for '.$elite->currentLocation->name;
+			$data['locationGoods']   = $elite->getGoodsForCurrentLocationPlus();
 		}
-		$data['allGoods']        = $elite->getAllGoods();
+		else {
+			$data['allGoods']        = $elite->getAllGoods();
+		}
 
 		$data['template']     = $app->path[0];
 		break;
@@ -201,7 +204,10 @@ switch ($app->path[0]) {
 			$data['currentLocation'] = $elite->currentLocation;
 			$data['title']        = 'New connection for '.$elite->currentLocation->name;
 		}
-		$data['locations']       = !empty($elite->currentLocation) ? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,CONFIG_HOPDISTANCE_SEARCH) : $elite->getAllLocations();
+		$data['locations']       = !empty($elite->currentLocation)
+			? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,CONFIG_HOPDISTANCE_SEARCH)
+			: $elite->getAllLocations()
+		;
 		$data['currentLocation'] = $elite->currentLocation;
 
 		$data['template']     = $app->path[0];

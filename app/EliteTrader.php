@@ -571,6 +571,7 @@ class EliteTrader {
 			}
 			$foundIds[$r->id] = $r->id;
 		}
+		$results = $this->sortByKey($results,'name');
 		return $results;
 	}
 
@@ -608,6 +609,65 @@ class EliteTrader {
 		return TRUE;
 	}
 
+	/**
+	 * Get all goods, but divided into old and new ones
+	 * @see getGoodsForLocationPlus
+	 */
+	public function getGoodsForCurrentLocationPlus() {
+		if (empty($this->currentLocation->id)) {
+			throw new \Exception('No location set');
+		}
+		return $this->getGoodsForLocationPlus($this->currentLocation->id);
+	}
+
+	/**
+	 * Get all goods, but divided into old and new ones
+	 * @param  integer $locationId [description]
+	 * @return object  with new & old
+	 */
+	public function getGoodsForLocationPlus ($locationId) {
+		$oldGoods = $this->getGoodsForLocation($locationId);
+		$ids = array();
+		foreach ($oldGoods as $g) {
+			$ids[] = $g->id;
+		}
+		if (!empty($ids)) {
+			$newGoods = $this->getGoodsNotInArray($ids);
+		}
+		$return = (object)array(
+			'old' => $oldGoods,
+			'new' => $newGoods,
+		);
+
+		return $return;
+	}
+
+	public function getGoodsForLocation ($locationId) {
+		$this->pdo->lastCmd =
+			'SELECT g.*'
+			.' FROM '.self::TABLE_GOODS.' AS g'
+			.' JOIN '.self::TABLE_PRICES.' AS p ON g.id = p.good_id'
+			.' WHERE p.location_id = '.$this->pdo->quote((int) $locationId)
+			.' AND NOT (p.price_sell = 0 AND p.price_buy = 0)'
+			.' ORDER BY g.name'
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+		return $sth->fetchAll();
+	}
+
+	public function getGoodsNotInArray (array $ids) {
+		$this->pdo->lastCmd =
+			'SELECT g.*'
+			.' FROM '.self::TABLE_GOODS.' AS g'
+			.' WHERE g.id NOT IN ('.implode(',',$ids).')'
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+		return $sth->fetchAll();
+	}
 
 	// -------------------------------------------
 	// UPDATE
@@ -768,5 +828,14 @@ class EliteTrader {
 			$row['trader_id'] = $currentTraderId;
 		}
 		return $row;
+	}
+
+	protected function sortByKey (array $results, $keyName) {
+		$order = array();
+		foreach ($results as $key => $row) {
+			$order[$key] = $row->$keyName;
+		}
+		array_multisort($order, SORT_ASC, $results);
+		return $results;
 	}
 }
