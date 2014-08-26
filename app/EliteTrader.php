@@ -52,7 +52,7 @@ class EliteTrader {
 		$this->currentTrader = (object)array(
 			'hops'            => (int)$hops,
 			'hopdistance'     => (float)$hopdistance,
-			'last_station_id' => NULL,
+			'last_location_id' => NULL,
 			'last_good_id'    => NULL,
 			'is_editor'       => TRUE,
 		);
@@ -104,7 +104,7 @@ class EliteTrader {
 			'email' => $email,
 			'pwd'   => $this->returnPassword($password),
 			'settings_json' => json_encode($this->currentTrader),
-			'location_id' => $this->currentTrader->last_station_id,
+			'location_id' => $this->currentTrader->last_location_id,
 		));
 		$this->currentTrader->id = $this->pdo->lastInsertId();
 		return $success;
@@ -137,7 +137,7 @@ class EliteTrader {
 				self::TABLE_TRADERS,
 				array(
 					'settings_json' => json_encode($this->currentTrader),
-					'location_id' => $this->currentTrader->last_station_id,
+					'location_id' => $this->currentTrader->last_location_id,
 				),
 				'id='.$this->pdo->quote($this->currentTrader->id)
 			);
@@ -157,7 +157,7 @@ class EliteTrader {
 	public function setCurrentLocation ($id) {
 		$id = (int)$id;
 		$this->currentLocation = $this->getLocation($id);
-		$this->currentTrader->last_station_id = $id;
+		$this->currentTrader->last_location_id = $id;
 		if (!empty($this->currentLocation)) {
 			$this->currentLocation->id = (int)$this->currentLocation->id;
 			return TRUE;
@@ -685,9 +685,7 @@ class EliteTrader {
 		foreach ($oldGoods as $g) {
 			$ids[] = $g->id;
 		}
-		if (!empty($ids)) {
-			$newGoods = $this->getGoodsNotInArray($ids);
-		}
+		$newGoods = $this->getGoodsNotInArray($ids);
 		$return = (object)array(
 			'old' => $oldGoods,
 			'new' => $newGoods,
@@ -714,7 +712,7 @@ class EliteTrader {
 		$this->pdo->lastCmd =
 			'SELECT g.*'
 			.' FROM '.self::TABLE_GOODS.' AS g'
-			.' WHERE g.id NOT IN ('.implode(',',$ids).')'
+			.(!empty($ids) ? ' WHERE g.id NOT IN ('.implode(',',$ids).')' : '')
 			.' ORDER BY g.name'
 		;
 		$this->pdo->lastData = NULL;

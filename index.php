@@ -229,6 +229,9 @@ switch ($app->path[0]) {
 			? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,CONFIG_HOPDISTANCE_SEARCH)
 			: $elite->getAllLocations()
 		;
+		if (empty($data['locations'])) {
+			$data['locations']= $elite->getAllLocations();
+		}
 		$data['currentLocation'] = $elite->currentLocation;
 
 		$data['template']     = $app->path[0];
