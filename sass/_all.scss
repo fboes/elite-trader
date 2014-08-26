@@ -59,6 +59,12 @@ textarea {
 		background-color:$color-yellow-light;
 	}
 }
+optgroup {
+	border-top:1px dotted;
+	option {
+		margin-left:$base-unit;
+	}
+}
 input {
 	&[type=radio],
 	&[type=checkbox],
