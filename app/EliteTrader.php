@@ -50,11 +50,11 @@ class EliteTrader {
 	 */
 	public function getCurrentTrader ($hops = 2, $hopdistance = 10) {
 		$this->currentTrader = (object)array(
-			'hops'            => (int)$hops,
-			'hopdistance'     => (float)$hopdistance,
+			'hops'             => (int)$hops,
+			'hopdistance'      => (float)$hopdistance,
 			'last_location_id' => NULL,
-			'last_good_id'    => NULL,
-			'is_editor'       => TRUE,
+			'last_good_id'     => NULL,
+			'is_editor'        => TRUE,
 		);
 		foreach ($_SESSION as $key => $value) {
 			if (isset($value)) {
@@ -185,7 +185,7 @@ class EliteTrader {
 	}
 
 	public function getCurrentTraderId () {
-		return !empty($this->currentTrader) ? $this->currentTrader->id : NULL;
+		return !empty($this->currentTrader->id) ? $this->currentTrader->id : NULL;
 	}
 
 	// -------------------------------------------
@@ -234,6 +234,31 @@ class EliteTrader {
 		return $id;
 	}
 
+	/**
+	 * [createCraft description]
+	 * @param  string  $name        [description]
+	 * @param  string  $description [description]
+	 * @param  integer $cargo       [description]
+	 * @param  integer $speed       [description]
+	 * @return integer              [description]
+	 */
+	public function createCraft ($name, $description = NULL, $cargo = NULL, $speed = 0) {
+		$id = NULL;
+		if ($this->pdo->replace(
+			self::TABLE_CRAFT,
+			$this->modifyRow(array(
+				'name'        => $name,
+				'description' => $description,
+				'cargo'       => (int)$cargo,
+				'speed'       => (int)$speed,
+			))
+		)) {
+			$id = $this->pdo->lastInsertId();
+		}
+		_print_r($this->pdo->getLastCommand());
+		return $id;
+	}
+
 	// -------------------------------------------
 	// READ
 	// -------------------------------------------
@@ -278,6 +303,27 @@ class EliteTrader {
 			$locations[] = $row;
 		}
 		return $locations;
+	}
+
+	/**
+	 * [getAllGoods description]
+	 */
+	public function getAllCraft () {
+		$this->pdo->lastCmd =
+			'SELECT *'
+			.' FROM '.self::TABLE_CRAFT
+			.' ORDER BY name'
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+
+		$goods = array();
+		while (($row = $sth->fetch()) !== false) {
+			$this->listGoods[$row->id] = $row->name;
+			$goods[] = $row;
+		}
+		return $goods;
 	}
 
 	// -------------------------------------------
@@ -338,6 +384,58 @@ class EliteTrader {
 	}
 
 	/**
+	 * [getCompleteCraft description]
+	 * @param  [type] $idCraft [description]
+	 * @return [type]         [description]
+	 */
+	public function getCompleteCraft ($idCraft) {
+		$idCraft = (int)$idCraft;
+		$this->pdo->lastCmd =
+			'SELECT *'
+			.' FROM '.self::TABLE_CRAFT
+			.' WHERE id = '.$this->pdo->quote((int)$idCraft)
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+		$result = $sth->fetchAll();
+		$craft = !empty($result[0]) ? $result[0] : array();
+
+		if ($craft) {
+			$craft->prices = $this->getPricesForCraft($idCraft);
+		}
+		$craft->delta = (object)array(
+			'highestBuy'  => NULL,
+			'highestSell' => NULL,
+			'lowestBuy'   => NULL,
+			'lowestSell'  => NULL,
+		);
+		foreach ($craft->prices as $p) {
+			if (!empty($p->price_buy)) {
+				if (empty($craft->delta->highestBuy) || $craft->delta->highestBuy->price < $p->price_buy) {
+					$craft->delta->highestBuy = $p;
+					$craft->delta->highestBuy->price = $p->price_buy;
+				}
+				if (empty($craft->delta->lowestBuy) || $craft->delta->lowestBuy->price > $p->price_buy) {
+					$craft->delta->lowestBuy = $p;
+					$craft->delta->lowestBuy->price = $p->price_buy;
+				}
+			}
+			if (!empty($p->price_sell)) {
+				if (empty($craft->delta->highestSell) || $craft->delta->highestSell->price < $p->price_sell) {
+					$craft->delta->highestSell = $p;
+					$craft->delta->highestSell->price = $p->price_sell;
+				}
+				if (empty($craft->delta->lowestSell) || $craft->delta->lowestSell->price > $p->price_sell) {
+					$craft->delta->lowestSell = $p;
+					$craft->delta->lowestSell->price = $p->price_sell;
+				}
+			}
+		}
+		return $craft;
+	}
+
+	/**
 	 * [getPricesForGood description]
 	 * @param  [type] $idGood [description]
 	 * @return [type]         [description]
@@ -348,6 +446,26 @@ class EliteTrader {
 			.' FROM '.self::TABLE_PRICES.' AS p'
 			.' JOIN '.self::TABLE_LOCATIONS.' AS l ON l.id = p.location_id'
 			.' WHERE p.good_id = '.$this->pdo->quote((int) $idGood)
+			.' AND ( p.price_buy > 0 OR p.price_sell > 0)'
+			.' ORDER BY l.name'
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+		return $sth->fetchAll();
+	}
+
+	/**
+	 * [getPricesForCraft description]
+	 * @param  [type] $idCraft [description]
+	 * @return [type]         [description]
+	 */
+	public function getPricesForCraft ($idCraft) {
+		$this->pdo->lastCmd =
+			'SELECT p.price_buy, p.price_sell, l.id AS location_id, l.name AS location_name'
+			.' FROM '.self::TABLE_X_CL.' AS p'
+			.' JOIN '.self::TABLE_LOCATIONS.' AS l ON l.id = p.location_id'
+			.' WHERE p.craft_id = '.$this->pdo->quote((int) $idCraft)
 			.' AND ( p.price_buy > 0 OR p.price_sell > 0)'
 			.' ORDER BY l.name'
 		;
@@ -721,6 +839,71 @@ class EliteTrader {
 		return $sth->fetchAll();
 	}
 
+	/**
+	 * Get all crafts, but divided into old and new ones
+	 * @see getGoodsForLocationPlus
+	 */
+	public function getCraftForCurrentLocationPlus() {
+		if (empty($this->currentLocation->id)) {
+			throw new \Exception('No location set');
+		}
+		return $this->getCraftForLocationPlus($this->currentLocation->id);
+	}
+
+	/**
+	 * Get all crafts, but divided into old and new ones
+	 * @param  integer $locationId [description]
+	 * @return object  with new & old
+	 */
+	public function getCraftForLocationPlus ($locationId) {
+		$oldCraft = $this->getCraftForLocation($locationId);
+		$ids = array();
+		foreach ($oldCraft as $g) {
+			$ids[] = $g->id;
+		}
+		$newCraft = $this->getCraftNotInArray($ids);
+		$return = (object)array(
+			'old' => $oldCraft,
+			'new' => $newCraft,
+		);
+		return $return;
+	}
+
+	public function getCraftForCurrentLocation() {
+		if (empty($this->currentLocation->id)) {
+			throw new \Exception('No location set');
+		}
+		return $this->getCraftForLocation($this->currentLocation->id);
+	}
+
+	public function getCraftForLocation ($locationId) {
+		$this->pdo->lastCmd =
+			'SELECT g.*, p.price_sell, p.price_buy'
+			.' FROM '.self::TABLE_CRAFT.' AS g'
+			.' JOIN '.self::TABLE_X_CL.' AS p ON g.id = p.craft_id'
+			.' WHERE p.location_id = '.$this->pdo->quote((int) $locationId)
+			.' AND NOT (p.price_sell = 0 AND p.price_buy = 0)'
+			.' ORDER BY g.name'
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+		return $sth->fetchAll();
+	}
+
+	public function getCraftNotInArray (array $ids) {
+		$this->pdo->lastCmd =
+			'SELECT g.*'
+			.' FROM '.self::TABLE_CRAFT.' AS g'
+			.(!empty($ids) ? ' WHERE g.id NOT IN ('.implode(',',$ids).')' : '')
+			.' ORDER BY g.name'
+		;
+		$this->pdo->lastData = NULL;
+		$sth = $this->pdo->prepare($this->pdo->lastCmd);
+		$sth->execute();
+		return $sth->fetchAll();
+	}
+
 	// -------------------------------------------
 	// UPDATE
 	// -------------------------------------------
@@ -750,6 +933,37 @@ class EliteTrader {
 	public function setPriceForLocation ($idLocation, $idGood, $priceBuy, $priceSell = 0) {
 		return ($this->pdo->replace(self::TABLE_PRICES, $this->modifyRow(array(
 			'good_id'      => (int)$idGood,
+			'location_id'  => (int)$idLocation,
+			'price_buy'    => (int)$priceBuy,
+			'price_sell'   => (int)$priceSell,
+		))) >= 0);
+	}
+
+	/**
+	 * Will invoke setPriceForLocation for current location
+	 * @param integer $idCraft   [description]
+	 * @param integer $priceBuy  [description]
+	 * @param integer $priceSell [description]
+	 * @return boolean           [description]
+	 */
+	public function setCraftPriceForCurrentLocation ($idCraft, $priceBuy, $priceSell = 0) {
+		if (empty($this->currentLocation->id)) {
+			throw new \Exception('No location set');
+		}
+		return $this->setCraftPriceForLocation($this->currentLocation->id, $idCraft, $priceBuy, $priceSell);
+	}
+
+	/**
+	 * Set new prices for good at given location
+	 * @param integer  $idLocation [description]
+	 * @param integer  $idCraft    [description]
+	 * @param integer  $priceBuy   [description]
+	 * @param integer  $priceSell  [description]
+	 * @return boolean             [description]
+	 */
+	public function setCraftPriceForLocation ($idLocation, $idCraft, $priceBuy, $priceSell = 0) {
+		return ($this->pdo->replace(self::TABLE_X_CL, $this->modifyRow(array(
+			'craft_id'     => (int)$idCraft,
 			'location_id'  => (int)$idLocation,
 			'price_buy'    => (int)$priceBuy,
 			'price_sell'   => (int)$priceSell,
@@ -809,6 +1023,36 @@ class EliteTrader {
 		}
 		return ($this->pdo->update(
 			self::TABLE_GOODS,
+			$this->modifyRow($data),
+			'id='.$this->pdo->quote($id)
+		));
+	}
+
+	/**
+	 * Set new name and description for craft
+	 * @param  integer $id          [description]
+	 * @param  string  $name        [description]
+	 * @param  string  $description [description]
+	 * @return boolean              [description]
+	 */
+	public function updateCraft ($id, $name, $description = NULL, $cargo = NULL, $speed = NULL) {
+		$data = array(
+			'name'        => $name,
+			'description' => $description,
+			'cargo'       => (int)$cargo,
+			'speed'       => (int)$speed,
+		);
+		if (empty($description)) {
+			unset($data['description']);
+		}
+		if (empty($cargo)) {
+			unset($data['cargo']);
+		}
+		if (empty($speed)) {
+			unset($data['speed']);
+		}
+		return ($this->pdo->update(
+			self::TABLE_CRAFT,
 			$this->modifyRow($data),
 			'id='.$this->pdo->quote($id)
 		));

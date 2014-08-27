@@ -10,17 +10,26 @@
 				<div>
 					<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='good_name'"><?php _echo($data->good->name);?></span></h3>
 					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='good_description'"><?php _echo($data->good->description);?></span></p>
-					<p>
+					<table style="width:auto;">
 						<?php if(!empty($data->good->delta->highestBuy)): ?>
-							Highest buyer: <a href="<?php _echo($app->url('locations',$data->good->delta->lowestSell->location_id));?>"><?php _echo($data->good->delta->highestBuy->location_name);?></a><br />
+							<tr>
+								<th>Highest buyer</th>
+								<td><a href="<?php _echo($app->url('locations',$data->good->delta->lowestSell->location_id));?>"><?php _echo($data->good->delta->highestBuy->location_name);?></a><br /></td>
+							</tr>
 						<?php endif; ?>
 						<?php if(!empty($data->good->delta->lowestSell)): ?>
-							Lowest seller: <a href="<?php _echo($app->url('locations',$data->good->delta->lowestSell->location_id));?>"><?php _echo($data->good->delta->lowestSell->location_name);?></a><br />
+							<tr>
+								<th>Lowest seller</th>
+								<td><a href="<?php _echo($app->url('locations',$data->good->delta->lowestSell->location_id));?>"><?php _echo($data->good->delta->lowestSell->location_name);?></a><br /></td>
+							</tr>
 						<?php endif; ?>
 						<?php if(!empty($data->good->delta->highestBuy) && !empty($data->good->delta->lowestSell)): ?>
-							Biggest delta: <?php $app->echoNumber($data->good->delta->highestBuy->price - $data->good->delta->lowestSell->price,CONFIG_UNIT_CURRENCY_SHORT);?>
+							<tr>
+								<th>Biggest delta</th>
+								<td><?php $app->echoNumber($data->good->delta->highestBuy->price - $data->good->delta->lowestSell->price,CONFIG_UNIT_CURRENCY);?></td>
+							</tr>
 						<?php endif; ?>
-					</p>
+					</table>
 				</div>
 
 				<?php if($data->good->prices): ?>

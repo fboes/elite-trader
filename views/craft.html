@@ -1,0 +1,104 @@
+<?php require('_header.html');?>
+<?php require('_header_break.html');?>
+
+<?php if (!empty($data->craft)): ?>
+	<div class="block-container-1">
+		<section>
+			<?php if ($data->currentTrader->is_editor): ?>
+				<form action="<?php _echo($app->currentUrl());?>" method="POST">
+			<?php endif; ?>
+				<div>
+					<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='craft_name'"><?php _echo($data->craft->name);?></span></h3>
+					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='craft_description'"><?php _echo($data->craft->description);?></span></p>
+					<p>Cargo: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Cargo' name='craft_cargo'"><?php _echo($data->craft->cargo);?></span></p>
+					<p>Speed: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Speed' name='craft_speed'"><?php _echo($data->craft->speed);?></span></p>
+					<table style="width:auto;">
+						<?php if(!empty($data->craft->delta->highestBuy)): ?>
+							<tr>
+								<th>Highest buyer</th>
+								<td><a href="<?php _echo($app->url('locations',$data->craft->delta->lowestSell->location_id));?>"><?php _echo($data->craft->delta->highestBuy->location_name);?></a><br /></td>
+							</tr>
+						<?php endif; ?>
+						<?php if(!empty($data->craft->delta->lowestSell)): ?>
+							<tr>
+								<th>Lowest seller</th>
+								<td><a href="<?php _echo($app->url('locations',$data->craft->delta->lowestSell->location_id));?>"><?php _echo($data->craft->delta->lowestSell->location_name);?></a><br /></td>
+							</tr>
+						<?php endif; ?>
+						<?php if(!empty($data->craft->delta->highestBuy) && !empty($data->craft->delta->lowestSell)): ?>
+							<tr>
+								<th>Biggest delta</th>
+								<td><?php $app->echoNumber($data->craft->delta->highestBuy->price - $data->craft->delta->lowestSell->price,CONFIG_UNIT_CURRENCY);?></td>
+							</tr>
+						<?php endif; ?>
+					</table>
+				</div>
+
+				<?php if($data->craft->prices): ?>
+					<table class="sortable">
+						<thead>
+							<tr>
+								<th>Location</th>
+								<th class="number">Sell to market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
+								<th class="number">Buy from market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($data->craft->prices as $craftIndex => $price): ?>
+								<tr>
+									<td><a href="<?php _echo($app->url('locations',$price->location_id));?>"><?php _echo($price->location_name); ?></a></td>
+									<td class="number">
+										<?php $app->echoNumber($price->price_buy);?>
+									</td>
+									<td class="number">
+										<?php $app->echoNumber($price->price_sell);?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				<?php endif; ?>
+			<?php if ($data->currentTrader->is_editor): ?>
+					<input type="hidden" name="action" value="update_craft" />
+					<button type="submit">Save</button>
+				</form>
+			<?php endif; ?>
+		</section>
+	</div>
+
+	<?php if ($data->currentTrader->is_editor): ?>
+		<div class="block-container-2">
+			<section>
+				<h4>New craft</h4>
+				<form action="<?php _echo($app->currentUrl());?>" method="POST">
+					<div class="form-fieldset" id="create_craft-new">
+						<div class="form-field">
+							<label for="create_craft-name">Name</label>
+							<input id="create_craft-name" type="text" name="name" />
+						</div>
+						<div class="form-field">
+							<label for="create_craft-description">Description</label>
+							<input id="create_craft-description" type="text" name="description" />
+						</div>
+						<div class="form-field">
+							<label for="create_craft-cargo">Cargo space</label>
+							<input id="create_craft-cargo" type="number" min="0" step="1" name="cargo" />
+						</div>
+						<div class="form-field">
+							<label for="create_craft-speed">Max. speed</label>
+							<input id="create_craft-speed" type="number" min="0" step="1" name="speed" />
+						</div>
+					</div>
+
+					<input type="hidden" name="action" value="create_craft" />
+					<button type="submit">Save</button>
+				</form>
+			</section>
+		</div>
+	<?php endif; ?>
+
+<?php endif; ?>
+
+<?php require('_footer_break.html');?>
+<?php require('_footer.html');?>
+

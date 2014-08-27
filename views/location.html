@@ -1,5 +1,6 @@
 <?php require('_header.html');?>
 	<?php if ($data->currentTrader->is_editor): ?>
+		<li><a href="<?php _echo($app->url('craft-update',$data->currentLocation->id));?>#modal-craft_update" class="modal"><i class="fa fa-rocket"></i> <span class="icon-hide">Create craft price</span></a></li>
 		<li><a href="<?php _echo($app->url('good-update',$data->currentLocation->id));?>#modal-good_update" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create price</span></a></li>
 		<li><a href="<?php _echo($app->url('location-update',$data->currentLocation->id));?>#modal-location_update" class="modal"><i class="fa fa-road"></i> <span class="icon-hide">Create connection</span></a></li>
 	<?php endif; ?>
@@ -93,7 +94,8 @@
 				</form>
 			<?php endif; ?>
 		</section>
-
+	</div>
+	<div class="block-container-2">
 		<section>
 			<h4>Travelling connections for <?php _echo($data->currentLocation->name);?></h4>
 
@@ -105,7 +107,7 @@
 						<thead>
 							<tr>
 								<th>Location</th>
-								<th class="number" style="width:5em;">Distance (<?php _echo(CONFIG_UNIT_DISTANCE);?>)</th>
+								<th class="number" style="width:5em;">Distance (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</th>
 								<th style="width:15em;">Compare prices</th>
 								<?php if ($data->currentTrader->is_editor): ?>
 									<th class="number" style="width:3em;"><i class="fa fa-trash-o"></i></th>
@@ -134,6 +136,47 @@
 
 			<?php if ($data->currentTrader->is_editor): ?>
 					<a href="<?php _echo($app->url('location-update',$data->currentLocation->id));?>#modal-location_update" class="modal button"><i class="fa fa-plus"></i> New connection</a>
+				</form>
+			<?php endif; ?>
+		</section>
+
+		<section>
+			<h4>Craft prices</h4>
+			<?php if ($data->currentTrader->is_editor): ?>
+				<form action="<?php _echo($app->currentUrl());?>" method="POST">
+				<?php endif; ?>
+				<?php if(!empty($data->craft)): ?>
+					<table class="sortable">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th class="number" style="width:5em;">Sell to market<br />(<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
+								<th class="number" style="width:5em;">Buy from market<br />(<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach($data->craft as $craft): ?>
+								<tr>
+									<td><a href="<?php _echo($app->url('craft',$craft->id));?>"><?php _echo($craft->name);?></a></td>
+									<td class="number">
+										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='craft[<?php _echo($goodIndex);?>][buy]'"><?php $app->echoNumber($craft->price_buy);?></span>
+									</td>
+									<td class="number">
+										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='1' name='craft[<?php _echo($goodIndex);?>][sell]'"><?php $app->echoNumber($craft->price_sell);?></span>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+					<?php if ($data->currentTrader->is_editor): ?>
+						<input type="hidden" name="location" value="<?php _echo($data->currentLocation->id);?>" />
+						<input type="hidden" name="action" value="update_craft" />
+						<button type="submit">Save craft prices</button>
+					<?php endif; ?>
+				<?php endif; ?>
+
+			<?php if ($data->currentTrader->is_editor): ?>
+					<a href="<?php _echo($app->url('location-update',$data->currentLocation->id));?>#modal-location_update" class="modal button"><i class="fa fa-plus"></i> New craft price</a>
 				</form>
 			<?php endif; ?>
 		</section>

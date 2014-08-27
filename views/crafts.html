@@ -1,0 +1,50 @@
+<?php require('_header.html');?>
+	<?php if ($data->currentTrader->is_editor): ?>
+		<!--li><a href="<?php _echo($app->url('craft-update'));?>#modal-craft_update" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create craft</span></a></li-->
+	<?php endif; ?>
+<?php require('_header_break.html');?>
+
+	<div class="block-container-2">
+		<section>
+			<h3>Craft</h3>
+			<?php if (!empty($data->allCraft)): ?>
+				<ul>
+					<?php foreach ($data->allCraft as $craft): ?>
+						<li><a href="<?php _echo($app->url('craft', $craft->id));?>"><?php _echo($craft->name);?></a></li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+		</section>
+		<?php if ($data->currentTrader->is_editor): ?>
+			<section>
+				<h4>New craft</h4>
+				<form action="<?php _echo($app->currentUrl());?>" method="POST">
+					<div class="form-fieldset" id="create_craft-new">
+						<div class="form-field">
+							<label for="create_craft-name">Name</label>
+							<input id="create_craft-name" type="text" name="name" />
+						</div>
+						<div class="form-field">
+							<label for="create_craft-description">Description</label>
+							<input id="create_craft-description" type="text" name="description" />
+						</div>
+						<div class="form-field">
+							<label for="create_craft-cargo">Cargo space</label>
+							<input id="create_craft-cargo" type="number" min="0" step="1" name="cargo" />
+						</div>
+						<div class="form-field">
+							<label for="create_craft-speed">Max. speed</label>
+							<input id="create_craft-speed" type="number" min="0" step="1" name="speed" />
+						</div>
+					</div>
+
+					<input type="hidden" name="action" value="create_craft" />
+					<button type="submit">Save</button>
+				</form>
+			</section>
+		<?php endif; ?>
+	</div>
+
+<?php require('_footer_break.html');?>
+<?php require('_footer.html');?>
+

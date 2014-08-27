@@ -1,0 +1,77 @@
+<?php if (!isset($_GET['ajax'])): ?>
+	<?php require('_header.html');?>
+	<?php require('_header_break.html');?>
+<?php endif; ?>
+
+<section>
+	<h4><?php _echo($data->title);?></h4>
+	<form action="<?php _echo($app->url('locations',$data->currentLocation->id));?>" method="POST">
+		<?php if(!empty($app->path[1])): ?>
+			<div class="form-field">
+				<label for="craft_update-craft_id">Craft</label>
+				<select id="craft_update-craft_id" name="craft_id" class="show-on-empty" data-show-on-empty="#craft_update-new">
+					<option value="">-- New craft --</option>
+					<?php if(!empty($data->allCraft)): ?>
+						<optgroup label="All crafts">
+						<?php foreach($data->allCraft as $craft):?>
+							<option value="<?php _echo($craft->id);?>"<?php echo(!empty($app->path[2]) && $app->path[2] == $craft->id ? ' selected="selected"' : '');?>><?php _echo($craft->name);?></option>
+						<?php endforeach; ?>
+						</optgroup>
+					<?php endif; ?>
+					<?php if(!empty($data->locationCraft->new)): ?>
+						<optgroup label="New prices">
+						<?php foreach($data->locationCraft->new as $craft):?>
+							<option value="<?php _echo($craft->id);?>"<?php echo(!empty($app->path[2]) && $app->path[2] == $craft->id ? ' selected="selected"' : '');?>><?php _echo($craft->name);?></option>
+						<?php endforeach; ?>
+						</optgroup>
+					<?php endif; ?>
+					<?php if(!empty($data->locationCraft->old)): ?>
+						<optgroup label="Old prices">
+						<?php foreach($data->locationCraft->old as $craft):?>
+							<option value="<?php _echo($craft->id);?>"<?php echo(!empty($app->path[2]) && $app->path[2] == $craft->id ? ' selected="selected"' : '');?>><?php _echo($craft->name);?></option>
+						<?php endforeach; ?>
+						</optgroup>
+					<?php endif; ?>
+				</select>
+			</div>
+		<?php endif; ?>
+
+		<div class="form-fieldset js-slide<?php _echo(!empty($app->path[2]) ? ' js-hidden' : '');?>" id="craft_update-new">
+			<div class="form-field">
+				<label for="craft_update-name">Name</label>
+				<input id="craft_update-name" type="text" name="name" />
+			</div>
+			<div class="form-field">
+				<label for="craft_update-description">Description</label>
+				<input id="craft_update-description" type="text" name="description" />
+			</div>
+			<div class="form-field">
+				<label for="craft_update-cargo">Cargo space</label>
+				<input id="craft_update-cargo" type="number" min="0" step="1" name="cargo" />
+			</div>
+			<div class="form-field">
+				<label for="craft_update-speed">Max. speed</label>
+				<input id="craft_update-speed" type="number" min="0" step="1" name="speed" />
+			</div>
+		</div>
+
+		<?php if(!empty($app->path[1])): ?>
+			<div class="form-field form-field-half">
+				<label for="craft_update-price_buy">Sell to… (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</label>
+				<input id="craft_update-price_buy" type="number" min="0" step="1" name="price_buy" />
+			</div>
+			<div class="form-field form-field-half">
+				<label for="craft_update-price_sell">Buy from… (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</label>
+				<input id="craft_update-price_sell" type="number" min="0" step="1" name="price_sell" />
+			</div>
+		<?php endif; ?>
+
+		<input type="hidden" name="action" value="craft_update" />
+		<button type="submit">Save</button>
+	</form>
+</section>
+
+<?php if (!isset($_GET['ajax'])): ?>
+	<?php require('_footer_break.html');?>
+	<?php require('_footer.html');?>
+<?php endif; ?>

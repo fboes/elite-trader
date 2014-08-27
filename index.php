@@ -41,6 +41,7 @@ if (!empty($_POST['action'])) {
 			break;
 		case 'trader-logout':
 			session_unset();
+			$elite->currentTrader = NULL;
 			$success = TRUE;
 			break;
 		case 'trader-create':
@@ -120,6 +121,14 @@ switch ($app->path[0]) {
 							$success = $elite->setPriceForCurrentLocation($_POST['good_id'],$_POST['price_buy'],$_POST['price_sell']);
 						}
 						break;
+					case 'craft_update':
+						if (!empty($_POST['name']) && empty($_POST['craft_id'])) {
+							$_POST['craft_id'] = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed']);
+						}
+						if (!empty($_POST['craft_id'])) {
+							$success = $elite->setCraftPriceForCurrentLocation($_POST['craft_id'],$_POST['price_buy'],$_POST['price_sell']);
+						}
+						break;
 					case 'location_update':
 						if (!empty($_POST['name']) && empty($_POST['location_id'])) {
 							$_POST['location_id'] = $elite->createLocation($_POST['name'],$_POST['description']);
@@ -144,6 +153,7 @@ switch ($app->path[0]) {
 				$data['prices']       = $elite->getPricesForCurrentAndNeighbouringLocations($elite->currentTrader->hops,$elite->currentTrader->hopdistance);
 				$data['title']        = $elite->currentLocation->name;
 			}
+			$data['craft']        = $elite->getCraftForCurrentLocation();
 			$data['template']     = 'location';
 			$data['connections']  = $elite->getNextLocationsForCurrentLocation(1);
 			$data['currentLocation'] = $elite->currentLocation;
@@ -196,6 +206,53 @@ switch ($app->path[0]) {
 			$data['title']        = $data['good']->name;
 		}
 		break;
+	case 'craft':
+		if (empty($app->path[1])) {
+			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
+				$success = $elite->createCraft($_POST['name'],@$_POST['description']);
+				$messages->addMessageOnAssert($success, 'Craft created', 'An error occured, please try again later');
+				if ($success) {
+					$messages->storeInSession();
+					$app->redirect ($app->path[0], $app->path[1]);
+				}
+			}
+			$data['allCraft']     = $elite->getAllCraft();
+			$data['template']     = 'crafts';
+			$data['title']        = 'Craft';
+		}
+		else {
+			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
+				$success = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed']);
+				$messages->addMessageOnAssert($success, 'Craft updated', 'An error occured, please try again later');
+				if ($success) {
+					$messages->storeInSession();
+					$app->redirect ($app->path[0], $app->path[1]);
+				}
+			}
+			$data['craft'] = $elite->getCompleteCraft($app->path[1]);
+			if (empty($data['craft'])) {
+				$app->redirect ($app->path[0], NULL, 307);
+			}
+			if (!empty($_POST['action'])) {
+				$success = TRUE;
+				switch ($_POST['action']) {
+					case 'update_craft':
+						if (!empty($_POST['craft_name'])) {
+							$success = $elite->updateCraft($app->path[1], $_POST['craft_name'],$_POST['craft_description'],@$_POST['craft_cargo'],@$_POST['craft_speed']) && $success;
+						}
+						break;
+				}
+				$messages->addMessageOnAssert($success, 'Craft saved', 'An error occured, please try again later');
+				if ($success) {
+					$messages->storeInSession();
+					$app->redirect ($app->path[0], $app->path[1]);
+				}
+			}
+
+			$data['template']     = 'craft';
+			$data['title']        = $data['craft']->name;
+		}
+		break;
 	case 'trader':
 		$data['template']     = $app->path[0];
 		$data['title']        = 'Trader & craft settings';
@@ -214,6 +271,20 @@ switch ($app->path[0]) {
 		}
 		else {
 			$data['allGoods']        = $elite->getAllGoods();
+		}
+
+		$data['template']     = $app->path[0];
+		break;
+	case 'craft-update':
+		$data['title']        = 'New craft';
+		if (!empty($app->path[1])) {
+			$elite->setCurrentLocation($app->path[1]);
+			$data['currentLocation'] = $elite->currentLocation;
+			$data['title']           = 'New price for '.$elite->currentLocation->name;
+			$data['locationCraft']   = $elite->getCraftForCurrentLocationPlus();
+		}
+		else {
+			$data['allCraft']        = $elite->getAllCraft();
 		}
 
 		$data['template']     = $app->path[0];

@@ -8,7 +8,10 @@ define ('CONFIG_DB_PWD','elite_trader');
 
 define ('CONFIG_UNIT_CURRENCY','credits');
 define ('CONFIG_UNIT_CURRENCY_SHORT','CR');
-define ('CONFIG_UNIT_DISTANCE','ly');
+define ('CONFIG_UNIT_DISTANCE','light years');
+define ('CONFIG_UNIT_DISTANCE_SHORT','ly');
+define ('CONFIG_UNIT_CARGO','tons');
+define ('CONFIG_UNIT_CARGO_SHORT','t');
 
 define ('CONFIG_HOPS_DEFAULT',       3);
 define ('CONFIG_HOPS_SEARCH',        CONFIG_HOPS_DEFAULT);
