@@ -101,6 +101,7 @@ span.icon-hide {
 		left: 0;
 		width:100%;
 		top: 0;
+		z-index:1;
 	}
 
 	.header-icon {
@@ -194,6 +195,8 @@ span.icon-hide {
 	}
 }
 #messages {
+	position:absolute;
+	width:100%;
 	section {
 		background-color: $color-yellow-light;
 		ul {
