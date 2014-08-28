@@ -208,9 +208,22 @@ switch ($app->path[0]) {
 		break;
 	case 'craft':
 		if (empty($app->path[1])) {
-			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
-				$success = $elite->createCraft($_POST['name'],@$_POST['description']);
-				$messages->addMessageOnAssert($success, 'Craft created', 'An error occured, please try again later');
+			if ($elite->currentTrader->is_editor && !empty($_POST['action'])) {
+				$success = TRUE;
+				switch ($_POST['action']) {
+					case 'update_crafts':
+						if (!empty($_POST['craft'])) {
+							foreach ($_POST['craft'] as $idCraft => $craft) {
+								$success = $elite->updateCraft($idCraft, NULL,$craft['description'],@$craft['cargo'],@$craft['speed'],@$craft['range_min'],@$craft['range_max']) && $success;
+							}
+						}
+						$messages->addMessageOnAssert($success, 'Craft saved', 'An error occured, please try again later');
+						break;
+					case 'craft_update':
+						$success = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed'],@$_POST['range_min'],@$_POST['range_max']);
+						$messages->addMessageOnAssert($success, 'Craft created', 'An error occured, please try again later');
+						break;
+				}
 				if ($success) {
 					$messages->storeInSession();
 					$app->redirect ($app->path[0], $app->path[1]);

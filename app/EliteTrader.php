@@ -1074,6 +1074,9 @@ class EliteTrader {
 	 * @return boolean              [description]
 	 */
 	public function updateCraft ($id, $name, $description = NULL, $cargo = NULL, $speed = NULL, $minRange = 0, $maxRange = 0) {
+		if (!$minRange) {
+			$minRange = floor($maxRange / 2);
+		}
 		$data = array(
 			'name'        => $name,
 			'description' => $description,
@@ -1082,6 +1085,9 @@ class EliteTrader {
 			'range_min'   => (float)$minRange,
 			'range_max'   => (float)$maxRange,
 		);
+		if (empty($name)) {
+			unset($data['name']);
+		}
 		if (empty($description)) {
 			unset($data['description']);
 		}
