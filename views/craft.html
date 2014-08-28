@@ -12,8 +12,8 @@
 					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='craft_description'"><?php _echo($data->craft->description);?></span></p>
 					<p>Cargo: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Cargo' name='craft_cargo'"><?php _echo($data->craft->cargo);?></span></p>
 					<p>Speed: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Speed' name='craft_speed'"><?php _echo($data->craft->speed);?></span></p>
-					<p>Min. distance_max: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Min. distance_max' name='craft_distance_max_min'"><?php _echo($data->craft->distance_max_min);?></span></p>
-					<p>Max. distance_max: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Max. distance_max' name='craft_distance_max_max'"><?php _echo($data->craft->distance_max_max);?></span></p>
+					<p>Min. range: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Min. distance_max' name='craft_range_min'"><?php _echo($data->craft->range_min);?></span></p>
+					<p>Max. range: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Max. distance_max' name='craft_range_max'"><?php _echo($data->craft->range_max);?></span></p>
 					<table style="width:auto;">
 						<?php if(!empty($data->craft->delta->highestBuy)): ?>
 							<tr>

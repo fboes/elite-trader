@@ -54,12 +54,12 @@
 				<input id="craft_update-speed" type="number" min="0" step="1" name="speed" />
 			</div>
 			<div class="form-field">
-				<label for="location_update-distance_max_min">Min. distance_max (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</label>
-				<input id="location_update-distance_max_min" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>" name="distance_max_min" />
+				<label for="location_update-range_min">Min. range (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</label>
+				<input id="location_update-range_min" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>" name="range_min" />
 			</div>
 			<div class="form-field">
-				<label for="location_update-distance_max_max">Max. distance_max (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</label>
-				<input id="location_update-distance_max_max" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>" name="distance_max_max" />
+				<label for="location_update-range_max">Max. range (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</label>
+				<input id="location_update-range_max" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>" name="range_max" />
 			</div>
 		</div>
 

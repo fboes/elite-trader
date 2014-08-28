@@ -287,8 +287,8 @@ class EliteTrader {
 				'description' => $description,
 				'cargo'       => (int)$cargo,
 				'speed'       => (int)$speed,
-				'distance_max_min'   => (float)$minRange,
-				'distance_max_max'   => (float)$maxRange,
+				'range_min'   => (float)$minRange,
+				'range_max'   => (float)$maxRange,
 			))
 		)) {
 			$id = $this->pdo->lastInsertId();
@@ -1079,8 +1079,8 @@ class EliteTrader {
 			'description' => $description,
 			'cargo'       => (int)$cargo,
 			'speed'       => (int)$speed,
-			'distance_max_min'   => (float)$minRange,
-			'distance_max_max'   => (float)$maxRange,
+			'range_min'   => (float)$minRange,
+			'range_max'   => (float)$maxRange,
 		);
 		if (empty($description)) {
 			unset($data['description']);
@@ -1092,10 +1092,10 @@ class EliteTrader {
 			unset($data['speed']);
 		}
 		if (empty($minRange)) {
-			unset($data['distance_max_min']);
+			unset($data['range_min']);
 		}
 		if (empty($maxRange)) {
-			unset($data['distance_max_max']);
+			unset($data['range_max']);
 		}
 		return ($this->pdo->update(
 			self::TABLE_CRAFT,
