@@ -4,7 +4,7 @@
 <?php if (!empty($data->craft)): ?>
 	<div class="block-container-1">
 		<section>
-			<?php if ($data->currentTrader->is_editor): ?>
+			<?php if (!empty($data->currentTrader->is_editor)): ?>
 				<form action="<?php _echo($app->currentUrl());?>" method="POST">
 			<?php endif; ?>
 				<div>
@@ -12,6 +12,8 @@
 					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='craft_description'"><?php _echo($data->craft->description);?></span></p>
 					<p>Cargo: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Cargo' name='craft_cargo'"><?php _echo($data->craft->cargo);?></span></p>
 					<p>Speed: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Speed' name='craft_speed'"><?php _echo($data->craft->speed);?></span></p>
+					<p>Min. distance_max: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Min. distance_max' name='craft_distance_max_min'"><?php _echo($data->craft->distance_max_min);?></span></p>
+					<p>Max. distance_max: <span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Max. distance_max' name='craft_distance_max_max'"><?php _echo($data->craft->distance_max_max);?></span></p>
 					<table style="width:auto;">
 						<?php if(!empty($data->craft->delta->highestBuy)): ?>
 							<tr>
@@ -28,7 +30,7 @@
 						<?php if(!empty($data->craft->delta->highestBuy) && !empty($data->craft->delta->lowestSell)): ?>
 							<tr>
 								<th>Biggest delta</th>
-								<td><?php $app->echoNumber($data->craft->delta->highestBuy->price - $data->craft->delta->lowestSell->price,CONFIG_UNIT_CURRENCY);?></td>
+								<td><?php $app->echoNumber($data->craft->delta->highestBuy->price - $data->craft->delta->lowestSell->price,CONFIG_UNIT_CURRENCY,CONFIG_UNIT_CURRENCY_DECIMALS);?></td>
 							</tr>
 						<?php endif; ?>
 					</table>
@@ -39,8 +41,8 @@
 						<thead>
 							<tr>
 								<th>Location</th>
-								<th class="number">Sell to market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
-								<th class="number">Buy from market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
+								<th class="number">Sell to market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT,CONFIG_UNIT_CURRENCY_DECIMALS);?>)</th>
+								<th class="number">Buy from market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT,CONFIG_UNIT_CURRENCY_DECIMALS);?>)</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -48,17 +50,17 @@
 								<tr>
 									<td><a href="<?php _echo($app->url('locations',$price->location_id));?>"><?php _echo($price->location_name); ?></a></td>
 									<td class="number">
-										<?php $app->echoNumber($price->price_buy);?>
+										<?php $app->echoNumber($price->price_buy,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?>
 									</td>
 									<td class="number">
-										<?php $app->echoNumber($price->price_sell);?>
+										<?php $app->echoNumber($price->price_sell,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?>
 									</td>
 								</tr>
 							<?php endforeach; ?>
 						</tbody>
 					</table>
 				<?php endif; ?>
-			<?php if ($data->currentTrader->is_editor): ?>
+			<?php if (!empty($data->currentTrader->is_editor)): ?>
 					<input type="hidden" name="action" value="update_craft" />
 					<button type="submit">Save</button>
 				</form>
@@ -66,7 +68,7 @@
 		</section>
 	</div>
 
-	<?php if ($data->currentTrader->is_editor): ?>
+	<?php if (!empty($data->currentTrader->is_editor)): ?>
 		<div class="block-container-2">
 			<section>
 				<h4>New craft</h4>

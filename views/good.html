@@ -4,7 +4,7 @@
 <?php if (!empty($data->good)): ?>
 	<div class="block-container-1">
 		<section>
-			<?php if ($data->currentTrader->is_editor): ?>
+			<?php if (!empty($data->currentTrader->is_editor)): ?>
 				<form action="<?php _echo($app->currentUrl());?>" method="POST">
 			<?php endif; ?>
 				<div>
@@ -26,7 +26,7 @@
 						<?php if(!empty($data->good->delta->highestBuy) && !empty($data->good->delta->lowestSell)): ?>
 							<tr>
 								<th>Biggest delta</th>
-								<td><?php $app->echoNumber($data->good->delta->highestBuy->price - $data->good->delta->lowestSell->price,CONFIG_UNIT_CURRENCY);?></td>
+								<td><?php $app->echoNumber($data->good->delta->highestBuy->price - $data->good->delta->lowestSell->price,CONFIG_UNIT_CURRENCY,CONFIG_UNIT_CURRENCY_DECIMALS);?></td>
 							</tr>
 						<?php endif; ?>
 					</table>
@@ -46,17 +46,17 @@
 								<tr>
 									<td><a href="<?php _echo($app->url('locations',$price->location_id));?>"><?php _echo($price->location_name); ?></a></td>
 									<td class="number">
-										<?php $app->echoNumber($price->price_buy);?>
+										<?php $app->echoNumber($price->price_buy,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?>
 									</td>
 									<td class="number">
-										<?php $app->echoNumber($price->price_sell);?>
+										<?php $app->echoNumber($price->price_sell,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?>
 									</td>
 								</tr>
 							<?php endforeach; ?>
 						</tbody>
 					</table>
 				<?php endif; ?>
-			<?php if ($data->currentTrader->is_editor): ?>
+			<?php if (!empty($data->currentTrader->is_editor)): ?>
 					<input type="hidden" name="action" value="update_good" />
 					<button type="submit">Save</button>
 				</form>
@@ -64,7 +64,7 @@
 		</section>
 	</div>
 
-	<?php if ($data->currentTrader->is_editor): ?>
+	<?php if (!empty($data->currentTrader->is_editor)): ?>
 		<div class="block-container-2">
 			<section>
 				<h4>New good</h4>

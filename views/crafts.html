@@ -1,5 +1,5 @@
 <?php require('_header.html');?>
-	<?php if ($data->currentTrader->is_editor): ?>
+	<?php if (!empty($data->currentTrader->is_editor)): ?>
 		<!--li><a href="<?php _echo($app->url('craft-update'));?>#modal-craft_update" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create craft</span></a></li-->
 	<?php endif; ?>
 <?php require('_header_break.html');?>
@@ -15,7 +15,7 @@
 				</ul>
 			<?php endif; ?>
 		</section>
-		<?php if ($data->currentTrader->is_editor): ?>
+		<?php if (!empty($data->currentTrader->is_editor)): ?>
 			<section>
 				<h4>New craft</h4>
 				<form action="<?php _echo($app->currentUrl());?>" method="POST">
@@ -35,6 +35,14 @@
 						<div class="form-field">
 							<label for="create_craft-speed">Max. speed</label>
 							<input id="create_craft-speed" type="number" min="0" step="1" name="speed" />
+						</div>
+						<div class="form-field">
+							<label for="location_update-distance_max_min">Min. distance_max (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</label>
+							<input id="location_update-distance_max_min" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>" name="distance_max_min" />
+						</div>
+						<div class="form-field">
+							<label for="location_update-distance_max_max">Max. distance_max (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</label>
+							<input id="location_update-distance_max_max" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>" name="distance_max_max" />
 						</div>
 					</div>
 

@@ -84,12 +84,25 @@ class App {
 		}
 	}
 
-	public function echoNumber ($number, $unit = NULL) {
-		if (is_int($number)) {
-			$str = (number_format($number));
-		} else {
-			$str = (number_format($number,2));
-		}
+	public function echoNumber ($number, $unit = NULL, $decimals = 0) {
+		$str = (number_format($number,$decimals));
 		echo ($str . (!empty($unit) ? '&nbsp;'.$unit : ''));
+	}
+
+	public function convertDecimalsToStep ($decimals) {
+		switch ((int) $decimals) {
+			case 0:
+				return 1;
+				break;
+			case 1:
+				return 0.1;
+				break;
+			case 2:
+				return 0.01;
+				break;
+			default:
+				return 10 / (pow(10, $decimals + 1));
+				break;
+		}
 	}
 }

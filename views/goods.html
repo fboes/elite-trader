@@ -1,5 +1,5 @@
 <?php require('_header.html');?>
-	<?php if ($data->currentTrader->is_editor): ?>
+	<?php if (!empty($data->currentTrader->is_editor)): ?>
 		<!--li><a href="<?php _echo($app->url('good-update'));?>#modal-good_update" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create good</span></a></li-->
 	<?php endif; ?>
 <?php require('_header_break.html');?>
@@ -15,7 +15,7 @@
 				</ul>
 			<?php endif; ?>
 		</section>
-		<?php if ($data->currentTrader->is_editor): ?>
+		<?php if (!empty($data->currentTrader->is_editor)): ?>
 			<section>
 				<h4>New good</h4>
 				<form action="<?php _echo($app->currentUrl());?>" method="POST">

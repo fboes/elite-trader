@@ -29,7 +29,7 @@ $elite = new EliteTrader(
 	new SuperPDO(CONFIG_DB_DSN,CONFIG_DB_USR,CONFIG_DB_PWD)
 	#,TraderApi::init(CONFIG_API_BASEURL, TraderApi::REPLY_TYPE_JSON)->setHttpCredentials(CONFIG_API_USR,CONFIG_API_PWD)
 );
-$elite->getCurrentTrader(CONFIG_HOPS_DEFAULT,CONFIG_HOPDISTANCE_DEFAULT);
+$elite->getCurrentTrader(CONFIG_HOPS_DEFAULT,CONFIG_RANGE_DEFAULT);
 $data['currentTrader'] = &$elite->currentTrader;
 
 if (!empty($_POST['action'])) {
@@ -53,8 +53,8 @@ if (!empty($_POST['action'])) {
 			if (!empty($_POST['hops'])) {
 				$success = $elite->setTraderHops($_POST['hops']);
 			}
-			if (!empty($_POST['hopdistance'])) {
-				$success = $elite->setTraderHopDistance($_POST['hopdistance']);
+			if (!empty($_POST['distance_max'])) {
+				$success = $elite->setTraderrange($_POST['distance_max']);
 			}
 			break;
 	}
@@ -123,7 +123,7 @@ switch ($app->path[0]) {
 						break;
 					case 'craft_update':
 						if (!empty($_POST['name']) && empty($_POST['craft_id'])) {
-							$_POST['craft_id'] = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed']);
+							$_POST['craft_id'] = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed'],@$_POST['range_min'],@$_POST['range_max']);
 						}
 						if (!empty($_POST['craft_id'])) {
 							$success = $elite->setCraftPriceForCurrentLocation($_POST['craft_id'],$_POST['price_buy'],$_POST['price_sell']);
@@ -150,7 +150,7 @@ switch ($app->path[0]) {
 				$data['title']        = 'Comparing prices for '.$elite->currentLocation->name.' with location '.$app->path[1];
 			}
 			else {
-				$data['prices']       = $elite->getPricesForCurrentAndNeighbouringLocations($elite->currentTrader->hops,$elite->currentTrader->hopdistance);
+				$data['prices']       = $elite->getPricesForCurrentAndNeighbouringLocations($elite->currentTrader->hops,$elite->currentTrader->distance_max);
 				$data['title']        = $elite->currentLocation->name;
 			}
 			$data['craft']        = $elite->getCraftForCurrentLocation();
@@ -222,7 +222,7 @@ switch ($app->path[0]) {
 		}
 		else {
 			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
-				$success = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed']);
+				$success = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed'],@$_POST['range_min'],@$_POST['range_max']);
 				$messages->addMessageOnAssert($success, 'Craft updated', 'An error occured, please try again later');
 				if ($success) {
 					$messages->storeInSession();
@@ -238,7 +238,7 @@ switch ($app->path[0]) {
 				switch ($_POST['action']) {
 					case 'update_craft':
 						if (!empty($_POST['craft_name'])) {
-							$success = $elite->updateCraft($app->path[1], $_POST['craft_name'],$_POST['craft_description'],@$_POST['craft_cargo'],@$_POST['craft_speed']) && $success;
+							$success = $elite->updateCraft($app->path[1], $_POST['craft_name'],$_POST['craft_description'],@$_POST['craft_cargo'],@$_POST['craft_speed'],@$_POST['craft_range_min'],@$_POST['craft_range_max']) && $success;
 						}
 						break;
 				}
@@ -280,7 +280,7 @@ switch ($app->path[0]) {
 		if (!empty($app->path[1])) {
 			$elite->setCurrentLocation($app->path[1]);
 			$data['currentLocation'] = $elite->currentLocation;
-			$data['title']           = 'New price for '.$elite->currentLocation->name;
+			$data['title']           = 'New craft price for '.$elite->currentLocation->name;
 			$data['locationCraft']   = $elite->getCraftForCurrentLocationPlus();
 		}
 		else {
@@ -297,7 +297,7 @@ switch ($app->path[0]) {
 			$data['title']        = 'New connection for '.$elite->currentLocation->name;
 		}
 		$data['locations']       = !empty($elite->currentLocation)
-			? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,CONFIG_HOPDISTANCE_SEARCH)
+			? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,CONFIG_RANGE_SEARCH)
 			: $elite->getAllLocations()
 		;
 		if (empty($data['locations'])) {

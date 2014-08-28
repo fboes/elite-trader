@@ -45,15 +45,15 @@ class EliteTrader {
 	/**
 	 * [getCurrentTrader description]
 	 * @param  integer $hops        [description]
-	 * @param  integer $hopdistance [description]
+	 * @param  float   $distance_max       [description]
 	 * @return [type]               [description]
 	 */
-	public function getCurrentTrader ($hops = 2, $hopdistance = 10) {
+	public function getCurrentTrader ($hops = 2, $distance_max = 10) {
 		$this->currentTrader = (object)array(
 			'hops'             => (int)$hops,
-			'hopdistance'      => (float)$hopdistance,
-			'last_location_id' => NULL,
-			'last_good_id'     => NULL,
+			'distance_max'            => (float)$distance_max,
+			'location_id'      => NULL,
+			'craft_id'         => NULL,
 			'is_editor'        => TRUE,
 		);
 		foreach ($_SESSION as $key => $value) {
@@ -65,53 +65,99 @@ class EliteTrader {
 
 	/**
 	 * [setTraderHops description]
-	 * @param [type] $hops [description]
+	 * @param integer $hops [description]
 	 */
 	public function setTraderHops ($hops) {
 		$hops = (int)$hops;
 		if (!empty($hops) && $hops > 0  && $hops <= 15) {
 			$this->currentTrader->hops = $hops;
-			$this->saveCurrentTrader();
 		}
 	}
 
 	/**
-	 * [setTraderHopDistance description]
-	 * @param [type] $hopdistance [description]
+	 * [setTraderdistance_max description]
+	 * @param float $distance_max [description]
 	 */
-	public function setTraderHopDistance ($hopdistance) {
-		$hopdistance = (float)$hopdistance;
-		if (!empty($hopdistance) && $hopdistance > 0  && $hopdistance <= 2000) {
-			$this->currentTrader->hopdistance = $hopdistance;
-			$this->saveCurrentTrader();
+	public function setTraderRange ($distance_max) {
+		$distance_max = (float)$distance_max;
+		if (!empty($distance_max) && $distance_max > 0  && $distance_max <= 2000) {
+			$this->currentTrader->distance_max = $distance_max;
 		}
 	}
 
 	/**
 	 * [persistCurrentTrader description]
-	 * @return [type] [description]
 	 */
 	public function persistCurrentTrader () {
+		if (!empty($this->currentTrader->id)) {
+			$altered = FALSE;
+			foreach ($_SESSION as $key => $value) {
+				if (!empty($this->currentTrader->$key) && $this->currentTrader->$key != $value) {
+					$altered = TRUE;
+					break;
+				}
+			}
+			if ($altered) {
+				$this->saveCurrentTrader();
+			}
+		}
 		foreach ($this->currentTrader as $key => $value) {
 			$_SESSION[$key] = $value;
 		}
 	}
 
+	/**
+	 * [createTrader description]
+	 * @param  [type] $email    [description]
+	 * @param  [type] $password [description]
+	 * @return [type]           [description]
+	 */
 	public function createTrader ($email, $password) {
 		unset($this->currentTrader->id);
 		$success = $this->pdo->insert(self::TABLE_TRADERS, array(
 			'name'  => $email,
 			'email' => $email,
 			'pwd'   => $this->returnPassword($password),
-			'settings_json' => json_encode($this->currentTrader),
-			'location_id' => $this->currentTrader->last_location_id,
 		));
 		$this->currentTrader->id = $this->pdo->lastInsertId();
 		return $success;
 	}
 
+	/**
+	 * [saveCurrentTrader description]
+	 * @return boolean [description]
+	 */
+	public function saveCurrentTrader () {
+		if (!empty($this->currentTrader->id)) {
+			$data = array(
+				'hops'  => $this->currentTrader->hops,
+				'distance_max' => $this->currentTrader->distance_max,
+				'location_id'   => $this->currentTrader->location_id,
+				'craft_id'      => $this->currentTrader->craft_id,
+				'is_editor'     => (int)$this->currentTrader->is_editor
+			);
+			if (empty($data['location_id'])) {
+				unset($data['location_id']);
+			}
+			if (empty($data['craft_id'])) {
+				unset($data['craft_id']);
+			}
+			return $this->pdo->update(
+				self::TABLE_TRADERS,
+				$data,
+				'id='.$this->pdo->quote($this->currentTrader->id)
+			);
+		}
+		return FALSE;
+	}
+
+	/**
+	 * [login description]
+	 * @param  [type] $email    [description]
+	 * @param  [type] $password [description]
+	 * @return [type]           [description]
+	 */
 	public function login ($email, $password) {
-		$id = (int)$id;
 		$this->pdo->lastCmd =
 			'SELECT t.*'
 			.' FROM '.self::TABLE_TRADERS.' AS t'
@@ -123,30 +169,13 @@ class EliteTrader {
 		$sth->execute();
 		$result = $sth->fetchAll();
 		$this->currentTrader = (!empty($result[0]) ? $result[0] : array());
-		if (!empty($this->currentTrader->settings_json)) {
-			$settings = json_decode($this->currentTrader->settings_json);
-			foreach ($settings as $key => $value) {
-				$this->currentTrader->$key = $value;
+		if (!empty($this->currentTrader)) {
+			foreach ($this->currentTrader as $key => $value) {
+				$_SESSION[$key] = $value;
 			}
 		}
-	}
-
-	public function saveCurrentTrader () {
-		if (!empty($this->currentTrader->id)) {
-			return $this->pdo->update(
-				self::TABLE_TRADERS,
-				array(
-					'settings_json' => json_encode($this->currentTrader),
-					'location_id' => $this->currentTrader->last_location_id,
-				),
-				'id='.$this->pdo->quote($this->currentTrader->id)
-			);
-		}
-		return FALSE;
-	}
-
-	protected function returnPassword($password) {
-		return crypt($password);
+		$this->currentTrader = (object)$this->currentTrader;
+		return !empty($this->currentTrader);
 	}
 
 	/**
@@ -157,7 +186,7 @@ class EliteTrader {
 	public function setCurrentLocation ($id) {
 		$id = (int)$id;
 		$this->currentLocation = $this->getLocation($id);
-		$this->currentTrader->last_location_id = $id;
+		$this->currentTrader->location_id = $id;
 		if (!empty($this->currentLocation)) {
 			$this->currentLocation->id = (int)$this->currentLocation->id;
 			return TRUE;
@@ -166,9 +195,17 @@ class EliteTrader {
 	}
 
 	/**
+	 * [getCurrentTraderId description]
+	 * @return integer [description]
+	 */
+	public function getCurrentTraderId () {
+		return !empty($this->currentTrader->id) ? $this->currentTrader->id : NULL;
+	}
+
+	/**
 	 * [getLocation description]
-	 * @param  [type] $id [description]
-	 * @return [type]     [description]
+	 * @param  integer $id [description]
+	 * @return [type]      [description]
 	 */
 	public function getLocation ($id) {
 		$id = (int)$id;
@@ -184,9 +221,6 @@ class EliteTrader {
 		return (!empty($result[0]) ? $result[0] : array());
 	}
 
-	public function getCurrentTraderId () {
-		return !empty($this->currentTrader->id) ? $this->currentTrader->id : NULL;
-	}
 
 	// -------------------------------------------
 	// CREATE
@@ -240,9 +274,11 @@ class EliteTrader {
 	 * @param  string  $description [description]
 	 * @param  integer $cargo       [description]
 	 * @param  integer $speed       [description]
+	 * @param  float   $minRange    [description]
+	 * @param  float   $maxRange    [description]
 	 * @return integer              [description]
 	 */
-	public function createCraft ($name, $description = NULL, $cargo = NULL, $speed = 0) {
+	public function createCraft ($name, $description = NULL, $cargo = NULL, $speed = 0, $minRange = 0, $maxRange = 0) {
 		$id = NULL;
 		if ($this->pdo->replace(
 			self::TABLE_CRAFT,
@@ -251,11 +287,12 @@ class EliteTrader {
 				'description' => $description,
 				'cargo'       => (int)$cargo,
 				'speed'       => (int)$speed,
+				'distance_max_min'   => (float)$minRange,
+				'distance_max_max'   => (float)$maxRange,
 			))
 		)) {
 			$id = $this->pdo->lastInsertId();
 		}
-		_print_r($this->pdo->getLastCommand());
 		return $id;
 	}
 
@@ -332,12 +369,11 @@ class EliteTrader {
 
 	/**
 	 * [getCompleteGood description]
-	 * @param  [type] $idGood [description]
-	 * @return [type]         [description]
+	 * @param  integer $idGood [description]
+	 * @return [type]          [description]
 	 */
 	public function getCompleteGood ($idGood) {
 		$idGood = (int)$idGood;
-		$this->currentTrader->last_good_id = $idGood;
 		$this->pdo->lastCmd =
 			'SELECT *'
 			.' FROM '.self::TABLE_GOODS
@@ -385,8 +421,8 @@ class EliteTrader {
 
 	/**
 	 * [getCompleteCraft description]
-	 * @param  [type] $idCraft [description]
-	 * @return [type]         [description]
+	 * @param  integer $idCraft [description]
+	 * @return [type]           [description]
 	 */
 	public function getCompleteCraft ($idCraft) {
 		$idCraft = (int)$idCraft;
@@ -437,8 +473,8 @@ class EliteTrader {
 
 	/**
 	 * [getPricesForGood description]
-	 * @param  [type] $idGood [description]
-	 * @return [type]         [description]
+	 * @param  integer $idGood [description]
+	 * @return [type]          [description]
 	 */
 	public function getPricesForGood ($idGood) {
 		$this->pdo->lastCmd =
@@ -457,8 +493,8 @@ class EliteTrader {
 
 	/**
 	 * [getPricesForCraft description]
-	 * @param  [type] $idCraft [description]
-	 * @return [type]         [description]
+	 * @param  integer $idCraft [description]
+	 * @return [type]           [description]
 	 */
 	public function getPricesForCraft ($idCraft) {
 		$this->pdo->lastCmd =
@@ -477,8 +513,8 @@ class EliteTrader {
 
 	/**
 	 * [getPricesForCurrentAndSpecificLocation description]
-	 * @param  [type] $locationId [description]
-	 * @return [type]             [description]
+	 * @param  integer $locationId [description]
+	 * @return [type]              [description]
 	 */
 	public function getPricesForCurrentAndSpecificLocation ($locationId) {
 		return $this->getPricesSpecificLocation($this->currentLocation, $locationId);
@@ -503,8 +539,8 @@ class EliteTrader {
 					if ($profits->highestPrice > $price->price_sell && $profits->highestPrice > $price->price_buy) {
 						$price->buyer = (object)array(
 							'id'    => $profits->highestId,
-							'price' => (int)$profits->highestPrice,
-							'delta' => (int)$profits->highestPrice - $price->price_sell,
+							'price' => (float)$profits->highestPrice,
+							'delta' => (float)$profits->highestPrice - $price->price_sell,
 							'name'  => $goods[$profits->highestId]->location_name,
 						);
 					}
@@ -513,8 +549,8 @@ class EliteTrader {
 					if ($profits->lowestPrice < $price->price_buy && $profits->lowestPrice < $price->price_sell || $price->price_sell == 0) {
 						$price->seller = (object)array(
 							'id'    => $profits->lowestId,
-							'price' => (int)$profits->lowestPrice,
-							'delta' => (int)$price->price_buy - $profits->lowestPrice,
+							'price' => (float)$profits->lowestPrice,
+							'delta' => (float)$price->price_buy - $profits->lowestPrice,
 							'name'  => $goods[$profits->lowestId]->location_name,
 						);
 					}
@@ -528,28 +564,28 @@ class EliteTrader {
 
 	/**
 	 * [getPricesForCurrentAndNeighbouringLocations description]
-	 * @param  integer $hops [description]
-	 * @param  float   $hopdistance Maximum distance for a hop
-	 * @return [type]        [description]
+	 * @param  integer $hops  [description]
+	 * @param  float   $distance_max Maximum distance for a hop
+	 * @return [type]         [description]
 	 */
-	public function getPricesForCurrentAndNeighbouringLocations ($hops = 1, $hopdistance = 999) {
+	public function getPricesForCurrentAndNeighbouringLocations ($hops = 1, $distance_max = 999) {
 		if (empty($this->currentLocation)) {
 			throw new \Exception('No location set');
 		}
-		return $this->getPricesForThisAndNeighbouringLocations($this->currentLocation, $hops, $hopdistance);
+		return $this->getPricesForThisAndNeighbouringLocations($this->currentLocation, $hops, $distance_max);
 	}
 
 	/**
 	 * [getPricesForThisAndNeighbouringLocations description]
 	 * @param  stdClass $location [description]
 	 * @param  integer  $hops     [description]
-	 * @param  float    $hopdistance Maximum distance for a hop
+	 * @param  float    $distance_max    Maximum distance for a hop
 	 * @return array              [description]
 	 */
-	public function getPricesForThisAndNeighbouringLocations (stdClass $location, $hops = 1, $hopdistance = 999) {
+	public function getPricesForThisAndNeighbouringLocations (stdClass $location, $hops = 1, $distance_max = 999) {
 		$pricesForThisLocation = $this->getPricesForLocations(array($location->id), TRUE);
 
-		$locations = $this->getNextLocations(array($location),$hops,$hopdistance);
+		$locations = $this->getNextLocations(array($location),$hops,$distance_max);
 		if (!empty($locations)) {
 			$locationIds = array();
 			foreach ($locations as $s) {
@@ -565,8 +601,8 @@ class EliteTrader {
 						if ($profits->highestPrice > $price->price_sell && $profits->highestPrice > $price->price_buy) {
 							$price->buyer = (object)array(
 								'id'    => $profits->highestId,
-								'price' => (int)$profits->highestPrice,
-								'delta' => (int)$profits->highestPrice - $price->price_sell,
+								'price' => (float)$profits->highestPrice,
+								'delta' => (float)$profits->highestPrice - $price->price_sell,
 								'name'  => $goods[$profits->highestId]->location_name,
 							);
 						}
@@ -575,8 +611,8 @@ class EliteTrader {
 						if ($profits->lowestPrice < $price->price_buy && $profits->lowestPrice < $price->price_sell || $price->price_sell == 0) {
 							$price->seller = (object)array(
 								'id'    => $profits->lowestId,
-								'price' => (int)$profits->lowestPrice,
-								'delta' => (int)$price->price_buy - $profits->lowestPrice,
+								'price' => (float)$profits->lowestPrice,
+								'delta' => (float)$price->price_buy - $profits->lowestPrice,
 								'name'  => $goods[$profits->lowestId]->location_name,
 							);
 						}
@@ -601,12 +637,12 @@ class EliteTrader {
 			'lowestPrice'  => NULL,
 		);
 		foreach ($traders as $tryId => $trader) {
-			if ((int)$trader->price_buy > 0 && (empty($result->highestId) || (int)$trader->price_buy > $result->highestPrice)) {
-				$result->highestPrice   = (int)$trader->price_buy;
+			if ((float)$trader->price_buy > 0 && (empty($result->highestId) || (float)$trader->price_buy > $result->highestPrice)) {
+				$result->highestPrice   = (float)$trader->price_buy;
 				$result->highestId      = $tryId;
 			}
-			if ((int)$trader->price_sell > 0 && (empty($result->lowestId) || (int)$trader->price_sell < $result->lowestPrice)) {
-				$result->lowestPrice    = (int)$trader->price_sell;
+			if ((float)$trader->price_sell > 0 && (empty($result->lowestId) || (float)$trader->price_sell < $result->lowestPrice)) {
+				$result->lowestPrice    = (float)$trader->price_sell;
 				$result->lowestId       = $tryId;
 			}
 		}
@@ -629,8 +665,8 @@ class EliteTrader {
 
 	/**
 	 * [getPricesForLocation description]
-	 * @param  [type] $id [description]
-	 * @return [type]     [description]
+	 * @param  integer $id [description]
+	 * @return [type]      [description]
 	 */
 	public function getPricesForLocation ($id) {
 		return $this->getPricesForLocations(array($id), TRUE);
@@ -659,8 +695,8 @@ class EliteTrader {
 		while (($row = $sth->fetch()) !== false) {
 			$row->id          = (int)$row->id;
 			$row->location_id = (int)$row->location_id;
-			$row->price_buy   = (int)$row->price_buy;
-			$row->price_sell  = (int)$row->price_sell;
+			$row->price_buy   = (float)$row->price_buy;
+			$row->price_sell  = (float)$row->price_sell;
 			$row = $this->addTsStatus($row);
 			if (empty($result[$row->id])) {
 				$result[$row->id] = array();
@@ -687,27 +723,27 @@ class EliteTrader {
 
 	/**
 	 * [getNextLocationsForCurrentLocation description]
-	 * @param  integer $hops [description]
-	 * @param  float   $hopdistance Maximum distance for a hop
-	 * @return [type]        [description]
+	 * @param  integer $hops        [description]
+	 * @param  float   $maxDistance Maximum distance for a hop
+	 * @return [type]               [description]
 	 */
-	public function getNextLocationsForCurrentLocation ($hops = 1, $hopdistance = 999) {
+	public function getNextLocationsForCurrentLocation ($hops = 1, $maxDistance = 999) {
 		return $this->getNextLocations(
 			array($this->currentLocation),
 			$hops,
-			$hopdistance
+			$maxDistance
 		);
 	}
 
 	/**
 	 * [getNextLocations description]
-	 * @param  array  $locations           [description]
-	 * @param  [type] $hops                [description]
-	 * @param  float   $hopdistance Maximum distance for a hop
-	 * @param  array  $excludedLocationIds [description]
-	 * @return [type]                      [description]
+	 * @param  array   $locations           [description]
+	 * @param  integer $hops                [description]
+	 * @param  float   $maxDistance         Maximum distance for a hop
+	 * @param  array   $excludedLocationIds [description]
+	 * @return [type]                       [description]
 	 */
-	public function getNextLocations (array $locations, $hops, $hopdistance = 999, array $excludedLocationIds = array()) {
+	public function getNextLocations (array $locations, $hops, $maxDistance = 999, array $excludedLocationIds = array()) {
 		if (empty($locations)) {
 			return array();
 		}
@@ -723,7 +759,7 @@ class EliteTrader {
 			.' JOIN locations AS l ON l.id = r.location_id_to'
 			.' WHERE l.id NOT IN ('.implode(',', $excludedLocationIds).')'
 			.' AND r.location_id_from IN('.implode(',', $locationIds).')'
-			.' AND r.distance < '.$this->pdo->quote((float)$hopdistance)
+			.' AND r.distance < '.$this->pdo->quote((float)$maxDistance)
 			.' ORDER BY l.name'
 		;
 		$this->pdo->lastData = NULL;
@@ -733,7 +769,7 @@ class EliteTrader {
 
 		$hops --;
 		if ($hops > 0) {
-			$results = array_merge($results, $this->getNextLocations($results, $hops, $hopdistance, $excludedLocationIds));
+			$results = array_merge($results, $this->getNextLocations($results, $hops, $maxDistance, $excludedLocationIds));
 		}
 
 		$foundIds = array();
@@ -911,8 +947,8 @@ class EliteTrader {
 	/**
 	 * Will invoke setPriceForLocation for current location
 	 * @param integer $idGood    [description]
-	 * @param integer $priceBuy  [description]
-	 * @param integer $priceSell [description]
+	 * @param float   $priceBuy  [description]
+	 * @param float   $priceSell [description]
 	 * @return boolean           [description]
 	 */
 	public function setPriceForCurrentLocation ($idGood, $priceBuy, $priceSell = 0) {
@@ -926,24 +962,24 @@ class EliteTrader {
 	 * Set new prices for good at given location
 	 * @param integer  $idLocation [description]
 	 * @param integer  $idGood     [description]
-	 * @param integer  $priceBuy   [description]
-	 * @param integer  $priceSell  [description]
+	 * @param float    $priceBuy   [description]
+	 * @param float    $priceSell  [description]
 	 * @return boolean             [description]
 	 */
 	public function setPriceForLocation ($idLocation, $idGood, $priceBuy, $priceSell = 0) {
 		return ($this->pdo->replace(self::TABLE_PRICES, $this->modifyRow(array(
 			'good_id'      => (int)$idGood,
 			'location_id'  => (int)$idLocation,
-			'price_buy'    => (int)$priceBuy,
-			'price_sell'   => (int)$priceSell,
+			'price_buy'    => (float)$priceBuy,
+			'price_sell'   => (float)$priceSell,
 		))) >= 0);
 	}
 
 	/**
 	 * Will invoke setPriceForLocation for current location
 	 * @param integer $idCraft   [description]
-	 * @param integer $priceBuy  [description]
-	 * @param integer $priceSell [description]
+	 * @param float   $priceBuy  [description]
+	 * @param float   $priceSell [description]
 	 * @return boolean           [description]
 	 */
 	public function setCraftPriceForCurrentLocation ($idCraft, $priceBuy, $priceSell = 0) {
@@ -957,16 +993,16 @@ class EliteTrader {
 	 * Set new prices for good at given location
 	 * @param integer  $idLocation [description]
 	 * @param integer  $idCraft    [description]
-	 * @param integer  $priceBuy   [description]
-	 * @param integer  $priceSell  [description]
+	 * @param float  $priceBuy   [description]
+	 * @param float  $priceSell  [description]
 	 * @return boolean             [description]
 	 */
 	public function setCraftPriceForLocation ($idLocation, $idCraft, $priceBuy, $priceSell = 0) {
 		return ($this->pdo->replace(self::TABLE_X_CL, $this->modifyRow(array(
 			'craft_id'     => (int)$idCraft,
 			'location_id'  => (int)$idLocation,
-			'price_buy'    => (int)$priceBuy,
-			'price_sell'   => (int)$priceSell,
+			'price_buy'    => (float)$priceBuy,
+			'price_sell'   => (float)$priceSell,
 		))) >= 0);
 	}
 
@@ -1033,14 +1069,18 @@ class EliteTrader {
 	 * @param  integer $id          [description]
 	 * @param  string  $name        [description]
 	 * @param  string  $description [description]
+	 * @param  float   $minRange    [description]
+	 * @param  float   $maxRange    [description]
 	 * @return boolean              [description]
 	 */
-	public function updateCraft ($id, $name, $description = NULL, $cargo = NULL, $speed = NULL) {
+	public function updateCraft ($id, $name, $description = NULL, $cargo = NULL, $speed = NULL, $minRange = 0, $maxRange = 0) {
 		$data = array(
 			'name'        => $name,
 			'description' => $description,
 			'cargo'       => (int)$cargo,
 			'speed'       => (int)$speed,
+			'distance_max_min'   => (float)$minRange,
+			'distance_max_max'   => (float)$maxRange,
 		);
 		if (empty($description)) {
 			unset($data['description']);
@@ -1050,6 +1090,12 @@ class EliteTrader {
 		}
 		if (empty($speed)) {
 			unset($data['speed']);
+		}
+		if (empty($minRange)) {
+			unset($data['distance_max_min']);
+		}
+		if (empty($maxRange)) {
+			unset($data['distance_max_max']);
 		}
 		return ($this->pdo->update(
 			self::TABLE_CRAFT,
@@ -1133,5 +1179,14 @@ class EliteTrader {
 		}
 		array_multisort($order, SORT_ASC, $results);
 		return $results;
+	}
+
+	/**
+	 * [returnPassword description]
+	 * @param  string $password [description]
+	 * @return string           [description]
+	 */
+	protected function returnPassword($password) {
+		return md5($password);
 	}
 }

@@ -53,16 +53,24 @@
 				<label for="craft_update-speed">Max. speed</label>
 				<input id="craft_update-speed" type="number" min="0" step="1" name="speed" />
 			</div>
+			<div class="form-field">
+				<label for="location_update-distance_max_min">Min. distance_max (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</label>
+				<input id="location_update-distance_max_min" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>" name="distance_max_min" />
+			</div>
+			<div class="form-field">
+				<label for="location_update-distance_max_max">Max. distance_max (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</label>
+				<input id="location_update-distance_max_max" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>" name="distance_max_max" />
+			</div>
 		</div>
 
 		<?php if(!empty($app->path[1])): ?>
 			<div class="form-field form-field-half">
 				<label for="craft_update-price_buy">Sell to… (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</label>
-				<input id="craft_update-price_buy" type="number" min="0" step="1" name="price_buy" />
+				<input id="craft_update-price_buy" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_CURRENCY_DECIMALS));?>" name="price_buy" />
 			</div>
 			<div class="form-field form-field-half">
 				<label for="craft_update-price_sell">Buy from… (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</label>
-				<input id="craft_update-price_sell" type="number" min="0" step="1" name="price_sell" />
+				<input id="craft_update-price_sell" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_CURRENCY_DECIMALS));?>" name="price_sell" />
 			</div>
 		<?php endif; ?>
 

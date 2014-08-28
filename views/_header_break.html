@@ -1,4 +1,4 @@
-						<?php if ($data->currentTrader->is_editor): ?>
+						<?php if (!empty($data->currentTrader->is_editor)): ?>
 							<li><a href="<?php _echo($app->url('trader'));?>#modal-trader" class="modal"><i class="fa fa-cog"></i> <span class="icon-hide">Trader settings</span></a></li>
 						<?php endif; ?>
 						<?php if (!empty($data->currentTrader->id)): ?>
