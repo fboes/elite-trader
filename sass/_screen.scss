@@ -20,9 +20,7 @@ ul {
 	}
 }
 table {
-	width:100%;
 	margin-bottom:1em;
-	font-size:0.75em;
 	thead {
 		border-bottom:$base-unit/8 dotted;
 	}
@@ -51,20 +49,24 @@ table {
 			}
 		}
 	}
-	tbody {
-		tr {
-			&:nth-child(odd) {
-				@if $switch-use-dark {
-					background-color: $color-black;
-				}
-				@else {
-					background-color: $color-white;
-				}
-			}
-			&.focus {
-				background-color: $color-yellow;
+	&.data {
+		width:100%;
+		font-size:0.75em;
+		tbody {
+			tr {
 				&:nth-child(odd) {
-					background-color: $color-yellow-light;
+					@if $switch-use-dark {
+						background-color: $color-black;
+					}
+					@else {
+						background-color: $color-white;
+					}
+				}
+				&.focus {
+					background-color: $color-yellow;
+					&:nth-child(odd) {
+						background-color: $color-yellow-light;
+					}
 				}
 			}
 		}
