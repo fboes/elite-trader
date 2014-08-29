@@ -1,40 +1,17 @@
 <?php require('_header.html');?>
-	<?php if (!empty($data->currentTrader->is_editor)): ?>
-		<!--li><a href="<?php _echo($app->url('good-update'));?>#modal-good_update" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create good</span></a></li-->
-	<?php endif; ?>
 <?php require('_header_break.html');?>
 
-	<div class="block-container-2">
+	<div class="block-container">
 		<section>
 			<h3>Goods</h3>
 			<?php if (!empty($data->allGoods)): ?>
-				<ul>
+				<ul class="col">
 					<?php foreach ($data->allGoods as $good): ?>
 						<li><a href="<?php _echo($app->url('goods', $good->id));?>"><?php _echo($good->name);?></a></li>
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>
 		</section>
-		<?php if (!empty($data->currentTrader->is_editor)): ?>
-			<section>
-				<h4>New good</h4>
-				<form action="<?php _echo($app->currentUrl());?>" method="POST">
-					<div class="form-fieldset" id="create_good-new">
-						<div class="form-field">
-							<label for="create_good-name">Name</label>
-							<input id="create_good-name" type="text" name="name" />
-						</div>
-						<div class="form-field">
-							<label for="create_good-description">Description</label>
-							<input id="create_good-description" type="text" name="description" />
-						</div>
-					</div>
-
-					<input type="hidden" name="action" value="create_good" />
-					<button type="submit">Save</button>
-				</form>
-			</section>
-		<?php endif; ?>
 	</div>
 
 <?php require('_footer_break.html');?>

@@ -9,15 +9,12 @@
 	<section>
 		<h3>Go to…</h3>
 		<ul>
-			<li><a href="<?php _echo($app->url('locations'));?>">list of locations</a></li>
 			<?php if(!empty($data->currentTrader->location_id)): ?>
-				<li><a href="<?php _echo($app->url('locations',$data->currentTrader->location_id));?>">the last location you have visited</a></li>
+				<li><a href="<?php _echo($app->url('locations',$data->currentTrader->location_id));?>">Last location you have visited</a></li>
 			<?php endif; ?>
-			<li><a href="<?php _echo($app->url('goods'));?>">list of goods</a></li>
-			<?php if(!empty($data->currentTrader->last_good_id)): ?>
-				<li><a href="<?php _echo($app->url('goods',$data->currentTrader->last_good_id));?>">the last good you have visited</a></li>
-			<?php endif; ?>
-			<li><a href="<?php _echo($app->url('craft'));?>">list of craft</a></li>
+			<li><a href="<?php _echo($app->url('locations'));?>">List of all locations</a></li>
+			<li><a href="<?php _echo($app->url('goods'));?>">List of all goods</a></li>
+			<li><a href="<?php _echo($app->url('craft'));?>">List of all craft</a></li>
 		</ul>
 
 	</section>

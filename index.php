@@ -15,7 +15,9 @@ require('app/TraderApi.php');
 require('app/EliteTrader.php');
 require('app/App.php');
 
-// Logic
+// --------------------------
+// SETUP
+// --------------------------
 
 $app = new App();
 $messages = new Messages();
@@ -326,7 +328,9 @@ switch ($app->path[0]) {
 $elite->persistCurrentTrader();
 $data = (object)$data;
 
+// --------------------------
 // View
+// --------------------------
 
 if (isset($_GET['json'])) {
 	header('Content-type: application/json');

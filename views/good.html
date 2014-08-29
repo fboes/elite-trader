@@ -33,7 +33,7 @@
 				</div>
 
 				<?php if($data->good->prices): ?>
-					<table class="sortable">
+					<table class="data sortable">
 						<thead>
 							<tr>
 								<th>Location</th>
@@ -63,30 +63,6 @@
 			<?php endif; ?>
 		</section>
 	</div>
-
-	<?php if (!empty($data->currentTrader->is_editor)): ?>
-		<div class="block-container-2">
-			<section>
-				<h4>New good</h4>
-				<form action="<?php _echo($app->currentUrl());?>" method="POST">
-					<div class="form-fieldset" id="create_good-new">
-						<div class="form-field">
-							<label for="create_good-name">Name</label>
-							<input id="create_good-name" type="text" name="name" />
-						</div>
-						<div class="form-field">
-							<label for="create_good-description">Description</label>
-							<input id="create_good-description" type="text" name="description" />
-						</div>
-					</div>
-
-					<input type="hidden" name="action" value="create_good" />
-					<button type="submit">Save</button>
-				</form>
-			</section>
-		</div>
-	<?php endif; ?>
-
 <?php endif; ?>
 
 <?php require('_footer_break.html');?>

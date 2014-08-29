@@ -2,7 +2,7 @@
 <?php require('_header_break.html');?>
 
 <?php if (!empty($data->craft)): ?>
-	<div class="block-container-1">
+	<div class="block-container-2">
 		<section>
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
 				<form action="<?php _echo($app->currentUrl());?>" method="POST">
@@ -47,38 +47,39 @@
 						<?php endif; ?>
 					</table>
 				</div>
-
-				<?php if($data->craft->prices): ?>
-					<table class="sortable">
-						<thead>
-							<tr>
-								<th>Location</th>
-								<th class="number">Sell to market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT,CONFIG_UNIT_CURRENCY_DECIMALS);?>)</th>
-								<th class="number">Buy from market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT,CONFIG_UNIT_CURRENCY_DECIMALS);?>)</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($data->craft->prices as $craftIndex => $price): ?>
-								<tr>
-									<td><a href="<?php _echo($app->url('locations',$price->location_id));?>"><?php _echo($price->location_name); ?></a></td>
-									<td class="number">
-										<?php $app->echoNumber($price->price_buy,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?>
-									</td>
-									<td class="number">
-										<?php $app->echoNumber($price->price_sell,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?>
-									</td>
-								</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
-				<?php endif; ?>
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
 					<input type="hidden" name="action" value="update_craft" />
 					<button type="submit">Save</button>
-					<a href="<?php _echo($app->url('craft-update'));?>#modal-good_update" class="modal button"><i class="fa fa-plus"></i> New craft</a>
 				</form>
 			<?php endif; ?>
 		</section>
+		<?php if($data->craft->prices): ?>
+			<section>
+				<h4>Prices</h4>
+				<table class="data sortable">
+					<thead>
+						<tr>
+							<th>Location</th>
+							<th class="number">Sell to market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT,CONFIG_UNIT_CURRENCY_DECIMALS);?>)</th>
+							<th class="number">Buy from market (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT,CONFIG_UNIT_CURRENCY_DECIMALS);?>)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($data->craft->prices as $craftIndex => $price): ?>
+							<tr>
+								<td><a href="<?php _echo($app->url('locations',$price->location_id));?>"><?php _echo($price->location_name); ?></a></td>
+								<td class="number">
+									<?php $app->echoNumber($price->price_buy,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?>
+								</td>
+								<td class="number">
+									<?php $app->echoNumber($price->price_sell,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</section>
+		<?php endif; ?>
 	</div>
 
 <?php endif; ?>

@@ -1,25 +1,22 @@
 <?php require('_header.html');?>
-	<?php if (!empty($data->currentTrader->is_editor)): ?>
-		<!--li><a href="<?php _echo($app->url('craft-update'));?>#modal-craft_update" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create craft</span></a></li-->
-	<?php endif; ?>
 <?php require('_header_break.html');?>
 
 	<div class="block-container-1">
 		<section>
 			<h3>Craft</h3>
-			<?php if (!empty($data->currentTrader->is_editor)): ?>
-				<form action="<?php _echo($app->currentUrl());?>" method="POST">
-			<?php endif; ?>
 			<?php if (!empty($data->allCraft)): ?>
-				<table class="sortable">
+				<?php if (!empty($data->currentTrader->is_editor)): ?>
+					<form action="<?php _echo($app->currentUrl());?>" method="POST">
+				<?php endif; ?>
+				<table class="data sortable">
 					<thead>
 						<tr>
 							<th>Name</th>
 							<th>Description</th>
 							<th class="number">Cargo (<?php _echo(CONFIG_UNIT_CARGO_SHORT);?>)</th>
 							<th class="number">Speed</th>
-							<th class="number">Min. range (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
-							<th class="number">Max. range (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</th>
+							<th class="number">Min. range (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</th>
+							<th class="number">Max. range (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -36,13 +33,13 @@
 					</tbody>
 				</table>
 				<?php if (!empty($data->currentTrader->is_editor)): ?>
-					<input type="hidden" name="action" value="update_crafts" />
-					<button type="submit">Save craft data</button>
+						<input type="hidden" name="action" value="crafts_update" />
+						<button type="submit">Save craft data</button>
+					</form>
 				<?php endif; ?>
 			<?php endif; ?>
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
 					<a href="<?php _echo($app->url('craft-update'));?>#modal-good_update" class="modal button"><i class="fa fa-plus"></i> New craft</a>
-				</form>
 			<?php endif; ?>
 		</section>
 	</div>
