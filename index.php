@@ -312,7 +312,7 @@ switch ($app->path[0]) {
 			$data['title']        = 'New connection for '.$elite->currentLocation->name;
 		}
 		$data['locations']       = !empty($elite->currentLocation)
-			? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,CONFIG_RANGE_SEARCH)
+			? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,max($elite->currentTrader->distance_max,CONFIG_RANGE_SEARCH))
 			: $elite->getAllLocations()
 		;
 		if (empty($data['locations'])) {
