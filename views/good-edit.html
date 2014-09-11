@@ -5,8 +5,8 @@
 
 <section>
 	<h4><?php _echo($data->title);?></h4>
-	<form action="<?php _echo($app->url('locations',$data->currentLocation->id));?>" method="POST">
-		<?php if(!empty($app->path[1])): ?>
+	<form action="<?php _echo($app->currentUrl());?>" method="POST">
+		<?php if(!empty($app->path[1]) && $app->path[1] != 'new'): ?>
 			<div class="form-field">
 				<label for="good_update-good_id">Good</label>
 				<select id="good_update-good_id" name="good_id" class="show-on-empty" data-show-on-empty="#good_update-new">
@@ -47,7 +47,7 @@
 			</div>
 		</div>
 
-		<?php if(!empty($app->path[1])): ?>
+		<?php if(!empty($app->path[1]) && $app->path[1] != 'new'): ?>
 			<div class="form-field form-field-half">
 				<label for="good_update-price_buy">Sell to… (<?php _echo(CONFIG_UNIT_CURRENCY_SHORT);?>)</label>
 				<input id="good_update-price_buy" type="number" min="0" step="<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_CURRENCY_DECIMALS));?>" name="price_buy" />

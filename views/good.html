@@ -8,8 +8,8 @@
 				<form action="<?php _echo($app->currentUrl());?>" method="POST">
 			<?php endif; ?>
 				<div>
-					<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='good_name'"><?php _echo($data->good->name);?></span></h3>
-					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='good_description'"><?php _echo($data->good->description);?></span></p>
+					<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='name'"><?php _echo($data->good->name);?></span></h3>
+					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='description'"><?php _echo($data->good->description);?></span></p>
 					<table style="width:auto;">
 						<?php if(!empty($data->good->delta->highestBuy)): ?>
 							<tr>
@@ -57,7 +57,7 @@
 					</table>
 				<?php endif; ?>
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
-					<input type="hidden" name="action" value="update_good" />
+					<input type="hidden" name="action" value="good_update" />
 					<button type="submit">Save</button>
 				</form>
 			<?php endif; ?>

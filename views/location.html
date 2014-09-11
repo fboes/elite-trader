@@ -1,8 +1,8 @@
 <?php require('_header.html');?>
 	<?php if (!empty($data->currentTrader->is_editor)): ?>
-		<li><a href="<?php _echo($app->url('craft-update',$data->currentLocation->id));?>#modal-craft_update" class="modal"><i class="fa fa-truck"></i> <span class="icon-hide">Create craft price</span></a></li>
-		<li><a href="<?php _echo($app->url('good-update',$data->currentLocation->id));?>#modal-good_update" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create price</span></a></li>
-		<li><a href="<?php _echo($app->url('location-update',$data->currentLocation->id));?>#modal-location_update" class="modal"><i class="fa fa-road"></i> <span class="icon-hide">Create connection</span></a></li>
+		<li><a href="<?php _echo($app->url('craft-link',$data->currentLocation->id));?>#modal-craft_link" class="modal"><i class="fa fa-truck"></i> <span class="icon-hide">Create craft price</span></a></li>
+		<li><a href="<?php _echo($app->url('good-link',$data->currentLocation->id));?>#modal-good_link" class="modal"><i class="fa fa-cube"></i> <span class="icon-hide">Create good price</span></a></li>
+		<li><a href="<?php _echo($app->url('location-link',$data->currentLocation->id));?>#modal-location_link" class="modal"><i class="fa fa-road"></i> <span class="icon-hide">Create connection</span></a></li>
 	<?php endif; ?>
 <?php require('_header_break.html');?>
 
@@ -77,13 +77,13 @@
 							<?php endforeach; ?>
 						</tbody>
 					</table>
-				<?php endif; ?>
-				<?php if (!empty($data->currentTrader->is_editor)): ?>
-					<input type="hidden" name="action" value="update_price" />
-					<button type="submit">Save location data</button>
-					<a href="<?php _echo($app->url('good-update',$data->currentLocation->id));?>#modal-good_update" class="modal button"><i class="fa fa-plus"></i> New price</a>
+					<?php if (!empty($data->currentTrader->is_editor)): ?>
+						<input type="hidden" name="action" value="prices_update" />
+						<button type="submit">Save location data</button>
+					<?php endif; ?>
 				<?php endif; ?>
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
+						<a href="<?php _echo($app->url('good-link',$data->currentLocation->id));?>#modal-good_link" class="modal button"><i class="fa fa-plus"></i> New price</a>
 				</form>
 			<?php endif; ?>
 		</section>
@@ -111,10 +111,10 @@
 							<?php foreach($data->connections as $c): ?>
 								<tr<?php echo(($c->distance > $data->currentTrader->distance_max) ? ' class="error" title="Out of range"': '');?>>
 									<td><a href="<?php _echo($app->url('locations',$c->id));?>"><?php _echo($c->name); ?></a></td>
-									<td class="number"><span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' name='lanes[<?php _echo(urlencode($c->id));?>]'"><?php $app->echoNumber($c->distance,NULL,CONFIG_UNIT_DISTANCE_DECIMALS); ?></span></td>
+									<td class="number"><span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' name='roads[<?php _echo(urlencode($c->id));?>]'"><?php $app->echoNumber($c->distance,NULL,CONFIG_UNIT_DISTANCE_DECIMALS); ?></span></td>
 									<td><a href="<?php _echo($app->url($app->path[0],$app->path[1], $c->id));?>"><i class="fa fa-exchange"></i><?php _echo($data->currentLocation->name);?></a></td>
 									<?php if (!empty($data->currentTrader->is_editor)): ?>
-										<td class="number"><input class="delete" type="checkbox" name="lanes_delete[<?php _echo(urlencode($c->id));?>]" value="x" /></td>
+										<td class="number"><input class="delete" type="checkbox" name="roads_delete[<?php _echo(urlencode($c->id));?>]" value="x" /></td>
 									<?php endif; ?>
 								</tr>
 							<?php endforeach; ?>
@@ -122,13 +122,13 @@
 					</table>
 					<?php if (!empty($data->currentTrader->is_editor)): ?>
 						<input type="hidden" name="location" value="<?php _echo($data->currentLocation->id);?>" />
-						<input type="hidden" name="action" value="update_lane" />
+						<input type="hidden" name="action" value="roads_update" />
 						<button type="submit">Save connection data</button>
 					<?php endif; ?>
 				<?php endif; ?>
 
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
-					<a href="<?php _echo($app->url('location-update',$data->currentLocation->id));?>#modal-location_update" class="modal button"><i class="fa fa-plus"></i> New connection</a>
+					<a href="<?php _echo($app->url('location-link',$data->currentLocation->id));?>#modal-location_link" class="modal button"><i class="fa fa-plus"></i> New connection</a>
 				</form>
 			<?php endif; ?>
 		</section>
@@ -163,13 +163,13 @@
 					</table>
 					<?php if (!empty($data->currentTrader->is_editor)): ?>
 						<input type="hidden" name="location" value="<?php _echo($data->currentLocation->id);?>" />
-						<input type="hidden" name="action" value="update_craft" />
+						<input type="hidden" name="action" value="craft_xl_update" />
 						<button type="submit">Save craft prices</button>
 					<?php endif; ?>
 				<?php endif; ?>
 
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
-					<a href="<?php _echo($app->url('craft-update',$data->currentLocation->id));?>#modal-location_update" class="modal button"><i class="fa fa-plus"></i> New craft price</a>
+					<a href="<?php _echo($app->url('craft-link',$data->currentLocation->id));?>#modal-craft_link" class="modal button"><i class="fa fa-plus"></i> New craft price</a>
 				</form>
 			<?php endif; ?>
 		</section>

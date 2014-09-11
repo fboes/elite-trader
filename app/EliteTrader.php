@@ -784,16 +784,16 @@ class EliteTrader {
 	}
 
 	/**
-	 * Invoke setLaneForCurrentLocation for current location
+	 * Invoke setRoadForCurrentLocation for current location
 	 * @param integer $idLocation [description]
 	 * @param float   $distance   [description]
 	 * @return boolean
 	 */
-	public function setLaneForCurrentLocation ($idLocation, $distance) {
+	public function setRoadForCurrentLocation ($idLocation, $distance) {
 		if (empty($this->currentLocation->id)) {
 			throw new \Exception('No location set');
 		}
-		return $this->setLane($this->currentLocation->id, $idLocation, $distance);
+		return $this->setRoad($this->currentLocation->id, $idLocation, $distance);
 	}
 
 	/**
@@ -803,7 +803,7 @@ class EliteTrader {
 	 * @param float   $distance    [description]
 	 * @return boolean
 	 */
-	public function setLane ($idLocation1, $idLocation2, $distance) {
+	public function setRoad ($idLocation1, $idLocation2, $distance) {
 		$this->pdo->replace(self::TABLE_ROADS, $this->modifyRow(array(
 			'location_id_from' => (int)$idLocation1,
 			'location_id_to'   => (int)$idLocation2,

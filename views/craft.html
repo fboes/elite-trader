@@ -8,24 +8,24 @@
 				<form action="<?php _echo($app->currentUrl());?>" method="POST">
 			<?php endif; ?>
 				<div>
-					<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='craft_name'"><?php _echo($data->craft->name);?></span></h3>
-					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='craft_description'"><?php _echo($data->craft->description);?></span></p>
+					<h3><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Name' name='name'"><?php _echo($data->craft->name);?></span></h3>
+					<p><span class="ir" data-ir-parents="div" data-ir-attributes="type='text' placeholder='Description' name='description'"><?php _echo($data->craft->description);?></span></p>
 					<table style="width:auto;">
 							<tr>
 								<th>Cargo (<?php _echo(CONFIG_UNIT_CARGO_SHORT);?>)</th>
-								<td><span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Cargo' name='craft_cargo'"><?php _echo($data->craft->cargo);?></span></td>
+								<td><span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Cargo' name='cargo'"><?php _echo($data->craft->cargo);?></span></td>
 							</tr>
 							<tr>
 								<th>Speed</th>
-								<td><span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Speed' name='craft_speed'"><?php _echo($data->craft->speed);?></span></td>
+								<td><span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='1' placeholder='Speed' name='speed'"><?php _echo($data->craft->speed);?></span></td>
 							</tr>
 							<tr>
 								<th>Min. range (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</th>
-								<td><span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Min. distance_max' name='craft_range_min'"><?php _echo($data->craft->range_min);?></span></td>
+								<td><span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Min. range' name='range_min'"><?php _echo($data->craft->range_min);?></span></td>
 							</tr>
 							<tr>
 								<th>Max. range (<?php _echo(CONFIG_UNIT_DISTANCE_SHORT);?>)</th>
-								<td><span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Max. distance_max' name='craft_range_max'"><?php _echo($data->craft->range_max);?></span></td>
+								<td><span class="ir" data-ir-parents="div" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' placeholder='Max. range' name='range_max'"><?php _echo($data->craft->range_max);?></span></td>
 							</tr>
 						<?php if(!empty($data->craft->delta->highestBuy)): ?>
 							<tr>
@@ -48,7 +48,7 @@
 					</table>
 				</div>
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
-					<input type="hidden" name="action" value="update_craft" />
+					<input type="hidden" name="action" value="craft_update" />
 					<button type="submit">Save</button>
 				</form>
 			<?php endif; ?>

@@ -11,6 +11,9 @@
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>
+			<?php if (!empty($data->currentTrader->is_editor)): ?>
+				<a href="<?php _echo($app->url('goods','new'));?>#modal-goods_new" class="modal button"><i class="fa fa-plus"></i> New good</a>
+			<?php endif; ?>
 		</section>
 	</div>
 

@@ -35,11 +35,11 @@
 				<?php if (!empty($data->currentTrader->is_editor)): ?>
 						<input type="hidden" name="action" value="crafts_update" />
 						<button type="submit">Save craft data</button>
-					</form>
 				<?php endif; ?>
 			<?php endif; ?>
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
-					<a href="<?php _echo($app->url('craft-update'));?>#modal-good_update" class="modal button"><i class="fa fa-plus"></i> New craft</a>
+					<a href="<?php _echo($app->url('craft','new'));?>#modal-craft_new" class="modal button"><i class="fa fa-plus"></i> New craft</a>
+				</form>
 			<?php endif; ?>
 		</section>
 	</div>

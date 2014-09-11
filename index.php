@@ -34,14 +34,19 @@ $elite = new EliteTrader(
 $elite->getCurrentTrader(CONFIG_HOPS_DEFAULT,CONFIG_RANGE_DEFAULT);
 $data['currentTrader'] = &$elite->currentTrader;
 
+// --------------------------
+// POST
+// --------------------------
+
 if (!empty($_POST['action'])) {
+	$success = TRUE;
 	switch ($_POST['action']) {
-		case 'trader-login':
+		case 'login':
 			if (!empty($_POST['email']) && !empty($_POST['password'])) {
 				$success = $elite->login($_POST['email'],$_POST['password']);
 			}
 			break;
-		case 'trader-logout':
+		case 'logout':
 			session_unset();
 			$elite->currentTrader = NULL;
 			$success = TRUE;
@@ -59,23 +64,120 @@ if (!empty($_POST['action'])) {
 				$success = $elite->setTraderrange($_POST['distance_max']);
 			}
 			break;
+		default:
+			if ($elite->currentTrader->is_editor) {
+				switch ($app->path[0]) {
+					case 'good-update':
+						$app->path[0] = 'goods';
+						# create
+						# update
+						# connect
+						if (!empty($_POST['name']) && empty($_POST['good_id'])) {
+							$_POST['good_id'] = $elite->createGood($_POST['name'],$_POST['description']);
+						}
+						if (!empty($_POST['good_id']) && !empty($_POST['price_buy'])) {
+							$success = $elite->setPriceForCurrentLocation($_POST['good_id'],$_POST['price_buy'],$_POST['price_sell']);
+						}
+						break;
+					case 'location-update':
+						$app->path[0] = 'locations';
+						# create
+						# update
+						# connect
+						if (!empty($_POST['name']) && empty($_POST['location_id'])) {
+							$_POST['location_id'] = $elite->createLocation($_POST['name'],@$_POST['description']);
+						}
+						if (!empty($_POST['location_id'])) {
+							$success = $elite->setRoadForCurrentLocation($_POST['location_id'],@$_POST['distance']);
+						}
+						break;
+					case 'craft-update':
+						$app->path[0] = 'craft';
+						# create
+						# update
+						# connect
+						$success = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed'],@$_POST['range_min'],@$_POST['range_max']);
+						if (!empty($success)) {
+							$app->path[1] = $success;
+						}
+						#if (!empty($success) && !empty($_POST['craft_id'])) {
+						#	$success = $elite->setCraftPriceForCurrentLocation($_POST['craft_id'],$_POST['price_buy'],$_POST['price_sell']);
+						#}
+
+						break;
+					case 'craft':
+						if (!empty($app->path[1])) {
+							$success = $elite->updateCraft($app->path[1], $_POST['name'],$_POST['description'],@$_POST['cargo'],@$_POST['speed'],@$_POST['range_min'],@$_POST['range_max']);
+						}
+						elseif (!empty($_POST['craft'])) {
+							foreach ($_POST['craft'] as $idCraft => $craft) {
+								$success = $elite->updateCraft($idCraft, NULL,$craft['description'],@$craft['cargo'],@$craft['speed'],@$craft['range_min'],@$craft['range_max']) && $success;
+							}
+						}
+						break;
+					case 'locations':
+						switch ($_POST['action']) {
+							case 'lanes_update':
+								# update
+								if (!empty($_POST['lanes'])) {
+									foreach ($_POST['lanes'] as $idLocation => $distance) {
+										$success = $elite->setRoadForCurrentLocation($idLocation, $distance) && $success;
+									}
+								}
+								if (!empty($_POST['lanes_delete'])) {
+									foreach ($_POST['lanes_delete'] as $idLocation => $value) {
+										$success = $elite->deleteLaneForCurrentLocation($idLocation) && $success;
+									}
+								}
+								break;
+							case 'craft_xl_update':
+								# update
+								if (!empty($_POST['name']) && empty($_POST['craft_id'])) {
+									$_POST['craft_id'] = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed'],@$_POST['range_min'],@$_POST['range_max']);
+								}
+								if (!empty($_POST['craft_id'])) {
+									$success = $elite->setCraftPriceForCurrentLocation($_POST['craft_id'],$_POST['price_buy'],$_POST['price_sell']);
+								}
+								break;
+							default:
+								# update
+								if (!empty($_POST['good'])) {
+									foreach ($_POST['good'] as $idGood => $name) {
+										$success = $elite->updateGood($idGood, $name) && $success;
+									}
+								}
+								if (!empty($_POST['location_name'])) {
+									$elite->updateCurrentLocation($_POST['location_name'],$_POST['location_description']);
+								}
+								if (!empty($_POST['price'])) {
+									foreach ($_POST['price'] as $idGood => $price) {
+										$success = $elite->setPriceForCurrentLocation($idGood, $price['buy'], $price['sell']) && $success;
+									}
+								}
+								break;
+						}
+						break;
+				}
+			}
+			break;
 	}
+	$messages->addMessageOnAssert($success, 'Successful', 'An error occured, please try again later');
 	if (!empty($success)) {
+		$messages->storeInSession();
 		$app->redirect ($app->path[0], $app->path[1]);
 	}
 }
 
+// --------------------------
+// GET
+// --------------------------
+
 switch ($app->path[0]) {
 	case 'locations':
-		if (empty($app->path[1])) {
-			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
-				$success = $elite->createLocation($_POST['name'],@$_POST['description']);
-				$messages->addMessageOnAssert($success, 'Location created', 'An error occured, please try again later');
-				if ($success) {
-					$messages->storeInSession();
-					$app->redirect ($app->path[0], $app->path[1]);
-				}
-			}
+		if (!empty($app->path[1]) && $app->path[1] === 'new') {
+			$data['template']     = 'location-edit';
+		}
+		elseif (empty($app->path[1])) {
 			$data['allLocations'] = $elite->getAllLocations();
 			$data['template']     = 'locations';
 			$data['title']        = 'Locations';
@@ -85,68 +187,6 @@ switch ($app->path[0]) {
 			if (empty($elite->currentLocation)) {
 				$app->redirect ($app->path[0], NULL, 307);
 			}
-			if ($elite->currentTrader->is_editor && !empty($_POST['action'])) {
-				$success = TRUE;
-				switch ($_POST['action']) {
-					case 'update_lane':
-						if (!empty($_POST['lanes'])) {
-							foreach ($_POST['lanes'] as $idLocation => $distance) {
-								$success = $elite->setLaneForCurrentLocation($idLocation, $distance) && $success;
-							}
-						}
-						if (!empty($_POST['lanes_delete'])) {
-							foreach ($_POST['lanes_delete'] as $idLocation => $value) {
-								$success = $elite->deleteLaneForCurrentLocation($idLocation) && $success;
-							}
-						}
-						break;
-					case 'update_price':
-						if (!empty($_POST['good'])) {
-							foreach ($_POST['good'] as $idGood => $name) {
-								$success = $elite->updateGood($idGood, $name) && $success;
-							}
-						}
-						if (!empty($_POST['location_name'])) {
-							$elite->updateCurrentLocation($_POST['location_name'],$_POST['location_description']);
-						}
-						if (!empty($_POST['price'])) {
-							foreach ($_POST['price'] as $idGood => $price) {
-								$success = $elite->setPriceForCurrentLocation($idGood, $price['buy'], $price['sell']) && $success;
-							}
-						}
-						break;
-					case 'good_update':
-						if (!empty($_POST['name']) && empty($_POST['good_id'])) {
-							$_POST['good_id'] = $elite->createGood($_POST['name'],$_POST['description']);
-						}
-						if (!empty($_POST['good_id'])) {
-							$success = $elite->setPriceForCurrentLocation($_POST['good_id'],$_POST['price_buy'],$_POST['price_sell']);
-						}
-						break;
-					case 'craft_update':
-						if (!empty($_POST['name']) && empty($_POST['craft_id'])) {
-							$_POST['craft_id'] = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed'],@$_POST['range_min'],@$_POST['range_max']);
-						}
-						if (!empty($_POST['craft_id'])) {
-							$success = $elite->setCraftPriceForCurrentLocation($_POST['craft_id'],$_POST['price_buy'],$_POST['price_sell']);
-						}
-						break;
-					case 'location_update':
-						if (!empty($_POST['name']) && empty($_POST['location_id'])) {
-							$_POST['location_id'] = $elite->createLocation($_POST['name'],$_POST['description']);
-						}
-						if (!empty($_POST['location_id'])) {
-							$success = $elite->setLaneForCurrentLocation($_POST['location_id'],$_POST['distance']);
-						}
-						break;
-				}
-				$messages->addMessageOnAssert($success, 'Update(s) saved', 'An error occured, please try again later');
-				if ($success) {
-					$messages->storeInSession();
-					$app->redirect ($app->path[0], $app->path[1]);
-				}
-			}
-
 			if (!empty($app->path[2])) {
 				$data['prices']       = $elite->getPricesForCurrentAndSpecificLocation($app->path[2]);
 				$data['title']        = 'Comparing prices for '.$elite->currentLocation->name.' with location '.$app->path[1];
@@ -162,108 +202,37 @@ switch ($app->path[0]) {
 		}
 		break;
 	case 'goods':
-		if (empty($app->path[1])) {
-			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
-				$success = $elite->createGood($_POST['name'],@$_POST['description']);
-				$messages->addMessageOnAssert($success, 'Good created', 'An error occured, please try again later');
-				if ($success) {
-					$messages->storeInSession();
-					$app->redirect ($app->path[0], $app->path[1]);
-				}
-			}
+		if (!empty($app->path[1]) && $app->path[1] === 'new') {
+			$data['template']     = 'good-edit';
+		}
+		elseif (empty($app->path[1])) {
 			$data['allGoods']     = $elite->getAllGoods();
 			$data['template']     = 'goods';
 			$data['title']        = 'Goods';
 		}
 		else {
-			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
-				$success = $elite->createGood($_POST['name'],@$_POST['description']);
-				$messages->addMessageOnAssert($success, 'Good updated', 'An error occured, please try again later');
-				if ($success) {
-					$messages->storeInSession();
-					$app->redirect ($app->path[0], $app->path[1]);
-				}
-			}
 			$data['good'] = $elite->getCompleteGood($app->path[1]);
 			if (empty($data['good'])) {
 				$app->redirect ($app->path[0], NULL, 307);
 			}
-			if (!empty($_POST['action'])) {
-				$success = TRUE;
-				switch ($_POST['action']) {
-					case 'update_good':
-						if (!empty($_POST['good_name'])) {
-							$success = $elite->updateGood($app->path[1], $_POST['good_name'],$_POST['good_description']) && $success;
-						}
-						break;
-				}
-				$messages->addMessageOnAssert($success, 'Good saved', 'An error occured, please try again later');
-				if ($success) {
-					$messages->storeInSession();
-					$app->redirect ($app->path[0], $app->path[1]);
-				}
-			}
-
 			$data['template']     = 'good';
 			$data['title']        = $data['good']->name;
 		}
 		break;
 	case 'craft':
-		if (empty($app->path[1])) {
-			if ($elite->currentTrader->is_editor && !empty($_POST['action'])) {
-				$success = TRUE;
-				switch ($_POST['action']) {
-					case 'update_crafts':
-						if (!empty($_POST['craft'])) {
-							foreach ($_POST['craft'] as $idCraft => $craft) {
-								$success = $elite->updateCraft($idCraft, NULL,$craft['description'],@$craft['cargo'],@$craft['speed'],@$craft['range_min'],@$craft['range_max']) && $success;
-							}
-						}
-						$messages->addMessageOnAssert($success, 'Craft saved', 'An error occured, please try again later');
-						break;
-					case 'craft_update':
-						$success = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed'],@$_POST['range_min'],@$_POST['range_max']);
-						$messages->addMessageOnAssert($success, 'Craft created', 'An error occured, please try again later');
-						break;
-				}
-				if ($success) {
-					$messages->storeInSession();
-					$app->redirect ($app->path[0], $app->path[1]);
-				}
-			}
+		if (!empty($app->path[1]) && $app->path[1] === 'new') {
+			$data['template']     = 'craft-edit';
+		}
+		elseif (empty($app->path[1])) {
 			$data['allCraft']     = $elite->getAllCraft();
 			$data['template']     = 'crafts';
 			$data['title']        = 'Craft';
 		}
 		else {
-			if ($elite->currentTrader->is_editor && !empty($_POST['name'])) {
-				$success = $elite->createCraft($_POST['name'],@$_POST['description'],@$_POST['cargo'],@$_POST['speed'],@$_POST['range_min'],@$_POST['range_max']);
-				$messages->addMessageOnAssert($success, 'Craft updated', 'An error occured, please try again later');
-				if ($success) {
-					$messages->storeInSession();
-					$app->redirect ($app->path[0], $app->path[1]);
-				}
-			}
 			$data['craft'] = $elite->getCompleteCraft($app->path[1]);
 			if (empty($data['craft'])) {
 				$app->redirect ($app->path[0], NULL, 307);
 			}
-			if (!empty($_POST['action'])) {
-				$success = TRUE;
-				switch ($_POST['action']) {
-					case 'update_craft':
-						if (!empty($_POST['craft_name'])) {
-							$success = $elite->updateCraft($app->path[1], $_POST['craft_name'],$_POST['craft_description'],@$_POST['craft_cargo'],@$_POST['craft_speed'],@$_POST['craft_range_min'],@$_POST['craft_range_max']) && $success;
-						}
-						break;
-				}
-				$messages->addMessageOnAssert($success, 'Craft saved', 'An error occured, please try again later');
-				if ($success) {
-					$messages->storeInSession();
-					$app->redirect ($app->path[0], $app->path[1]);
-				}
-			}
-
 			$data['template']     = 'craft';
 			$data['title']        = $data['craft']->name;
 		}
@@ -272,12 +241,15 @@ switch ($app->path[0]) {
 		$data['template']     = $app->path[0];
 		$data['title']        = 'Trader & craft settings';
 		break;
-	case 'trader-login':
+	case 'login':
 		$data['template']     = $app->path[0];
 		$data['title']        = 'Login';
 		break;
-	case 'good-update':
-		$data['title']        = 'New good';
+	case 'logout':
+		$data['template']     = 'login';
+		$data['title']        = 'Logout';
+		break;
+	case 'good-link':
 		if (!empty($app->path[1])) {
 			$elite->setCurrentLocation($app->path[1]);
 			$data['currentLocation'] = $elite->currentLocation;
@@ -285,13 +257,11 @@ switch ($app->path[0]) {
 			$data['locationGoods']   = $elite->getGoodsForCurrentLocationPlus();
 		}
 		else {
-			$data['allGoods']        = $elite->getAllGoods();
+			$app->redirect ($app->path[0], NULL, 307);
 		}
-
-		$data['template']     = $app->path[0];
+		$data['template']     = 'good-edit';
 		break;
-	case 'craft-update':
-		$data['title']        = 'New craft';
+	case 'craft-link':
 		if (!empty($app->path[1])) {
 			$elite->setCurrentLocation($app->path[1]);
 			$data['currentLocation'] = $elite->currentLocation;
@@ -299,17 +269,18 @@ switch ($app->path[0]) {
 			$data['locationCraft']   = $elite->getCraftForCurrentLocationPlus();
 		}
 		else {
-			$data['allCraft']        = $elite->getAllCraft();
+			$app->redirect ($app->path[0], NULL, 307);
 		}
-
-		$data['template']     = $app->path[0];
+		$data['template']     = 'craft-edit';
 		break;
-	case 'location-update':
-		$data['title']        = 'New location';
+	case 'location-link':
 		if (!empty($app->path[1])) {
 			$elite->setCurrentLocation($app->path[1]);
 			$data['currentLocation'] = $elite->currentLocation;
 			$data['title']        = 'New connection for '.$elite->currentLocation->name;
+		}
+		else {
+			$app->redirect ($app->path[0], NULL, 307);
 		}
 		$data['locations']       = !empty($elite->currentLocation)
 			? $elite->getNextLocationsForCurrentLocation(CONFIG_HOPS_SEARCH,CONFIG_RANGE_SEARCH)
@@ -320,7 +291,7 @@ switch ($app->path[0]) {
 		}
 		$data['currentLocation'] = $elite->currentLocation;
 
-		$data['template']     = $app->path[0];
+		$data['template']     = 'location-edit';
 		break;
 	default:
 		break;
