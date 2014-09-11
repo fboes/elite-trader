@@ -150,10 +150,10 @@
 								<tr>
 									<td><a href="<?php _echo($app->url('craft',$craft->id));?>"><?php _echo($craft->name);?></a></td>
 									<td class="number">
-										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_CURRENCY_DECIMALS));?>' name='craft[<?php _echo($goodIndex);?>][buy]'"><?php $app->echoNumber($craft->price_buy,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?></span>
+										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_CURRENCY_DECIMALS));?>' name='craft[<?php _echo($craft->id);?>][buy]'"><?php $app->echoNumber($craft->price_buy,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?></span>
 									</td>
 									<td class="number">
-										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_CURRENCY_DECIMALS));?>' name='craft[<?php _echo($goodIndex);?>][sell]'"><?php $app->echoNumber($craft->price_sell,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?></span>
+										<span class="ir" data-ir-parents="tr" data-ir-filter="td.number" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_CURRENCY_DECIMALS));?>' name='craft[<?php _echo($craft->id);?>][sell]'"><?php $app->echoNumber($craft->price_sell,NULL,CONFIG_UNIT_CURRENCY_DECIMALS);?></span>
 									</td>
 								</tr>
 							<?php endforeach; ?>
