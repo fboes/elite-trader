@@ -139,6 +139,13 @@ switch ($app->path[0]) {
 							$success = $elite->setLaneForCurrentLocation($_POST['location_id'],$_POST['distance']);
 						}
 						break;
+					case 'update_craft':
+						if (!empty($_POST['craft'])) {
+							foreach ($_POST['craft'] as $idCraft => $craft) {
+								$success = $elite->setCraftPriceForCurrentLocation($idCraft, $craft['buy'], $craft['sell']) && $success;
+							}
+						}
+						break;
 				}
 				$messages->addMessageOnAssert($success, 'Update(s) saved', 'An error occured, please try again later');
 				if ($success) {
@@ -213,7 +220,7 @@ switch ($app->path[0]) {
 			if ($elite->currentTrader->is_editor && !empty($_POST['action'])) {
 				$success = TRUE;
 				switch ($_POST['action']) {
-					case 'update_crafts':
+					case 'crafts_update':
 						if (!empty($_POST['craft'])) {
 							foreach ($_POST['craft'] as $idCraft => $craft) {
 								$success = $elite->updateCraft($idCraft, NULL,$craft['description'],@$craft['cargo'],@$craft['speed'],@$craft['range_min'],@$craft['range_max']) && $success;

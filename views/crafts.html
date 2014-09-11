@@ -4,10 +4,10 @@
 	<div class="block-container-1">
 		<section>
 			<h3>Craft</h3>
+			<?php if (!empty($data->currentTrader->is_editor)): ?>
+				<form action="<?php _echo($app->currentUrl());?>" method="POST">
+			<?php endif; ?>
 			<?php if (!empty($data->allCraft)): ?>
-				<?php if (!empty($data->currentTrader->is_editor)): ?>
-					<form action="<?php _echo($app->currentUrl());?>" method="POST">
-				<?php endif; ?>
 				<table class="data sortable">
 					<thead>
 						<tr>
@@ -33,13 +33,13 @@
 					</tbody>
 				</table>
 				<?php if (!empty($data->currentTrader->is_editor)): ?>
-						<input type="hidden" name="action" value="crafts_update" />
-						<button type="submit">Save craft data</button>
-					</form>
+					<input type="hidden" name="action" value="crafts_update" />
+					<button type="submit">Save craft data</button>
 				<?php endif; ?>
 			<?php endif; ?>
 			<?php if (!empty($data->currentTrader->is_editor)): ?>
 					<a href="<?php _echo($app->url('craft-update'));?>#modal-good_update" class="modal button"><i class="fa fa-plus"></i> New craft</a>
+				</form>
 			<?php endif; ?>
 		</section>
 	</div>
