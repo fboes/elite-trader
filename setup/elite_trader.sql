@@ -62,7 +62,9 @@ CREATE TABLE IF NOT EXISTS `craft_locations` (
   `craft_id` int(10) unsigned NOT NULL,
   `location_id` int(10) unsigned NOT NULL,
   `price_buy` decimal(10,2) unsigned DEFAULT NULL,
-  `price_sell` decimal(10,2) unsigned DEFAULT NULL
+  `price_sell` decimal(10,2) unsigned DEFAULT NULL,
+  `trader_id` int(10) unsigned DEFAULT NULL,
+  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -93,7 +95,8 @@ INSERT INTO `craft_locations` (`craft_id`, `location_id`, `price_buy`, `price_se
 
 CREATE TABLE IF NOT EXISTS `craft_traders` (
   `craft_id` int(10) unsigned NOT NULL,
-  `trader_id` int(10) unsigned NOT NULL
+  `trader_id` int(10) unsigned NOT NULL,
+  `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
