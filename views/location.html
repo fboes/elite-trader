@@ -112,7 +112,7 @@
 								<tr<?php echo(($c->distance > $data->currentTrader->distance_max) ? ' class="error" title="Out of range"': '');?>>
 									<td><a href="<?php _echo($app->url('locations',$c->id));?>"><?php _echo($c->name); ?></a></td>
 									<td class="number"><span class="ir" data-ir-parents="tr" data-ir-attributes="type='number' min='0' step='<?php _echo($app->convertDecimalsToStep(CONFIG_UNIT_DISTANCE_DECIMALS));?>' name='lanes[<?php _echo(urlencode($c->id));?>]'"><?php $app->echoNumber($c->distance,NULL,CONFIG_UNIT_DISTANCE_DECIMALS); ?></span></td>
-									<td><a href="<?php _echo($app->url('locations',$data->currentLocation->id,$c->id));?>"><i class="fa fa-calculator"></i></a></td>
+									<td class="number"><a href="<?php _echo($app->url('locations',$data->currentLocation->id,$c->id));?>"><i class="fa fa-calculator"></i></a></td>
 									<?php if (!empty($data->currentTrader->is_editor)): ?>
 										<td class="number"><input class="delete" type="checkbox" name="lanes_delete[<?php _echo(urlencode($c->id));?>]" value="x" /></td>
 									<?php endif; ?>
