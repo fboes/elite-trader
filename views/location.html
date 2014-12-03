@@ -58,7 +58,7 @@
 									</td>
 									<?php if(!empty($price->buyer)): ?>
 										<td class="number"><?php $app->echoNumber($price->buyer->delta,NULL,CONFIG_UNIT_CURRENCY_DECIMALS); ?></td>
-										<td><a href="<?php _echo($app->url('locations',$price->buyer->id));?>"><?php _echo($price->buyer->name); ?></a>
+										<td><a href="<?php _echo($app->url('locations',$price->buyer->id));?>"><?php _echo($price->buyer->name); ?></a> | <a href="<?php _echo($app->url('locations',$data->currentLocation->id,$price->buyer->id));?>"><i class="fa fa-calculator"></i></a>
 										</td>
 									<?php else: ?>
 										<td class="empty"></td>
@@ -66,7 +66,7 @@
 									<?php endif; ?>
 									<?php if(!empty($price->seller)): ?>
 										<td class="number"><?php $app->echoNumber($price->seller->delta,NULL,CONFIG_UNIT_CURRENCY_DECIMALS); ?></td>
-										<td><a href="<?php _echo($app->url('locations',$price->seller->id));?>"><?php _echo($price->seller->name); ?></a>
+										<td><a href="<?php _echo($app->url('locations',$price->seller->id));?>"><?php _echo($price->seller->name); ?></a> | <a href="<?php _echo($app->url('locations',$data->currentLocation->id,$price->seller->id));?>"><i class="fa fa-calculator"></i></a>
 										</td>
 									<?php else: ?>
 										<td class="empty"></td>
